@@ -1,0 +1,197 @@
+{
+  "contractName": "PriviNFTBuying",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/PriviNFTBuying.sol\":\"PriviNFTBuying\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/PriviNFTBuying.sol\":{\"keccak256\":\"0xef0bf66ab34990fb3f6f8e9d049e2f81ec455d5d85827cdf54b4e10a91a0995c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ed46bee628897d6ced16887cb1e0baf128fad36f2ec9e4a2c2d20986a52d22c9\",\"dweb:/ipfs/QmQtfrPpS99BrVRpzi2W7KVKWrtycRwmgDh6niXyg42u51\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220aa3e4ec7f9d3bcef86813a7db194eea65d56e7cd92f99cbcc0c9b74eb1e9f9c064736f6c63430008090033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220aa3e4ec7f9d3bcef86813a7db194eea65d56e7cd92f99cbcc0c9b74eb1e9f9c064736f6c63430008090033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "66:56:1:-:0;;;94:26;;;;;;;;;;66:56;;;;;;",
+  "deployedSourceMap": "66:56:1:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\ncontract PriviNFTBuying {\n  constructor() public {\n  }\n}\n",
+  "sourcePath": "E:\\Projects\\Privi2\\PriviNFTOptions\\privi-NFT-buying\\contracts\\PriviNFTBuying.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/PriviNFTBuying.sol",
+    "exportedSymbols": {
+      "PriviNFTBuying": [
+        39
+      ]
+    },
+    "id": 40,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 34,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "PriviNFTBuying",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 39,
+        "linearizedBaseContracts": [
+          39
+        ],
+        "name": "PriviNFTBuying",
+        "nameLocation": "75:14:1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 37,
+              "nodeType": "Block",
+              "src": "115:5:1",
+              "statements": []
+            },
+            "id": 38,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 35,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "105:2:1"
+            },
+            "returnParameters": {
+              "id": 36,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "115:0:1"
+            },
+            "scope": 39,
+            "src": "94:26:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 40,
+        "src": "66:56:1",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:91:1"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/PriviNFTBuying.sol",
+    "exportedSymbols": {
+      "PriviNFTBuying": [
+        39
+      ]
+    },
+    "id": 40,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 34,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "PriviNFTBuying",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 39,
+        "linearizedBaseContracts": [
+          39
+        ],
+        "name": "PriviNFTBuying",
+        "nameLocation": "75:14:1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 37,
+              "nodeType": "Block",
+              "src": "115:5:1",
+              "statements": []
+            },
+            "id": 38,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 35,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "105:2:1"
+            },
+            "returnParameters": {
+              "id": 36,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "115:0:1"
+            },
+            "scope": 39,
+            "src": "94:26:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 40,
+        "src": "66:56:1",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:91:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.9+commit.e5eed63a.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-10-26T13:58:21.293Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
