@@ -109,14 +109,10 @@ contract PriviNFTBuying {
     NFTOption storage option = _getOption(optionID);
     require(option.owner != address(0), "No such option exists");
 
+    emit OptionSold(option.owner, msg.sender, optionID);
   }
 
-  function depositNFT(
-    address nft
-  ) external {
-  }
-
-  function depositToken(
+  function deposit(
     address token,
     uint256 amount
   ) external {
@@ -124,7 +120,7 @@ contract PriviNFTBuying {
     reserves[msg.sender][token] = reserves[msg.sender][token] + amount;
   }
 
-  function withdrawToken(
+  function withdraw(
     address token,
     uint256 amount
   ) external {
@@ -140,10 +136,14 @@ contract PriviNFTBuying {
   ) external {
   }
 
-  function totalAsset(
+  function totalAssetUSD(
     address user
-  ) external {
-
+  ) external returns (uint256) {
+    uint256 total = 0;
+    for (uint i = 0; i < tokens.length; i++) {
+      total += reserves[user][tokens[i]];
+    }
+    return total;
   }
 
   function _getOption(uint256 optionID) private returns (NFTOption storage) {
