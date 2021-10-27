@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -47,12 +49,21 @@ contract PriviNFTBuying {
   }
 
   uint256 counter;
+  address[] tokens;
+  address nftPool;
+  address priceOracle;
 
   mapping(uint256 => NFTOption) options;
+  mapping(address => mapping (address => uint256)) reserves
 
   constructor(
-    address token
+    address[] memory _tokens,
+    address _nftPool,
+    address _priceOracle
   ) public {
+    tokens = _tokens;
+    nftPool = _nftPool;
+    priceOracle = _priceOracle;
   }
   
   function createOption(
@@ -67,6 +78,15 @@ contract PriviNFTBuying {
     NFTOption memory option = NFTOption(msg.sender, nft, expiry, pct, optionID);
     options[optionID] = option;
     emit OptionCreated(msg.sender, nft, expiry, price, pct, optionID);
+  }
+
+  function moidfyOption(
+    uint256 optionID,
+    address nft,
+    uint256 expiry,
+    uint256 price,
+    uint256 pct
+  ) external {
   }
   
   function cancelOption(
@@ -88,13 +108,18 @@ contract PriviNFTBuying {
 
   }
 
-  function deposit(
+  function depositNFT(
+    address nft
+  ) external {
+  }
+
+  function depositToken(
     address token,
     uint256 amount
   ) external {
   }
 
-  function withdraw(
+  function withdrawToken(
     address token,
     uint256 amount
   ) external {
@@ -109,6 +134,12 @@ contract PriviNFTBuying {
   ) external {
   }
 
+  function totalAsset(
+
+  ) external {
+
+  }
+
   function _getOption(uint256 optionID) private returns (NFTOption storage) {
     return options[optionID];
   }
@@ -117,6 +148,12 @@ contract PriviNFTBuying {
     // not completed yet
 
     returns address(0);
+  }
+
+  function _tokenToUSD(address token) private returns (uint256) {
+    // not completed yet
+
+    return 0;
   }
 
   /*
