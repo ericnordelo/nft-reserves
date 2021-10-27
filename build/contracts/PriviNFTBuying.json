@@ -18,7 +18,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "id",
+          "name": "optionID",
           "type": "uint256"
         }
       ],
@@ -61,7 +61,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "id",
+          "name": "optionID",
           "type": "uint256"
         }
       ],
@@ -86,7 +86,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "id",
+          "name": "optionID",
           "type": "uint256"
         }
       ],
@@ -120,7 +120,7 @@
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "optionID",
           "type": "uint256"
         }
       ],
@@ -131,7 +131,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "optionID",
           "type": "uint256"
         }
       ],
@@ -150,7 +150,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "id",
+          "name": "optionID",
           "type": "uint256"
         }
       ],
@@ -166,9 +166,9 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"OptionCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"nft\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pct\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"OptionCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"OptionSold\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"buyOption\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"cancelOption\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"nft\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pct\",\"type\":\"uint256\"}],\"name\":\"createOption\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/PriviNFTBuying.sol\":\"PriviNFTBuying\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/PriviNFTBuying.sol\":{\"keccak256\":\"0xfd52267445abc1b2521ca084ed0f79fc68314a995070dc5067969976ff6fc107\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6865bb10302cf5a9241994718e8185e9cb93064d75507aec51d06b8f0b910e20\",\"dweb:/ipfs/QmPh9AR9UqP7T36iP3iRi7G5Xmv2Bu1AgU1o1MU2Fuwk8x\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506101cb806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80630cbca65814610046578063de6bf6351461006c578063fba225b91461006c575b600080fd5b61005961005436600461010c565b610090565b6040519081526020015b60405180910390f35b61008061007a366004610153565b50600090565b6040519015158152602001610063565b60008054908190806100a18361016c565b9091555050604080513381526001600160a01b0387166020820152908101859052606081018490526080810183905260a081018290527fa2af0d1750ac3f92fbaeb824aa17d8962d72f3759bde8620f9c415831d8884909060c00160405180910390a1949350505050565b6000806000806080858703121561012257600080fd5b84356001600160a01b038116811461013957600080fd5b966020860135965060408601359560600135945092505050565b60006020828403121561016557600080fd5b5035919050565b600060001982141561018e57634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212207144dddd0ab99b8d6bfa7da9f66027aab06cfef5589afa091dbfffc51244950764736f6c63430008090033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c80630cbca65814610046578063de6bf6351461006c578063fba225b91461006c575b600080fd5b61005961005436600461010c565b610090565b6040519081526020015b60405180910390f35b61008061007a366004610153565b50600090565b6040519015158152602001610063565b60008054908190806100a18361016c565b9091555050604080513381526001600160a01b0387166020820152908101859052606081018490526080810183905260a081018290527fa2af0d1750ac3f92fbaeb824aa17d8962d72f3759bde8620f9c415831d8884909060c00160405180910390a1949350505050565b6000806000806080858703121561012257600080fd5b84356001600160a01b038116811461013957600080fd5b966020860135965060408601359560600135945092505050565b60006020828403121561016557600080fd5b5035919050565b600060001982141561018e57634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212207144dddd0ab99b8d6bfa7da9f66027aab06cfef5589afa091dbfffc51244950764736f6c63430008090033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"optionID\",\"type\":\"uint256\"}],\"name\":\"OptionCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"nft\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pct\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"optionID\",\"type\":\"uint256\"}],\"name\":\"OptionCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"optionID\",\"type\":\"uint256\"}],\"name\":\"OptionSold\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"optionID\",\"type\":\"uint256\"}],\"name\":\"buyOption\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"optionID\",\"type\":\"uint256\"}],\"name\":\"cancelOption\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"nft\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pct\",\"type\":\"uint256\"}],\"name\":\"createOption\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"optionID\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/PriviNFTBuying.sol\":\"PriviNFTBuying\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/PriviNFTBuying.sol\":{\"keccak256\":\"0xb47a6dc2f2b3e6ffd686f55b398e484735a2c3e26b2288393b1a9a400f3c5546\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ac60bfea38f0868ba9c3fedebdc4bab7dc81ffcf9df5ad95bf04456830cfc79\",\"dweb:/ipfs/QmRa6yJAs5z9HzyN7jHc8vBqVDUPCNxXosnx2PwTGyceXg\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610245806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80630cbca65814610046578063de6bf6351461006c578063fba225b91461006c575b600080fd5b610059610054366004610186565b610090565b6040519081526020015b60405180910390f35b61008061007a3660046101cd565b50600090565b6040519015158152602001610063565b60008054908190806100a1836101e6565b90915550506040805160a08082018352338083526001600160a01b0389811660208086018281528688018c815260608089018c81526080808b018d815260008e81526001808952908e90208d518154908c166001600160a01b03199182161782559751918101805492909b16919097161790985592516002850155516003840155945160049092019190915587519485529084019190915294820189905281018790529283018590528201839052907fa2af0d1750ac3f92fbaeb824aa17d8962d72f3759bde8620f9c415831d8884909060c00160405180910390a150949350505050565b6000806000806080858703121561019c57600080fd5b84356001600160a01b03811681146101b357600080fd5b966020860135965060408601359560600135945092505050565b6000602082840312156101df57600080fd5b5035919050565b600060001982141561020857634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212207e7d09bbe66eeacaf007fad4b27584164a31bd3e88886fc8832f864516c9464c64736f6c63430008090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c80630cbca65814610046578063de6bf6351461006c578063fba225b91461006c575b600080fd5b610059610054366004610186565b610090565b6040519081526020015b60405180910390f35b61008061007a3660046101cd565b50600090565b6040519015158152602001610063565b60008054908190806100a1836101e6565b90915550506040805160a08082018352338083526001600160a01b0389811660208086018281528688018c815260608089018c81526080808b018d815260008e81526001808952908e90208d518154908c166001600160a01b03199182161782559751918101805492909b16919097161790985592516002850155516003840155945160049092019190915587519485529084019190915294820189905281018790529283018590528201839052907fa2af0d1750ac3f92fbaeb824aa17d8962d72f3759bde8620f9c415831d8884909060c00160405180910390a150949350505050565b6000806000806080858703121561019c57600080fd5b84356001600160a01b03811681146101b357600080fd5b966020860135965060408601359560600135945092505050565b6000602082840312156101df57600080fd5b5035919050565b600060001982141561020857634e487b7160e01b600052601160045260246000fd5b506001019056fea26469706673582212207e7d09bbe66eeacaf007fad4b27584164a31bd3e88886fc8832f864516c9464c64736f6c63430008090033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [
@@ -1601,18 +1601,18 @@
       "name": "#utility.yul"
     }
   ],
-  "sourceMap": "65:920:0:-:0;;;552:26;;;;;;;;;;65:920;;;;;;",
-  "deployedSourceMap": "65:920:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;584:232;;;;;;:::i;:::-;;:::i;:::-;;;656:25:1;;;644:2;629:18;584:232:0;;;;;;;;822:80;;;;;;:::i;:::-;-1:-1:-1;882:12:0;;822:80;;;;1042:14:1;;1035:22;1017:41;;1005:2;990:18;822:80:0;877:187:1;584:232:0;701:10;724:7;;;;;701:10;737:9;724:7;737:9;:::i;:::-;;;;-1:-1:-1;;757:54:0;;;771:10;1631:34:1;;-1:-1:-1;;;;;1701:15:1;;1696:2;1681:18;;1674:43;1733:18;;;1726:34;;;1791:2;1776:18;;1769:34;;;1834:3;1819:19;;1812:35;;;1611:3;1863:19;;1856:35;;;757:54:0;;1580:3:1;1565:19;757:54:0;;;;;;;584:232;;;;;;:::o;14:491:1:-;100:6;108;116;124;177:3;165:9;156:7;152:23;148:33;145:53;;;194:1;191;184:12;145:53;220:23;;-1:-1:-1;;;;;272:31:1;;262:42;;252:70;;318:1;315;308:12;252:70;341:5;393:2;378:18;;365:32;;-1:-1:-1;444:2:1;429:18;;416:32;;495:2;480:18;467:32;;-1:-1:-1;14:491:1;-1:-1:-1;;;14:491:1:o;692:180::-;751:6;804:2;792:9;783:7;779:23;775:32;772:52;;;820:1;817;810:12;772:52;-1:-1:-1;843:23:1;;692:180;-1:-1:-1;692:180:1:o;1069:232::-;1108:3;-1:-1:-1;;1129:17:1;;1126:140;;;1188:10;1183:3;1179:20;1176:1;1169:31;1223:4;1220:1;1213:15;1251:4;1248:1;1241:15;1126:140;-1:-1:-1;1293:1:1;1282:13;;1069:232::o",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.0 <0.9.0;\n\ncontract PriviNFTBuying {\n  event OptionCreated(\n    address owner,\n    address nft,\n    uint256 expiry,\n    uint256 price,\n    uint256 pct,\n    uint256 id\n  );\n\n  event OptionCanceled(\n    address owner,\n    uint256 id\n  );\n\n  event OptionSold(\n    address owner,\n    address buyer,\n    uint256 id\n  );\n  \n  struct NFTOption {\n    address owner;\n    address nft;\n    uint256 expiry;\n    uint256 pct;\n    uint256 id;\n  }\n\n\n  uint256 counter;\n\n  mapping(uint256 => NFTOption) options;\n\n  constructor() public {\n  }\n  \n  function createOption(\n    address nft,\n    uint256 expiry,\n    uint256 price,\n    uint256 pct\n  ) external returns (uint256 id) {\n    id = counter;\n    counter++;\n    emit OptionCreated(msg.sender, nft, expiry, price, pct, id);\n  }\n  \n  function cancelOption(\n    uint256 id\n  ) external returns (bool success) {\n\n  }\n\n  function buyOption(\n    uint256 id\n  ) external returns (bool success) {\n\n  }\n}\n",
+  "sourceMap": "65:1199:0:-:0;;;575:26;;;;;;;;;;65:1199;;;;;;",
+  "deployedSourceMap": "65:1199:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;607:363;;;;;;:::i;:::-;;:::i;:::-;;;656:25:1;;;644:2;629:18;607:363:0;;;;;;;;976:86;;;;;;:::i;:::-;-1:-1:-1;1042:12:0;;976:86;;;;1042:14:1;;1035:22;1017:41;;1005:2;990:18;976:86:0;877:187:1;607:363:0;724:16;759:7;;;;;724:16;772:9;759:7;772:9;:::i;:::-;;;;-1:-1:-1;;813:49:0;;;;;;;;;823:10;813:49;;;-1:-1:-1;;;;;813:49:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;868:17:0;;;:7;:17;;;;;;;:26;;;;;;;-1:-1:-1;;;;;;868:26:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;905:60;;1631:34:1;;;1681:18;;;1674:43;;;;1733:18;;;1726:34;;;1776:18;;1769:34;;;1819:19;;;1812:35;;;1863:19;;1856:35;;;813:49:0;905:60;;1580:3:1;1565:19;905:60:0;;;;;;;742:228;607:363;;;;;;:::o;14:491:1:-;100:6;108;116;124;177:3;165:9;156:7;152:23;148:33;145:53;;;194:1;191;184:12;145:53;220:23;;-1:-1:-1;;;;;272:31:1;;262:42;;252:70;;318:1;315;308:12;252:70;341:5;393:2;378:18;;365:32;;-1:-1:-1;444:2:1;429:18;;416:32;;495:2;480:18;467:32;;-1:-1:-1;14:491:1;-1:-1:-1;;;14:491:1:o;692:180::-;751:6;804:2;792:9;783:7;779:23;775:32;772:52;;;820:1;817;810:12;772:52;-1:-1:-1;843:23:1;;692:180;-1:-1:-1;692:180:1:o;1069:232::-;1108:3;-1:-1:-1;;1129:17:1;;1126:140;;;1188:10;1183:3;1179:20;1176:1;1169:31;1223:4;1220:1;1213:15;1251:4;1248:1;1241:15;1126:140;-1:-1:-1;1293:1:1;1282:13;;1069:232::o",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.8.0 <0.9.0;\n\ncontract PriviNFTBuying {\n  event OptionCreated(\n    address owner,\n    address nft,\n    uint256 expiry,\n    uint256 price,\n    uint256 pct,\n    uint256 optionID\n  );\n\n  event OptionCanceled(\n    address owner,\n    uint256 optionID\n  );\n\n  event OptionSold(\n    address owner,\n    address buyer,\n    uint256 optionID\n  );\n  \n  struct NFTOption {\n    address owner;\n    address nft;\n    uint256 expiry;\n    uint256 pct;\n    uint256 optionID;\n  }\n\n  uint256 counter;\n\n  mapping(uint256 => NFTOption) options;\n\n  constructor() public {\n  }\n  \n  function createOption(\n    address nft,\n    uint256 expiry,\n    uint256 price,\n    uint256 pct\n  ) external returns (uint256 optionID) {\n    optionID = counter;\n    counter++;\n    NFTOption memory option = NFTOption(msg.sender, nft, expiry, pct, optionID);\n    options[optionID] = option;\n    emit OptionCreated(msg.sender, nft, expiry, price, pct, optionID);\n  }\n  \n  function cancelOption(\n    uint256 optionID\n  ) external returns (bool success) {\n\n  }\n\n  function buyOption(\n    uint256 optionID\n  ) external returns (bool success) {\n\n  }\n\n  function _getOption(uint256 optionID) private returns (NFTOption storage) {\n    return options[optionID];\n  }\n}\n",
   "sourcePath": "E:\\Projects\\Privi2\\PriviNFTOptions\\privi-NFT-buying\\contracts\\PriviNFTBuying.sol",
   "ast": {
     "absolutePath": "project:/contracts/PriviNFTBuying.sol",
     "exportedSymbols": {
       "PriviNFTBuying": [
-        99
+        130
       ]
     },
-    "id": 100,
+    "id": 131,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
@@ -1637,9 +1637,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 99,
+        "id": 130,
         "linearizedBaseContracts": [
-          99
+          130
         ],
         "name": "PriviNFTBuying",
         "nameLocation": "74:14:0",
@@ -1802,11 +1802,11 @@
                   "id": 13,
                   "indexed": false,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "218:2:0",
+                  "name": "optionID",
+                  "nameLocation": "218:8:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 15,
-                  "src": "210:10:0",
+                  "src": "210:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1826,15 +1826,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "112:112:0"
+              "src": "112:118:0"
             },
-            "src": "93:132:0"
+            "src": "93:138:0"
           },
           {
             "anonymous": false,
             "id": 21,
             "name": "OptionCanceled",
-            "nameLocation": "235:14:0",
+            "nameLocation": "241:14:0",
             "nodeType": "EventDefinition",
             "parameters": {
               "id": 20,
@@ -1846,10 +1846,10 @@
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "owner",
-                  "nameLocation": "263:5:0",
+                  "nameLocation": "269:5:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 21,
-                  "src": "255:13:0",
+                  "src": "261:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1860,7 +1860,7 @@
                     "id": 16,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "255:7:0",
+                    "src": "261:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1874,11 +1874,11 @@
                   "id": 19,
                   "indexed": false,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "282:2:0",
+                  "name": "optionID",
+                  "nameLocation": "288:8:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 21,
-                  "src": "274:10:0",
+                  "src": "280:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1889,7 +1889,7 @@
                     "id": 18,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "274:7:0",
+                    "src": "280:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1898,15 +1898,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "249:39:0"
+              "src": "255:45:0"
             },
-            "src": "229:60:0"
+            "src": "235:66:0"
           },
           {
             "anonymous": false,
             "id": 29,
             "name": "OptionSold",
-            "nameLocation": "299:10:0",
+            "nameLocation": "311:10:0",
             "nodeType": "EventDefinition",
             "parameters": {
               "id": 28,
@@ -1918,10 +1918,10 @@
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "owner",
-                  "nameLocation": "323:5:0",
+                  "nameLocation": "335:5:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 29,
-                  "src": "315:13:0",
+                  "src": "327:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1932,7 +1932,7 @@
                     "id": 22,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "315:7:0",
+                    "src": "327:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1947,10 +1947,10 @@
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "buyer",
-                  "nameLocation": "342:5:0",
+                  "nameLocation": "354:5:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 29,
-                  "src": "334:13:0",
+                  "src": "346:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1961,7 +1961,7 @@
                     "id": 24,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "334:7:0",
+                    "src": "346:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1975,11 +1975,11 @@
                   "id": 27,
                   "indexed": false,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "361:2:0",
+                  "name": "optionID",
+                  "nameLocation": "373:8:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 29,
-                  "src": "353:10:0",
+                  "src": "365:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1990,7 +1990,7 @@
                     "id": 26,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "353:7:0",
+                    "src": "365:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1999,9 +1999,9 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "309:58:0"
+              "src": "321:64:0"
             },
-            "src": "293:75:0"
+            "src": "305:81:0"
           },
           {
             "canonicalName": "PriviNFTBuying.NFTOption",
@@ -2012,10 +2012,10 @@
                 "id": 31,
                 "mutability": "mutable",
                 "name": "owner",
-                "nameLocation": "405:5:0",
+                "nameLocation": "423:5:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "397:13:0",
+                "src": "415:13:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -2026,7 +2026,7 @@
                   "id": 30,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "397:7:0",
+                  "src": "415:7:0",
                   "stateMutability": "nonpayable",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
@@ -2040,10 +2040,10 @@
                 "id": 33,
                 "mutability": "mutable",
                 "name": "nft",
-                "nameLocation": "424:3:0",
+                "nameLocation": "442:3:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "416:11:0",
+                "src": "434:11:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -2054,7 +2054,7 @@
                   "id": 32,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "416:7:0",
+                  "src": "434:7:0",
                   "stateMutability": "nonpayable",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
@@ -2068,10 +2068,10 @@
                 "id": 35,
                 "mutability": "mutable",
                 "name": "expiry",
-                "nameLocation": "441:6:0",
+                "nameLocation": "459:6:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "433:14:0",
+                "src": "451:14:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -2082,7 +2082,7 @@
                   "id": 34,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "433:7:0",
+                  "src": "451:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -2095,10 +2095,10 @@
                 "id": 37,
                 "mutability": "mutable",
                 "name": "pct",
-                "nameLocation": "461:3:0",
+                "nameLocation": "479:3:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "453:11:0",
+                "src": "471:11:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -2109,7 +2109,7 @@
                   "id": 36,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "453:7:0",
+                  "src": "471:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -2121,11 +2121,11 @@
                 "constant": false,
                 "id": 39,
                 "mutability": "mutable",
-                "name": "id",
-                "nameLocation": "478:2:0",
+                "name": "optionID",
+                "nameLocation": "496:8:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "470:10:0",
+                "src": "488:16:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -2136,7 +2136,7 @@
                   "id": 38,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "470:7:0",
+                  "src": "488:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -2146,10 +2146,10 @@
               }
             ],
             "name": "NFTOption",
-            "nameLocation": "381:9:0",
+            "nameLocation": "399:9:0",
             "nodeType": "StructDefinition",
-            "scope": 99,
-            "src": "374:111:0",
+            "scope": 130,
+            "src": "392:117:0",
             "visibility": "public"
           },
           {
@@ -2157,10 +2157,10 @@
             "id": 42,
             "mutability": "mutable",
             "name": "counter",
-            "nameLocation": "498:7:0",
+            "nameLocation": "521:7:0",
             "nodeType": "VariableDeclaration",
-            "scope": 99,
-            "src": "490:15:0",
+            "scope": 130,
+            "src": "513:15:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -2171,7 +2171,7 @@
               "id": 41,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "490:7:0",
+              "src": "513:7:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -2184,10 +2184,10 @@
             "id": 47,
             "mutability": "mutable",
             "name": "options",
-            "nameLocation": "540:7:0",
+            "nameLocation": "563:7:0",
             "nodeType": "VariableDeclaration",
-            "scope": 99,
-            "src": "510:37:0",
+            "scope": 130,
+            "src": "533:37:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -2200,14 +2200,14 @@
                 "id": 43,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "518:7:0",
+                "src": "541:7:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "510:29:0",
+              "src": "533:29:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_NFTOption_$40_storage_$",
                 "typeString": "mapping(uint256 => struct PriviNFTBuying.NFTOption)"
@@ -2220,10 +2220,10 @@
                   "name": "NFTOption",
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 40,
-                  "src": "529:9:0"
+                  "src": "552:9:0"
                 },
                 "referencedDeclaration": 40,
-                "src": "529:9:0",
+                "src": "552:9:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
                   "typeString": "struct PriviNFTBuying.NFTOption"
@@ -2236,7 +2236,7 @@
             "body": {
               "id": 50,
               "nodeType": "Block",
-              "src": "573:5:0",
+              "src": "596:5:0",
               "statements": []
             },
             "id": 51,
@@ -2250,25 +2250,25 @@
               "id": 48,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "563:2:0"
+              "src": "586:2:0"
             },
             "returnParameters": {
               "id": 49,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "573:0:0"
+              "src": "596:0:0"
             },
-            "scope": 99,
-            "src": "552:26:0",
+            "scope": 130,
+            "src": "575:26:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 81,
+              "id": 99,
               "nodeType": "Block",
-              "src": "713:103:0",
+              "src": "742:228:0",
               "statements": [
                 {
                   "expression": {
@@ -2279,11 +2279,11 @@
                     "lValueRequested": false,
                     "leftHandSide": {
                       "id": 64,
-                      "name": "id",
+                      "name": "optionID",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 62,
-                      "src": "719:2:0",
+                      "src": "748:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2297,13 +2297,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 42,
-                      "src": "724:7:0",
+                      "src": "759:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "719:12:0",
+                    "src": "748:18:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2311,7 +2311,7 @@
                   },
                   "id": 67,
                   "nodeType": "ExpressionStatement",
-                  "src": "719:12:0"
+                  "src": "748:18:0"
                 },
                 {
                   "expression": {
@@ -2323,14 +2323,14 @@
                     "nodeType": "UnaryOperation",
                     "operator": "++",
                     "prefix": false,
-                    "src": "737:9:0",
+                    "src": "772:9:0",
                     "subExpression": {
                       "id": 68,
                       "name": "counter",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 42,
-                      "src": "737:7:0",
+                      "src": "772:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2343,92 +2343,330 @@
                   },
                   "id": 70,
                   "nodeType": "ExpressionStatement",
-                  "src": "737:9:0"
+                  "src": "772:9:0"
                 },
                 {
-                  "eventCall": {
+                  "assignments": [
+                    73
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 73,
+                      "mutability": "mutable",
+                      "name": "option",
+                      "nameLocation": "804:6:0",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 99,
+                      "src": "787:23:0",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_NFTOption_$40_memory_ptr",
+                        "typeString": "struct PriviNFTBuying.NFTOption"
+                      },
+                      "typeName": {
+                        "id": 72,
+                        "nodeType": "UserDefinedTypeName",
+                        "pathNode": {
+                          "id": 71,
+                          "name": "NFTOption",
+                          "nodeType": "IdentifierPath",
+                          "referencedDeclaration": 40,
+                          "src": "787:9:0"
+                        },
+                        "referencedDeclaration": 40,
+                        "src": "787:9:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
+                          "typeString": "struct PriviNFTBuying.NFTOption"
+                        }
+                      },
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 82,
+                  "initialValue": {
                     "arguments": [
                       {
                         "expression": {
-                          "id": 72,
+                          "id": 75,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 4294967281,
-                          "src": "771:3:0",
+                          "src": "823:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 73,
+                        "id": 76,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
-                        "src": "771:10:0",
+                        "src": "823:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
-                        }
-                      },
-                      {
-                        "id": 74,
-                        "name": "nft",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 53,
-                        "src": "783:3:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_address",
-                          "typeString": "address"
-                        }
-                      },
-                      {
-                        "id": 75,
-                        "name": "expiry",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 55,
-                        "src": "788:6:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        }
-                      },
-                      {
-                        "id": 76,
-                        "name": "price",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 57,
-                        "src": "796:5:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
                         }
                       },
                       {
                         "id": 77,
-                        "name": "pct",
+                        "name": "nft",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 59,
-                        "src": "803:3:0",
+                        "referencedDeclaration": 53,
+                        "src": "835:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 78,
+                        "name": "expiry",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 55,
+                        "src": "840:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
                       {
-                        "id": 78,
-                        "name": "id",
+                        "id": 79,
+                        "name": "pct",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 59,
+                        "src": "848:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 80,
+                        "name": "optionID",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 62,
-                        "src": "808:2:0",
+                        "src": "853:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 74,
+                      "name": "NFTOption",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 40,
+                      "src": "813:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_NFTOption_$40_storage_ptr_$",
+                        "typeString": "type(struct PriviNFTBuying.NFTOption storage pointer)"
+                      }
+                    },
+                    "id": 81,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "813:49:0",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_memory_ptr",
+                      "typeString": "struct PriviNFTBuying.NFTOption memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "787:75:0"
+                },
+                {
+                  "expression": {
+                    "id": 87,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "baseExpression": {
+                        "id": 83,
+                        "name": "options",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 47,
+                        "src": "868:7:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_NFTOption_$40_storage_$",
+                          "typeString": "mapping(uint256 => struct PriviNFTBuying.NFTOption storage ref)"
+                        }
+                      },
+                      "id": 85,
+                      "indexExpression": {
+                        "id": 84,
+                        "name": "optionID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 62,
+                        "src": "876:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "868:17:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_NFTOption_$40_storage",
+                        "typeString": "struct PriviNFTBuying.NFTOption storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "id": 86,
+                      "name": "option",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 73,
+                      "src": "888:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_NFTOption_$40_memory_ptr",
+                        "typeString": "struct PriviNFTBuying.NFTOption memory"
+                      }
+                    },
+                    "src": "868:26:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_storage",
+                      "typeString": "struct PriviNFTBuying.NFTOption storage ref"
+                    }
+                  },
+                  "id": 88,
+                  "nodeType": "ExpressionStatement",
+                  "src": "868:26:0"
+                },
+                {
+                  "eventCall": {
+                    "arguments": [
+                      {
+                        "expression": {
+                          "id": 90,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4294967281,
+                          "src": "919:3:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 91,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "src": "919:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 92,
+                        "name": "nft",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 53,
+                        "src": "931:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 93,
+                        "name": "expiry",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 55,
+                        "src": "936:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 94,
+                        "name": "price",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 57,
+                        "src": "944:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 95,
+                        "name": "pct",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 59,
+                        "src": "951:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 96,
+                        "name": "optionID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 62,
+                        "src": "956:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2462,18 +2700,18 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 71,
+                      "id": 89,
                       "name": "OptionCreated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 15,
-                      "src": "757:13:0",
+                      "src": "905:13:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
                         "typeString": "function (address,address,uint256,uint256,uint256,uint256)"
                       }
                     },
-                    "id": 79,
+                    "id": 97,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2481,26 +2719,26 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "757:54:0",
+                    "src": "905:60:0",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 80,
+                  "id": 98,
                   "nodeType": "EmitStatement",
-                  "src": "752:59:0"
+                  "src": "900:65:0"
                 }
               ]
             },
             "functionSelector": "0cbca658",
-            "id": 82,
+            "id": 100,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "createOption",
-            "nameLocation": "593:12:0",
+            "nameLocation": "616:12:0",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 60,
@@ -2511,10 +2749,10 @@
                   "id": 53,
                   "mutability": "mutable",
                   "name": "nft",
-                  "nameLocation": "619:3:0",
+                  "nameLocation": "642:3:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "611:11:0",
+                  "scope": 100,
+                  "src": "634:11:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2525,7 +2763,7 @@
                     "id": 52,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "611:7:0",
+                    "src": "634:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2539,10 +2777,10 @@
                   "id": 55,
                   "mutability": "mutable",
                   "name": "expiry",
-                  "nameLocation": "636:6:0",
+                  "nameLocation": "659:6:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "628:14:0",
+                  "scope": 100,
+                  "src": "651:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2553,7 +2791,7 @@
                     "id": 54,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "628:7:0",
+                    "src": "651:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2566,10 +2804,10 @@
                   "id": 57,
                   "mutability": "mutable",
                   "name": "price",
-                  "nameLocation": "656:5:0",
+                  "nameLocation": "679:5:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "648:13:0",
+                  "scope": 100,
+                  "src": "671:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2580,7 +2818,7 @@
                     "id": 56,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "648:7:0",
+                    "src": "671:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2593,10 +2831,10 @@
                   "id": 59,
                   "mutability": "mutable",
                   "name": "pct",
-                  "nameLocation": "675:3:0",
+                  "nameLocation": "698:3:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "667:11:0",
+                  "scope": 100,
+                  "src": "690:11:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2607,7 +2845,7 @@
                     "id": 58,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "667:7:0",
+                    "src": "690:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2616,7 +2854,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "605:77:0"
+              "src": "628:77:0"
             },
             "returnParameters": {
               "id": 63,
@@ -2626,11 +2864,11 @@
                   "constant": false,
                   "id": 62,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "709:2:0",
+                  "name": "optionID",
+                  "nameLocation": "732:8:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "701:10:0",
+                  "scope": 100,
+                  "src": "724:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2641,7 +2879,7 @@
                     "id": 61,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "701:7:0",
+                    "src": "724:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2650,42 +2888,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "700:12:0"
+              "src": "723:18:0"
             },
-            "scope": 99,
-            "src": "584:232:0",
+            "scope": 130,
+            "src": "607:363:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "body": {
-              "id": 89,
+              "id": 107,
               "nodeType": "Block",
-              "src": "896:6:0",
+              "src": "1056:6:0",
               "statements": []
             },
             "functionSelector": "de6bf635",
-            "id": 90,
+            "id": 108,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "cancelOption",
-            "nameLocation": "831:12:0",
+            "nameLocation": "985:12:0",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 85,
+              "id": 103,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 84,
+                  "id": 102,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "857:2:0",
+                  "name": "optionID",
+                  "nameLocation": "1011:8:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 90,
-                  "src": "849:10:0",
+                  "scope": 108,
+                  "src": "1003:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2693,10 +2931,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 83,
+                    "id": 101,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "849:7:0",
+                    "src": "1003:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2705,21 +2943,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "843:20:0"
+              "src": "997:26:0"
             },
             "returnParameters": {
-              "id": 88,
+              "id": 106,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 87,
+                  "id": 105,
                   "mutability": "mutable",
                   "name": "success",
-                  "nameLocation": "887:7:0",
+                  "nameLocation": "1047:7:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 90,
-                  "src": "882:12:0",
+                  "scope": 108,
+                  "src": "1042:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2727,10 +2965,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 86,
+                    "id": 104,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "882:4:0",
+                    "src": "1042:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2739,42 +2977,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "881:14:0"
+              "src": "1041:14:0"
             },
-            "scope": 99,
-            "src": "822:80:0",
+            "scope": 130,
+            "src": "976:86:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "body": {
-              "id": 97,
+              "id": 115,
               "nodeType": "Block",
-              "src": "977:6:0",
+              "src": "1143:6:0",
               "statements": []
             },
             "functionSelector": "fba225b9",
-            "id": 98,
+            "id": 116,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "buyOption",
-            "nameLocation": "915:9:0",
+            "nameLocation": "1075:9:0",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 93,
+              "id": 111,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 92,
+                  "id": 110,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "938:2:0",
+                  "name": "optionID",
+                  "nameLocation": "1098:8:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 98,
-                  "src": "930:10:0",
+                  "scope": 116,
+                  "src": "1090:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2782,10 +3020,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 91,
+                    "id": 109,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "930:7:0",
+                    "src": "1090:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2794,21 +3032,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "924:20:0"
+              "src": "1084:26:0"
             },
             "returnParameters": {
-              "id": 96,
+              "id": 114,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 95,
+                  "id": 113,
                   "mutability": "mutable",
                   "name": "success",
-                  "nameLocation": "968:7:0",
+                  "nameLocation": "1134:7:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 98,
-                  "src": "963:12:0",
+                  "scope": 116,
+                  "src": "1129:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2816,10 +3054,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 94,
+                    "id": 112,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "963:4:0",
+                    "src": "1129:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2828,30 +3066,169 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "962:14:0"
+              "src": "1128:14:0"
             },
-            "scope": 99,
-            "src": "906:77:0",
+            "scope": 130,
+            "src": "1066:83:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 128,
+              "nodeType": "Block",
+              "src": "1227:35:0",
+              "statements": [
+                {
+                  "expression": {
+                    "baseExpression": {
+                      "id": 124,
+                      "name": "options",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 47,
+                      "src": "1240:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_NFTOption_$40_storage_$",
+                        "typeString": "mapping(uint256 => struct PriviNFTBuying.NFTOption storage ref)"
+                      }
+                    },
+                    "id": 126,
+                    "indexExpression": {
+                      "id": 125,
+                      "name": "optionID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 118,
+                      "src": "1248:8:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1240:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_storage",
+                      "typeString": "struct PriviNFTBuying.NFTOption storage ref"
+                    }
+                  },
+                  "functionReturnParameters": 123,
+                  "id": 127,
+                  "nodeType": "Return",
+                  "src": "1233:24:0"
+                }
+              ]
+            },
+            "id": 129,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_getOption",
+            "nameLocation": "1162:10:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 119,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 118,
+                  "mutability": "mutable",
+                  "name": "optionID",
+                  "nameLocation": "1181:8:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 129,
+                  "src": "1173:16:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 117,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1173:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1172:18:0"
+            },
+            "returnParameters": {
+              "id": 123,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 122,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 129,
+                  "src": "1208:17:0",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
+                    "typeString": "struct PriviNFTBuying.NFTOption"
+                  },
+                  "typeName": {
+                    "id": 121,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 120,
+                      "name": "NFTOption",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 40,
+                      "src": "1208:9:0"
+                    },
+                    "referencedDeclaration": 40,
+                    "src": "1208:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
+                      "typeString": "struct PriviNFTBuying.NFTOption"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1207:19:0"
+            },
+            "scope": 130,
+            "src": "1153:109:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "private"
           }
         ],
-        "scope": 100,
-        "src": "65:920:0",
+        "scope": 131,
+        "src": "65:1199:0",
         "usedErrors": []
       }
     ],
-    "src": "32:954:0"
+    "src": "32:1233:0"
   },
   "legacyAST": {
     "absolutePath": "project:/contracts/PriviNFTBuying.sol",
     "exportedSymbols": {
       "PriviNFTBuying": [
-        99
+        130
       ]
     },
-    "id": 100,
+    "id": 131,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
@@ -2876,9 +3253,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 99,
+        "id": 130,
         "linearizedBaseContracts": [
-          99
+          130
         ],
         "name": "PriviNFTBuying",
         "nameLocation": "74:14:0",
@@ -3041,11 +3418,11 @@
                   "id": 13,
                   "indexed": false,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "218:2:0",
+                  "name": "optionID",
+                  "nameLocation": "218:8:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 15,
-                  "src": "210:10:0",
+                  "src": "210:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3065,15 +3442,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "112:112:0"
+              "src": "112:118:0"
             },
-            "src": "93:132:0"
+            "src": "93:138:0"
           },
           {
             "anonymous": false,
             "id": 21,
             "name": "OptionCanceled",
-            "nameLocation": "235:14:0",
+            "nameLocation": "241:14:0",
             "nodeType": "EventDefinition",
             "parameters": {
               "id": 20,
@@ -3085,10 +3462,10 @@
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "owner",
-                  "nameLocation": "263:5:0",
+                  "nameLocation": "269:5:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 21,
-                  "src": "255:13:0",
+                  "src": "261:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3099,7 +3476,7 @@
                     "id": 16,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "255:7:0",
+                    "src": "261:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3113,11 +3490,11 @@
                   "id": 19,
                   "indexed": false,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "282:2:0",
+                  "name": "optionID",
+                  "nameLocation": "288:8:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 21,
-                  "src": "274:10:0",
+                  "src": "280:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3128,7 +3505,7 @@
                     "id": 18,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "274:7:0",
+                    "src": "280:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3137,15 +3514,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "249:39:0"
+              "src": "255:45:0"
             },
-            "src": "229:60:0"
+            "src": "235:66:0"
           },
           {
             "anonymous": false,
             "id": 29,
             "name": "OptionSold",
-            "nameLocation": "299:10:0",
+            "nameLocation": "311:10:0",
             "nodeType": "EventDefinition",
             "parameters": {
               "id": 28,
@@ -3157,10 +3534,10 @@
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "owner",
-                  "nameLocation": "323:5:0",
+                  "nameLocation": "335:5:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 29,
-                  "src": "315:13:0",
+                  "src": "327:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3171,7 +3548,7 @@
                     "id": 22,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "315:7:0",
+                    "src": "327:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3186,10 +3563,10 @@
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "buyer",
-                  "nameLocation": "342:5:0",
+                  "nameLocation": "354:5:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 29,
-                  "src": "334:13:0",
+                  "src": "346:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3200,7 +3577,7 @@
                     "id": 24,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "334:7:0",
+                    "src": "346:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3214,11 +3591,11 @@
                   "id": 27,
                   "indexed": false,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "361:2:0",
+                  "name": "optionID",
+                  "nameLocation": "373:8:0",
                   "nodeType": "VariableDeclaration",
                   "scope": 29,
-                  "src": "353:10:0",
+                  "src": "365:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3229,7 +3606,7 @@
                     "id": 26,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "353:7:0",
+                    "src": "365:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3238,9 +3615,9 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "309:58:0"
+              "src": "321:64:0"
             },
-            "src": "293:75:0"
+            "src": "305:81:0"
           },
           {
             "canonicalName": "PriviNFTBuying.NFTOption",
@@ -3251,10 +3628,10 @@
                 "id": 31,
                 "mutability": "mutable",
                 "name": "owner",
-                "nameLocation": "405:5:0",
+                "nameLocation": "423:5:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "397:13:0",
+                "src": "415:13:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3265,7 +3642,7 @@
                   "id": 30,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "397:7:0",
+                  "src": "415:7:0",
                   "stateMutability": "nonpayable",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
@@ -3279,10 +3656,10 @@
                 "id": 33,
                 "mutability": "mutable",
                 "name": "nft",
-                "nameLocation": "424:3:0",
+                "nameLocation": "442:3:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "416:11:0",
+                "src": "434:11:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3293,7 +3670,7 @@
                   "id": 32,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "416:7:0",
+                  "src": "434:7:0",
                   "stateMutability": "nonpayable",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
@@ -3307,10 +3684,10 @@
                 "id": 35,
                 "mutability": "mutable",
                 "name": "expiry",
-                "nameLocation": "441:6:0",
+                "nameLocation": "459:6:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "433:14:0",
+                "src": "451:14:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3321,7 +3698,7 @@
                   "id": 34,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "433:7:0",
+                  "src": "451:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -3334,10 +3711,10 @@
                 "id": 37,
                 "mutability": "mutable",
                 "name": "pct",
-                "nameLocation": "461:3:0",
+                "nameLocation": "479:3:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "453:11:0",
+                "src": "471:11:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3348,7 +3725,7 @@
                   "id": 36,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "453:7:0",
+                  "src": "471:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -3360,11 +3737,11 @@
                 "constant": false,
                 "id": 39,
                 "mutability": "mutable",
-                "name": "id",
-                "nameLocation": "478:2:0",
+                "name": "optionID",
+                "nameLocation": "496:8:0",
                 "nodeType": "VariableDeclaration",
                 "scope": 40,
-                "src": "470:10:0",
+                "src": "488:16:0",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -3375,7 +3752,7 @@
                   "id": 38,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "470:7:0",
+                  "src": "488:7:0",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -3385,10 +3762,10 @@
               }
             ],
             "name": "NFTOption",
-            "nameLocation": "381:9:0",
+            "nameLocation": "399:9:0",
             "nodeType": "StructDefinition",
-            "scope": 99,
-            "src": "374:111:0",
+            "scope": 130,
+            "src": "392:117:0",
             "visibility": "public"
           },
           {
@@ -3396,10 +3773,10 @@
             "id": 42,
             "mutability": "mutable",
             "name": "counter",
-            "nameLocation": "498:7:0",
+            "nameLocation": "521:7:0",
             "nodeType": "VariableDeclaration",
-            "scope": 99,
-            "src": "490:15:0",
+            "scope": 130,
+            "src": "513:15:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -3410,7 +3787,7 @@
               "id": 41,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "490:7:0",
+              "src": "513:7:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -3423,10 +3800,10 @@
             "id": 47,
             "mutability": "mutable",
             "name": "options",
-            "nameLocation": "540:7:0",
+            "nameLocation": "563:7:0",
             "nodeType": "VariableDeclaration",
-            "scope": 99,
-            "src": "510:37:0",
+            "scope": 130,
+            "src": "533:37:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -3439,14 +3816,14 @@
                 "id": 43,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "518:7:0",
+                "src": "541:7:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "510:29:0",
+              "src": "533:29:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_NFTOption_$40_storage_$",
                 "typeString": "mapping(uint256 => struct PriviNFTBuying.NFTOption)"
@@ -3459,10 +3836,10 @@
                   "name": "NFTOption",
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 40,
-                  "src": "529:9:0"
+                  "src": "552:9:0"
                 },
                 "referencedDeclaration": 40,
-                "src": "529:9:0",
+                "src": "552:9:0",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
                   "typeString": "struct PriviNFTBuying.NFTOption"
@@ -3475,7 +3852,7 @@
             "body": {
               "id": 50,
               "nodeType": "Block",
-              "src": "573:5:0",
+              "src": "596:5:0",
               "statements": []
             },
             "id": 51,
@@ -3489,25 +3866,25 @@
               "id": 48,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "563:2:0"
+              "src": "586:2:0"
             },
             "returnParameters": {
               "id": 49,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "573:0:0"
+              "src": "596:0:0"
             },
-            "scope": 99,
-            "src": "552:26:0",
+            "scope": 130,
+            "src": "575:26:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 81,
+              "id": 99,
               "nodeType": "Block",
-              "src": "713:103:0",
+              "src": "742:228:0",
               "statements": [
                 {
                   "expression": {
@@ -3518,11 +3895,11 @@
                     "lValueRequested": false,
                     "leftHandSide": {
                       "id": 64,
-                      "name": "id",
+                      "name": "optionID",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 62,
-                      "src": "719:2:0",
+                      "src": "748:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -3536,13 +3913,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 42,
-                      "src": "724:7:0",
+                      "src": "759:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "719:12:0",
+                    "src": "748:18:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3550,7 +3927,7 @@
                   },
                   "id": 67,
                   "nodeType": "ExpressionStatement",
-                  "src": "719:12:0"
+                  "src": "748:18:0"
                 },
                 {
                   "expression": {
@@ -3562,14 +3939,14 @@
                     "nodeType": "UnaryOperation",
                     "operator": "++",
                     "prefix": false,
-                    "src": "737:9:0",
+                    "src": "772:9:0",
                     "subExpression": {
                       "id": 68,
                       "name": "counter",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 42,
-                      "src": "737:7:0",
+                      "src": "772:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -3582,92 +3959,330 @@
                   },
                   "id": 70,
                   "nodeType": "ExpressionStatement",
-                  "src": "737:9:0"
+                  "src": "772:9:0"
                 },
                 {
-                  "eventCall": {
+                  "assignments": [
+                    73
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 73,
+                      "mutability": "mutable",
+                      "name": "option",
+                      "nameLocation": "804:6:0",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 99,
+                      "src": "787:23:0",
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_NFTOption_$40_memory_ptr",
+                        "typeString": "struct PriviNFTBuying.NFTOption"
+                      },
+                      "typeName": {
+                        "id": 72,
+                        "nodeType": "UserDefinedTypeName",
+                        "pathNode": {
+                          "id": 71,
+                          "name": "NFTOption",
+                          "nodeType": "IdentifierPath",
+                          "referencedDeclaration": 40,
+                          "src": "787:9:0"
+                        },
+                        "referencedDeclaration": 40,
+                        "src": "787:9:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
+                          "typeString": "struct PriviNFTBuying.NFTOption"
+                        }
+                      },
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 82,
+                  "initialValue": {
                     "arguments": [
                       {
                         "expression": {
-                          "id": 72,
+                          "id": 75,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 4294967281,
-                          "src": "771:3:0",
+                          "src": "823:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 73,
+                        "id": 76,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
-                        "src": "771:10:0",
+                        "src": "823:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
-                        }
-                      },
-                      {
-                        "id": 74,
-                        "name": "nft",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 53,
-                        "src": "783:3:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_address",
-                          "typeString": "address"
-                        }
-                      },
-                      {
-                        "id": 75,
-                        "name": "expiry",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 55,
-                        "src": "788:6:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        }
-                      },
-                      {
-                        "id": 76,
-                        "name": "price",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 57,
-                        "src": "796:5:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
                         }
                       },
                       {
                         "id": 77,
-                        "name": "pct",
+                        "name": "nft",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 59,
-                        "src": "803:3:0",
+                        "referencedDeclaration": 53,
+                        "src": "835:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 78,
+                        "name": "expiry",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 55,
+                        "src": "840:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
                       {
-                        "id": 78,
-                        "name": "id",
+                        "id": 79,
+                        "name": "pct",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 59,
+                        "src": "848:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 80,
+                        "name": "optionID",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 62,
-                        "src": "808:2:0",
+                        "src": "853:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 74,
+                      "name": "NFTOption",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 40,
+                      "src": "813:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_struct$_NFTOption_$40_storage_ptr_$",
+                        "typeString": "type(struct PriviNFTBuying.NFTOption storage pointer)"
+                      }
+                    },
+                    "id": 81,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "structConstructorCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "813:49:0",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_memory_ptr",
+                      "typeString": "struct PriviNFTBuying.NFTOption memory"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "787:75:0"
+                },
+                {
+                  "expression": {
+                    "id": 87,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "baseExpression": {
+                        "id": 83,
+                        "name": "options",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 47,
+                        "src": "868:7:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_NFTOption_$40_storage_$",
+                          "typeString": "mapping(uint256 => struct PriviNFTBuying.NFTOption storage ref)"
+                        }
+                      },
+                      "id": 85,
+                      "indexExpression": {
+                        "id": 84,
+                        "name": "optionID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 62,
+                        "src": "876:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "868:17:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_NFTOption_$40_storage",
+                        "typeString": "struct PriviNFTBuying.NFTOption storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "id": 86,
+                      "name": "option",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 73,
+                      "src": "888:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_NFTOption_$40_memory_ptr",
+                        "typeString": "struct PriviNFTBuying.NFTOption memory"
+                      }
+                    },
+                    "src": "868:26:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_storage",
+                      "typeString": "struct PriviNFTBuying.NFTOption storage ref"
+                    }
+                  },
+                  "id": 88,
+                  "nodeType": "ExpressionStatement",
+                  "src": "868:26:0"
+                },
+                {
+                  "eventCall": {
+                    "arguments": [
+                      {
+                        "expression": {
+                          "id": 90,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4294967281,
+                          "src": "919:3:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 91,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "src": "919:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 92,
+                        "name": "nft",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 53,
+                        "src": "931:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "id": 93,
+                        "name": "expiry",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 55,
+                        "src": "936:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 94,
+                        "name": "price",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 57,
+                        "src": "944:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 95,
+                        "name": "pct",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 59,
+                        "src": "951:3:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "id": 96,
+                        "name": "optionID",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 62,
+                        "src": "956:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3701,18 +4316,18 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 71,
+                      "id": 89,
                       "name": "OptionCreated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 15,
-                      "src": "757:13:0",
+                      "src": "905:13:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$__$",
                         "typeString": "function (address,address,uint256,uint256,uint256,uint256)"
                       }
                     },
-                    "id": 79,
+                    "id": 97,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3720,26 +4335,26 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "757:54:0",
+                    "src": "905:60:0",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 80,
+                  "id": 98,
                   "nodeType": "EmitStatement",
-                  "src": "752:59:0"
+                  "src": "900:65:0"
                 }
               ]
             },
             "functionSelector": "0cbca658",
-            "id": 82,
+            "id": 100,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "createOption",
-            "nameLocation": "593:12:0",
+            "nameLocation": "616:12:0",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 60,
@@ -3750,10 +4365,10 @@
                   "id": 53,
                   "mutability": "mutable",
                   "name": "nft",
-                  "nameLocation": "619:3:0",
+                  "nameLocation": "642:3:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "611:11:0",
+                  "scope": 100,
+                  "src": "634:11:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3764,7 +4379,7 @@
                     "id": 52,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "611:7:0",
+                    "src": "634:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3778,10 +4393,10 @@
                   "id": 55,
                   "mutability": "mutable",
                   "name": "expiry",
-                  "nameLocation": "636:6:0",
+                  "nameLocation": "659:6:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "628:14:0",
+                  "scope": 100,
+                  "src": "651:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3792,7 +4407,7 @@
                     "id": 54,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "628:7:0",
+                    "src": "651:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3805,10 +4420,10 @@
                   "id": 57,
                   "mutability": "mutable",
                   "name": "price",
-                  "nameLocation": "656:5:0",
+                  "nameLocation": "679:5:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "648:13:0",
+                  "scope": 100,
+                  "src": "671:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3819,7 +4434,7 @@
                     "id": 56,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "648:7:0",
+                    "src": "671:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3832,10 +4447,10 @@
                   "id": 59,
                   "mutability": "mutable",
                   "name": "pct",
-                  "nameLocation": "675:3:0",
+                  "nameLocation": "698:3:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "667:11:0",
+                  "scope": 100,
+                  "src": "690:11:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3846,7 +4461,7 @@
                     "id": 58,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "667:7:0",
+                    "src": "690:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3855,7 +4470,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "605:77:0"
+              "src": "628:77:0"
             },
             "returnParameters": {
               "id": 63,
@@ -3865,11 +4480,11 @@
                   "constant": false,
                   "id": 62,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "709:2:0",
+                  "name": "optionID",
+                  "nameLocation": "732:8:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "701:10:0",
+                  "scope": 100,
+                  "src": "724:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3880,7 +4495,7 @@
                     "id": 61,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "701:7:0",
+                    "src": "724:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3889,42 +4504,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "700:12:0"
+              "src": "723:18:0"
             },
-            "scope": 99,
-            "src": "584:232:0",
+            "scope": 130,
+            "src": "607:363:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "body": {
-              "id": 89,
+              "id": 107,
               "nodeType": "Block",
-              "src": "896:6:0",
+              "src": "1056:6:0",
               "statements": []
             },
             "functionSelector": "de6bf635",
-            "id": 90,
+            "id": 108,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "cancelOption",
-            "nameLocation": "831:12:0",
+            "nameLocation": "985:12:0",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 85,
+              "id": 103,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 84,
+                  "id": 102,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "857:2:0",
+                  "name": "optionID",
+                  "nameLocation": "1011:8:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 90,
-                  "src": "849:10:0",
+                  "scope": 108,
+                  "src": "1003:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3932,10 +4547,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 83,
+                    "id": 101,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "849:7:0",
+                    "src": "1003:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3944,21 +4559,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "843:20:0"
+              "src": "997:26:0"
             },
             "returnParameters": {
-              "id": 88,
+              "id": 106,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 87,
+                  "id": 105,
                   "mutability": "mutable",
                   "name": "success",
-                  "nameLocation": "887:7:0",
+                  "nameLocation": "1047:7:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 90,
-                  "src": "882:12:0",
+                  "scope": 108,
+                  "src": "1042:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3966,10 +4581,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 86,
+                    "id": 104,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "882:4:0",
+                    "src": "1042:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -3978,42 +4593,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "881:14:0"
+              "src": "1041:14:0"
             },
-            "scope": 99,
-            "src": "822:80:0",
+            "scope": 130,
+            "src": "976:86:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "body": {
-              "id": 97,
+              "id": 115,
               "nodeType": "Block",
-              "src": "977:6:0",
+              "src": "1143:6:0",
               "statements": []
             },
             "functionSelector": "fba225b9",
-            "id": 98,
+            "id": 116,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "buyOption",
-            "nameLocation": "915:9:0",
+            "nameLocation": "1075:9:0",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 93,
+              "id": 111,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 92,
+                  "id": 110,
                   "mutability": "mutable",
-                  "name": "id",
-                  "nameLocation": "938:2:0",
+                  "name": "optionID",
+                  "nameLocation": "1098:8:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 98,
-                  "src": "930:10:0",
+                  "scope": 116,
+                  "src": "1090:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4021,10 +4636,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 91,
+                    "id": 109,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "930:7:0",
+                    "src": "1090:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -4033,21 +4648,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "924:20:0"
+              "src": "1084:26:0"
             },
             "returnParameters": {
-              "id": 96,
+              "id": 114,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 95,
+                  "id": 113,
                   "mutability": "mutable",
                   "name": "success",
-                  "nameLocation": "968:7:0",
+                  "nameLocation": "1134:7:0",
                   "nodeType": "VariableDeclaration",
-                  "scope": 98,
-                  "src": "963:12:0",
+                  "scope": 116,
+                  "src": "1129:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -4055,10 +4670,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 94,
+                    "id": 112,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "963:4:0",
+                    "src": "1129:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -4067,21 +4682,160 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "962:14:0"
+              "src": "1128:14:0"
             },
-            "scope": 99,
-            "src": "906:77:0",
+            "scope": 130,
+            "src": "1066:83:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 128,
+              "nodeType": "Block",
+              "src": "1227:35:0",
+              "statements": [
+                {
+                  "expression": {
+                    "baseExpression": {
+                      "id": 124,
+                      "name": "options",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 47,
+                      "src": "1240:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_NFTOption_$40_storage_$",
+                        "typeString": "mapping(uint256 => struct PriviNFTBuying.NFTOption storage ref)"
+                      }
+                    },
+                    "id": 126,
+                    "indexExpression": {
+                      "id": 125,
+                      "name": "optionID",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 118,
+                      "src": "1248:8:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "1240:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_storage",
+                      "typeString": "struct PriviNFTBuying.NFTOption storage ref"
+                    }
+                  },
+                  "functionReturnParameters": 123,
+                  "id": 127,
+                  "nodeType": "Return",
+                  "src": "1233:24:0"
+                }
+              ]
+            },
+            "id": 129,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_getOption",
+            "nameLocation": "1162:10:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 119,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 118,
+                  "mutability": "mutable",
+                  "name": "optionID",
+                  "nameLocation": "1181:8:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 129,
+                  "src": "1173:16:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 117,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1173:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1172:18:0"
+            },
+            "returnParameters": {
+              "id": 123,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 122,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 129,
+                  "src": "1208:17:0",
+                  "stateVariable": false,
+                  "storageLocation": "storage",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
+                    "typeString": "struct PriviNFTBuying.NFTOption"
+                  },
+                  "typeName": {
+                    "id": 121,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 120,
+                      "name": "NFTOption",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 40,
+                      "src": "1208:9:0"
+                    },
+                    "referencedDeclaration": 40,
+                    "src": "1208:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_NFTOption_$40_storage_ptr",
+                      "typeString": "struct PriviNFTBuying.NFTOption"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1207:19:0"
+            },
+            "scope": 130,
+            "src": "1153:109:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "private"
           }
         ],
-        "scope": 100,
-        "src": "65:920:0",
+        "scope": 131,
+        "src": "65:1199:0",
         "usedErrors": []
       }
     ],
-    "src": "32:954:0"
+    "src": "32:1233:0"
   },
   "compiler": {
     "name": "solc",
@@ -4089,7 +4843,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-10-27T09:03:25.873Z",
+  "updatedAt": "2021-10-27T09:16:11.241Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
