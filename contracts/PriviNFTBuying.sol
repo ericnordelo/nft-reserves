@@ -8,6 +8,21 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
 
+/*
+- person holds an NFT, may want to sell it. Set it into sale with conditions. The NFT is locked
+  Future time when this will be sold
+  Price at which it will be sold
+  Pct of collateral required by the buyer to get this option of buying
+- buyers can come there and make accept that by giving the collateral and adquiring that option of buying it. Lets make them receive an NFT which will be that option to buying and can be tradeable
+- buyers can make their counterproposal, with the 3 parameters 1,2,3 before.
+- owner can withdraw the NFT if not buyer came yet.
+- owner can withdraw and use the collateral whenever he wants.
+- owner can recover the NFT during that period by repaying the collateral he withdraw + some fee as penalty
+- buyer can deposit collateral with different tokens (for example with ETH, DAI.. or maybe even JOTs)
+- buyer needs to deposit more collateral if the LTV goes below the pct collateral required
+- If it goes bellow, he gots liquidated and lose the option off buying.
+*/
+
 contract PriviNFTBuying {
   event OptionCreated(
     address owner,
@@ -116,15 +131,24 @@ contract PriviNFTBuying {
     address token,
     uint256 amount
   ) external {
+    require(amount > 0, "INSUFFICIENT_INPUT_AMOUNT");
     IERC20(token).transferFrom(msg.sender, admin, amount);
     reserves[msg.sender][token] = reserves[msg.sender][token] + amount;
+
+    emit Depoist(msg.sender, token, amount);
   }
 
   function withdraw(
     address token,
     uint256 amount
   ) external {
+    require(amount > 0, "INSUFFICIENT_INPUT_AMOUNT");
+
     require(reserves[msg.sender][token] >= amount, "Not enough asset");
+    IERC20(token).transferFrom(admin, msg.sender, amount);
+    reserves[msg.sender][token] = reserves[msg.sender][token] - amount;
+
+    emit Withdraw(msg.sender, token, amount);
   }
 
   function assign(
@@ -160,19 +184,4 @@ contract PriviNFTBuying {
     // not completed yet
     return IPriceOracle(priceOracle).price(token);
   }
-
-  /*
-  - person holds an NFT, may want to sell it. Set it into sale with conditions. The NFT is locked
-    Future time when this will be sold
-    Price at which it will be sold
-    Pct of collateral required by the buyer to get this option of buying
-  - buyers can come there and make accept that by giving the collateral and adquiring that option of buying it. Lets make them receive an NFT which will be that option to buying and can be tradeable
-  - buyers can make their counterproposal, with the 3 parameters 1,2,3 before.
-  - owner can withdraw the NFT if not buyer came yet.
-  - owner can withdraw and use the collateral whenever he wants.
-  - owner can recover the NFT during that period by repaying the collateral he withdraw + some fee as penalty
-  - buyer can deposit collateral with different tokens (for example with ETH, DAI.. or maybe even JOTs)
-  - buyer needs to deposit more collateral if the LTV goes below the pct collateral required
-  - If it goes bellow, he gots liquidated and lose the option off buying.
-  */
 }
