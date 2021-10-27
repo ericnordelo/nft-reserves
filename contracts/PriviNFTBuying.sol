@@ -6,6 +6,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {IPriceOracle} from "./interface/IPriceOracle.sol";
 
 contract PriviNFTBuying {
   event OptionCreated(
@@ -52,9 +53,10 @@ contract PriviNFTBuying {
   address[] tokens;
   address nftPool;
   address priceOracle;
+  address admin;
 
   mapping(uint256 => NFTOption) options;
-  mapping(address => mapping (address => uint256)) reserves
+  mapping(address => mapping (address => uint256)) reserves;
 
   constructor(
     address[] memory _tokens,
@@ -64,6 +66,7 @@ contract PriviNFTBuying {
     tokens = _tokens;
     nftPool = _nftPool;
     priceOracle = _priceOracle;
+    admin = address(this);
   }
   
   function createOption(
@@ -117,12 +120,15 @@ contract PriviNFTBuying {
     address token,
     uint256 amount
   ) external {
+    IERC20(token).transferFrom(msg.sender, admin, amount);
+    reserves[msg.sender][token] = reserves[msg.sender][token] + amount;
   }
 
   function withdrawToken(
     address token,
     uint256 amount
   ) external {
+    require(reserves[msg.sender][token] >= amount, "Not enough asset");
   }
 
   function assign(
@@ -135,7 +141,7 @@ contract PriviNFTBuying {
   }
 
   function totalAsset(
-
+    address user
   ) external {
 
   }
@@ -147,13 +153,12 @@ contract PriviNFTBuying {
   function _nftOwner(address nft) private returns (address) {
     // not completed yet
 
-    returns address(0);
+    return address(0);
   }
 
   function _tokenToUSD(address token) private returns (uint256) {
     // not completed yet
-
-    return 0;
+    return IPriceOracle(priceOracle).price(token);
   }
 
   /*
