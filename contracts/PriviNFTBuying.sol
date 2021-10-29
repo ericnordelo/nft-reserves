@@ -52,6 +52,12 @@ contract PriviNFTBuying {
     uint256 optionID,
     uint256 offerID
   );
+
+  event Assigned(
+    bool assigned,
+    uint256 optionID,
+    uint256 offerID
+  );
   
   event Deposit(
     address account,
@@ -71,6 +77,13 @@ contract PriviNFTBuying {
     uint256 expiry;
     uint256 pct;
     uint256 optionID;
+  }
+
+  struct Offer {
+    address buyer;
+    address owner;
+    uint256 optionID;
+    uint256 offerID;
   }
 
   uint256 counter;
@@ -109,7 +122,7 @@ contract PriviNFTBuying {
     counter++;
     NFTOption memory option = NFTOption(msg.sender, nft, expiry, pct, optionID);
     options[optionID] = option;
-    emit OptionCreated(msg.sender, nft, expiry, price, pct, optionID);
+    emit OOptionCreated(msg.sender, nft, expiry, price, pct, optionID);
   }
 
   function moidfyOption(
@@ -129,16 +142,22 @@ contract PriviNFTBuying {
     require(option.owner == msg.sender, "Not owner of option");
 
     delete options[optionID];
-    emit OptionCanceled(msg.sender, optionID);
+    emit OOptionCanceled(msg.sender, optionID);
   }
-
-  function buyOption(
+  
+  function createOffer(
     uint256 optionID
   ) external {
-    NFTOption storage option = _getOption(optionID);
-    require(option.owner != address(0), "No such option exists");
+  }
 
-    emit OptionSold(option.owner, msg.sender, optionID);
+  function acceptOffer(
+    uint256 offerID
+  ) external {
+  }
+
+  function assignOffer(
+    uint256 offerID
+  ) external {
   }
 
   function deposit(
@@ -149,7 +168,7 @@ contract PriviNFTBuying {
     IERC20(token).transferFrom(msg.sender, admin, amount);
     reserves[msg.sender][token] = reserves[msg.sender][token] + amount;
 
-    emit Depoist(msg.sender, token, amount);
+    emit Deposit(msg.sender, token, amount);
   }
 
   function withdraw(
@@ -163,11 +182,6 @@ contract PriviNFTBuying {
     reserves[msg.sender][token] = reserves[msg.sender][token] - amount;
 
     emit Withdraw(msg.sender, token, amount);
-  }
-
-  function assign(
-    uint256 optionID
-  ) external {
   }
 
   function recover(
