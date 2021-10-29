@@ -28,6 +28,7 @@ contract PriviNFTBuying {
     address owner,
     address nft,
     uint256 expiry,
+    address token,
     uint256 price,
     uint256 pct,
     uint256 optionID
@@ -43,23 +44,12 @@ contract PriviNFTBuying {
     address buyer,
     uint256 optionID
   );
-
-  event Depoist(
-    address owner,
-    address token,
-    uint256 amount
-  );
-
-  event Withdraw(
-    address owner,
-    address token,
-    uint256 amount
-  );
   
   struct NFTOption {
     address owner;
     address nft;
     uint256 expiry;
+    address token;
     uint256 pct;
     uint256 optionID;
   }
@@ -72,6 +62,7 @@ contract PriviNFTBuying {
 
   mapping(uint256 => NFTOption) options;
   mapping(address => mapping (address => uint256)) reserves;
+  mapping(address => bool) validToken;
 
   constructor(
     address[] memory _tokens,
@@ -82,6 +73,9 @@ contract PriviNFTBuying {
     nftPool = _nftPool;
     priceOracle = _priceOracle;
     admin = address(this);
+    for (uint i = 0; i < _tokens.length; i++) {
+        validToken[_tokens[i]] = true;
+    }
   }
   
   function createOption(
