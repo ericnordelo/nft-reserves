@@ -24,32 +24,51 @@ import {IPriceOracle} from "./interface/IPriceOracle.sol";
 */
 
 contract PriviNFTBuying {
-  event OptionCreated(
+  event OOptionCreated(
     address owner,
     address nft,
     uint256 expiry,
-    address token,
     uint256 price,
     uint256 pct,
     uint256 optionID
   );
 
-  event OptionCanceled(
+  event OOptionCanceled(
     address owner,
     uint256 optionID
   );
 
-  event OptionSold(
+  event BOfferCreated(
+    address buyer,
+    address token,
+    address price,
+    uint256 optionID,
+    uint256 offerID
+  );
+
+  event OOfferAccepted(
     address owner,
     address buyer,
-    uint256 optionID
+    uint256 optionID,
+    uint256 offerID
+  );
+  
+  event Deposit(
+    address account,
+    address token,
+    uint256 amount
+  );
+
+  event Withdraw(
+    address account,
+    address token,
+    uint256 amount
   );
   
   struct NFTOption {
     address owner;
     address nft;
     uint256 expiry;
-    address token;
     uint256 pct;
     uint256 optionID;
   }
@@ -81,6 +100,7 @@ contract PriviNFTBuying {
   function createOption(
     address nft,
     uint256 expiry,
+    address token,
     uint256 price,
     uint256 pct
   ) external returns (uint256 optionID) {
