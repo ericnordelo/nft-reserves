@@ -28,6 +28,7 @@ contract PriviNFTReserval {
     address owner,
     address nft,
     uint256 expiry,
+    address token,
     uint256 price,
     uint256 pct,
     uint256 reservalID
@@ -75,6 +76,8 @@ contract PriviNFTReserval {
     address owner;
     address nft;
     uint256 expiry;
+    address token;
+    uint256 price;
     uint256 pct;
     uint256 reservalID;
   }
@@ -120,18 +123,10 @@ contract PriviNFTReserval {
     require(msg.sender == _nftOwner(nft), "Not Owner of NFT");
     reservalID = counter;
     counter++;
-    NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, pct, reservalID);
+    NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID);
     reservals[reservalID] = reserval;
-    emit OReservalCreated(msg.sender, nft, expiry, price, pct, reservalID);
-  }
-
-  function moidfyReserval(
-    uint256 reservalID,
-    address nft,
-    uint256 expiry,
-    uint256 price,
-    uint256 pct
-  ) external {
+    
+    emit OReservalCreated(msg.sender, nft, expiry, token, price, pct, reservalID);
   }
   
   function cancelReserval(
