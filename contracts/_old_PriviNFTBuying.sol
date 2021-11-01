@@ -9,22 +9,22 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
 
 /*
-- person holds an NFT, may want to sell it. Set it into sale with conditions. The NFT is locked
-  Future time when this will be sold
-  Price at which it will be sold
-  Pct of collateral required by the buyer to get this option of buying
-- buyers can come there and make accept that by giving the collateral and adquiring that option of buying it. Lets make them receive an NFT which will be that option to buying and can be tradeable
-- buyers can make their counterproposal, with the 3 parameters 1,2,3 before.
-- owner can withdraw the NFT if not buyer came yet.
-- owner can withdraw and use the collateral whenever he wants.
-- owner can recover the NFT during that period by repaying the collateral he withdraw + some fee as penalty
-- buyer can deposit collateral with different tokens (for example with ETH, DAI.. or maybe even JOTs)
-- buyer needs to deposit more collateral if the LTV goes below the pct collateral required
-- If it goes bellow, he gots liquidated and lose the option off buying.
+OWNER:
+-  Whitelist asset to be open to receive Reserval Offers. He may (start with his own initial offer). IMPORTANT: if the owner sets an offer you get only the approval of the Owner ffor the NFT to the contract but the NFT is NOT LOCKED at this stage
+-  Owner can remove from whitelist without any cost as long as no offer has been accepted first.
+-  Owner can accept an offer. At this stage NFT is locked on the contract
+-  Owner can withdraw collateral deposited by the buyer at any moment
+-  If owner wants to cancel the Reserval (Option), he needs to payback what he withdrawn +a fee
+BUYER:
+-  Buyer can set offers for whitelisted NFTs. IMPORTANT: the offer does not lock the collateraal of the buyer. It only gets the proposal for that toekns aand amoiunt to the contrract. For example if i propose 10K SHIB, I approve the contract but i do not lock them.
+-  Buyer can reserve NFT directly if the owner has some offer
+-  Buyer needs to keep a level of collateral. Otherwise can be liquidaated and lose it.
+-  If collateral goes below the ratio, buyer needs to deposit more collateral.
+-  At future (expiration) the buyer needs to pay the Reserve Price within a period of 5 days max. If not, he loses the option of buying
 */
 
 contract PriviNFTBuying {
-  event OptionCreated(
+  event OOptionCreated(
     address owner,
     address nft,
     uint256 expiry,
@@ -33,25 +33,40 @@ contract PriviNFTBuying {
     uint256 optionID
   );
 
-  event OptionCanceled(
+  event OOptionCanceled(
     address owner,
     uint256 optionID
   );
 
-  event OptionSold(
+  event BOfferCreated(
+    address buyer,
+    address token,
+    address price,
+    uint256 optionID,
+    uint256 offerID
+  );
+
+  event OOfferAccepted(
     address owner,
     address buyer,
-    uint256 optionID
+    uint256 optionID,
+    uint256 offerID
   );
 
-  event Depoist(
-    address owner,
+  event Assigned(
+    bool assigned,
+    uint256 optionID,
+    uint256 offerID
+  );
+  
+  event Deposit(
+    address account,
     address token,
     uint256 amount
   );
 
   event Withdraw(
-    address owner,
+    address account,
     address token,
     uint256 amount
   );
@@ -64,6 +79,13 @@ contract PriviNFTBuying {
     uint256 optionID;
   }
 
+  struct Offer {
+    address buyer;
+    address owner;
+    uint256 optionID;
+    uint256 offerID;
+  }
+
   uint256 counter;
   address[] tokens;
   address nftPool;
@@ -72,6 +94,7 @@ contract PriviNFTBuying {
 
   mapping(uint256 => NFTOption) options;
   mapping(address => mapping (address => uint256)) reserves;
+  mapping(address => bool) validToken;
 
   constructor(
     address[] memory _tokens,
@@ -82,11 +105,15 @@ contract PriviNFTBuying {
     nftPool = _nftPool;
     priceOracle = _priceOracle;
     admin = address(this);
+    for (uint i = 0; i < _tokens.length; i++) {
+        validToken[_tokens[i]] = true;
+    }
   }
   
   function createOption(
     address nft,
     uint256 expiry,
+    address token,
     uint256 price,
     uint256 pct
   ) external returns (uint256 optionID) {
@@ -95,7 +122,7 @@ contract PriviNFTBuying {
     counter++;
     NFTOption memory option = NFTOption(msg.sender, nft, expiry, pct, optionID);
     options[optionID] = option;
-    emit OptionCreated(msg.sender, nft, expiry, price, pct, optionID);
+    emit OOptionCreated(msg.sender, nft, expiry, price, pct, optionID);
   }
 
   function moidfyOption(
@@ -115,16 +142,22 @@ contract PriviNFTBuying {
     require(option.owner == msg.sender, "Not owner of option");
 
     delete options[optionID];
-    emit OptionCanceled(msg.sender, optionID);
+    emit OOptionCanceled(msg.sender, optionID);
   }
-
-  function buyOption(
+  
+  function createOffer(
     uint256 optionID
   ) external {
-    NFTOption storage option = _getOption(optionID);
-    require(option.owner != address(0), "No such option exists");
+  }
 
-    emit OptionSold(option.owner, msg.sender, optionID);
+  function acceptOffer(
+    uint256 offerID
+  ) external {
+  }
+
+  function assignOffer(
+    uint256 offerID
+  ) external {
   }
 
   function deposit(
@@ -135,7 +168,7 @@ contract PriviNFTBuying {
     IERC20(token).transferFrom(msg.sender, admin, amount);
     reserves[msg.sender][token] = reserves[msg.sender][token] + amount;
 
-    emit Depoist(msg.sender, token, amount);
+    emit Deposit(msg.sender, token, amount);
   }
 
   function withdraw(
@@ -149,11 +182,6 @@ contract PriviNFTBuying {
     reserves[msg.sender][token] = reserves[msg.sender][token] - amount;
 
     emit Withdraw(msg.sender, token, amount);
-  }
-
-  function assign(
-    uint256 optionID
-  ) external {
   }
 
   function recover(

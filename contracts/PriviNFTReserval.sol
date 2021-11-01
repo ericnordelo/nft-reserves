@@ -9,21 +9,21 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
 
 /*
-- person holds an NFT, may want to sell it. Set it into sale with conditions. The NFT is locked
-  Future time when this will be sold
-  Price at which it will be sold
-  Pct of collateral required by the buyer to get this option of buying
-- buyers can come there and make accept that by giving the collateral and adquiring that option of buying it. Lets make them receive an NFT which will be that option to buying and can be tradeable
-- buyers can make their counterproposal, with the 3 parameters 1,2,3 before.
-- owner can withdraw the NFT if not buyer came yet.
-- owner can withdraw and use the collateral whenever he wants.
-- owner can recover the NFT during that period by repaying the collateral he withdraw + some fee as penalty
-- buyer can deposit collateral with different tokens (for example with ETH, DAI.. or maybe even JOTs)
-- buyer needs to deposit more collateral if the LTV goes below the pct collateral required
-- If it goes bellow, he gots liquidated and lose the option off buying.
+OWNER:
+-  Whitelist asset to be open to receive Reserval Offers. He may (start with his own initial offer). IMPORTANT: if the owner sets an offer you get only the approval of the Owner ffor the NFT to the contract but the NFT is NOT LOCKED at this stage
+-  Owner can remove from whitelist without any cost as long as no offer has been accepted first.
+-  Owner can accept an offer. At this stage NFT is locked on the contract
+-  Owner can withdraw collateral deposited by the buyer at any moment
+-  If owner wants to cancel the Reserval (Option), he needs to payback what he withdrawn +a fee
+BUYER:
+-  Buyer can set offers for whitelisted NFTs. IMPORTANT: the offer does not lock the collateraal of the buyer. It only gets the proposal for that toekns aand amoiunt to the contrract. For example if i propose 10K SHIB, I approve the contract but i do not lock them.
+-  Buyer can reserve NFT directly if the owner has some offer
+-  Buyer needs to keep a level of collateral. Otherwise can be liquidaated and lose it.
+-  If collateral goes below the ratio, buyer needs to deposit more collateral.
+-  At future (expiration) the buyer needs to pay the Reserve Price within a period of 5 days max. If not, he loses the option of buying
 */
 
-contract PriviNFTBuying {
+contract PriviNFTReserval {
   event OOptionCreated(
     address owner,
     address nft,
