@@ -14,48 +14,48 @@ OWNER:
 -  Owner can remove from whitelist without any cost as long as no offer has been accepted first.
 -  Owner can accept an offer. At this stage NFT is locked on the contract
 -  Owner can withdraw collateral deposited by the buyer at any moment
--  If owner wants to cancel the Reserval (Option), he needs to payback what he withdrawn +a fee
+-  If owner wants to cancel the Reserval (Reserval), he needs to payback what he withdrawn +a fee
 BUYER:
 -  Buyer can set offers for whitelisted NFTs. IMPORTANT: the offer does not lock the collateraal of the buyer. It only gets the proposal for that toekns aand amoiunt to the contrract. For example if i propose 10K SHIB, I approve the contract but i do not lock them.
 -  Buyer can reserve NFT directly if the owner has some offer
 -  Buyer needs to keep a level of collateral. Otherwise can be liquidaated and lose it.
 -  If collateral goes below the ratio, buyer needs to deposit more collateral.
--  At future (expiration) the buyer needs to pay the Reserve Price within a period of 5 days max. If not, he loses the option of buying
+-  At future (expiration) the buyer needs to pay the Reserve Price within a period of 5 days max. If not, he loses the Reserval of buying
 */
 
 contract PriviNFTReserval {
-  event OOptionCreated(
+  event OReservalCreated(
     address owner,
     address nft,
     uint256 expiry,
     uint256 price,
     uint256 pct,
-    uint256 optionID
+    uint256 reservalID
   );
 
-  event OOptionCanceled(
+  event OReservalCanceled(
     address owner,
-    uint256 optionID
+    uint256 reservalID
   );
 
   event BOfferCreated(
     address buyer,
     address token,
     address price,
-    uint256 optionID,
+    uint256 reservalID,
     uint256 offerID
   );
 
   event OOfferAccepted(
     address owner,
     address buyer,
-    uint256 optionID,
+    uint256 reservalID,
     uint256 offerID
   );
 
   event Assigned(
     bool assigned,
-    uint256 optionID,
+    uint256 reservalID,
     uint256 offerID
   );
   
@@ -71,18 +71,18 @@ contract PriviNFTReserval {
     uint256 amount
   );
   
-  struct NFTOption {
+  struct NFTReserval {
     address owner;
     address nft;
     uint256 expiry;
     uint256 pct;
-    uint256 optionID;
+    uint256 reservalID;
   }
 
   struct Offer {
     address buyer;
     address owner;
-    uint256 optionID;
+    uint256 reservalID;
     uint256 offerID;
   }
 
@@ -92,7 +92,7 @@ contract PriviNFTReserval {
   address priceOracle;
   address admin;
 
-  mapping(uint256 => NFTOption) options;
+  mapping(uint256 => NFTReserval) reservals;
   mapping(address => mapping (address => uint256)) reserves;
   mapping(address => bool) validToken;
 
@@ -110,23 +110,23 @@ contract PriviNFTReserval {
     }
   }
   
-  function createOption(
+  function createReserval(
     address nft,
     uint256 expiry,
     address token,
     uint256 price,
     uint256 pct
-  ) external returns (uint256 optionID) {
+  ) external returns (uint256 reservalID) {
     require(msg.sender == _nftOwner(nft), "Not Owner of NFT");
-    optionID = counter;
+    reservalID = counter;
     counter++;
-    NFTOption memory option = NFTOption(msg.sender, nft, expiry, pct, optionID);
-    options[optionID] = option;
-    emit OOptionCreated(msg.sender, nft, expiry, price, pct, optionID);
+    NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, pct, reservalID);
+    reservals[reservalID] = reserval;
+    emit OReservalCreated(msg.sender, nft, expiry, price, pct, reservalID);
   }
 
-  function moidfyOption(
-    uint256 optionID,
+  function moidfyReserval(
+    uint256 reservalID,
     address nft,
     uint256 expiry,
     uint256 price,
@@ -134,19 +134,19 @@ contract PriviNFTReserval {
   ) external {
   }
   
-  function cancelOption(
-    uint256 optionID
+  function cancelReserval(
+    uint256 reservalID
   ) external {
-    NFTOption storage option = _getOption(optionID);
-    require(option.owner != address(0), "No such option exists");
-    require(option.owner == msg.sender, "Not owner of option");
+    NFTReserval storage reserval = _getReserval(reservalID);
+    require(reserval.owner != address(0), "No such reserval exists");
+    require(reserval.owner == msg.sender, "Not owner of reserval");
 
-    delete options[optionID];
-    emit OOptionCanceled(msg.sender, optionID);
+    delete reservals[reservalID];
+    emit OReservalCanceled(msg.sender, reservalID);
   }
   
   function createOffer(
-    uint256 optionID
+    uint256 reservalID
   ) external {
   }
 
@@ -198,8 +198,8 @@ contract PriviNFTReserval {
     return total;
   }
 
-  function _getOption(uint256 optionID) private returns (NFTOption storage) {
-    return options[optionID];
+  function _getReserval(uint256 reservalID) private returns (NFTReserval storage) {
+    return reservals[reservalID];
   }
 
   function _nftOwner(address nft) private returns (address) {

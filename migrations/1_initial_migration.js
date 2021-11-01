@@ -1,5 +1,5 @@
-const PriviNFTBuying = artifacts.require("PriviNFTBuying");
+const PriviNFTReserval = artifacts.require("PriviNFTReserval");
 
 module.exports = function (deployer) {
-  deployer.deploy(PriviNFTBuying);
+  deployer.deploy(PriviNFTReserval);
 };
