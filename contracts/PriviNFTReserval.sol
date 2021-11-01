@@ -6,6 +6,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "solidity-linked-list/contracts/StructuredLinkedList.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
 
 /*
@@ -41,16 +42,11 @@ contract PriviNFTReserval {
 
   event BOfferCreated(
     address buyer,
-    address token,
-    address price,
     uint256 reservalID,
     uint256 offerID
   );
 
   event OOfferAccepted(
-    address owner,
-    address buyer,
-    uint256 reservalID,
     uint256 offerID
   );
 
@@ -84,18 +80,20 @@ contract PriviNFTReserval {
 
   struct Offer {
     address buyer;
-    address owner;
     uint256 reservalID;
     uint256 offerID;
   }
 
-  uint256 counter;
+  uint256 cntReserval;
+  uint255 cntOffer;
   address[] tokens;
   address nftPool;
   address priceOracle;
   address admin;
 
   mapping(uint256 => NFTReserval) reservals;
+  mapping(uint256 => Offer) offers;
+
   mapping(address => mapping (address => uint256)) reserves;
   mapping(address => bool) validToken;
 
@@ -111,6 +109,8 @@ contract PriviNFTReserval {
     for (uint i = 0; i < _tokens.length; i++) {
         validToken[_tokens[i]] = true;
     }
+    cntReserval = 0;
+    cntOffer = 0;
   }
   
   function createReserval(
@@ -121,12 +121,14 @@ contract PriviNFTReserval {
     uint256 pct
   ) external returns (uint256 reservalID) {
     require(msg.sender == _nftOwner(nft), "Not Owner of NFT");
-    reservalID = counter;
-    counter++;
+    reservalID = cntReserval;
+    cntReserval++;
     NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID);
+
+    _addToLList(reserval.owner, reservalID);
     reservals[reservalID] = reserval;
     
-    emit OReservalCreated(msg.sender, nft, expiry, token, price, pct, reservalID);
+    emit OReservalCreated(reserval.owner, nft, expiry, token, price, pct, reservalID);
   }
   
   function cancelReserval(
@@ -136,18 +138,30 @@ contract PriviNFTReserval {
     require(reserval.owner != address(0), "No such reserval exists");
     require(reserval.owner == msg.sender, "Not owner of reserval");
 
+    _removeFromLList(reserval.owner, reservalID);
     delete reservals[reservalID];
-    emit OReservalCanceled(msg.sender, reservalID);
+
+    emit OReservalCanceled(reserval.owner, reservalID);
   }
   
   function createOffer(
     uint256 reservalID
-  ) external {
+  ) external returns (uint256 offerID) {
+    NFTReserval storage reserval = _getReserval(reservalID);
+    require(reserval.owner != address(0), "No such reserval exists");
+
+    offerID = cntOffer;
+    cntOffer++;
+    NFTReserval memory offer = Offer(msg.sender, reservalID, offerID);
+
+    emit BOfferCreated(offer.offerID, reservalID, offerID);
   }
 
   function acceptOffer(
     uint256 offerID
   ) external {
+    Offer storage offer = _getOffer(offer);
+    
   }
 
   function assignOffer(
@@ -197,6 +211,10 @@ contract PriviNFTReserval {
     return reservals[reservalID];
   }
 
+  function _getOffer(uint256 offerID) private returns (Offer storage) {
+    return offers[offerID];
+  }
+
   function _nftOwner(address nft) private returns (address) {
     // not completed yet
 
@@ -206,5 +224,13 @@ contract PriviNFTReserval {
   function _tokenToUSD(address token) private returns (uint256) {
     // not completed yet
     return IPriceOracle(priceOracle).price(token);
+  }
+
+  function _addToLList(address key, uint256 item) private {
+
+  }
+
+  function _removeFromLList(address key, uint256 item) private {
+
   }
 }
