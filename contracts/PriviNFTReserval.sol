@@ -25,6 +25,8 @@ BUYER:
 */
 
 contract PriviNFTReserval {
+  using StructuredLinkedList for StructuredLinkedList.List;
+
   event OReservalCreated(
     address owner,
     address nft,
@@ -76,16 +78,18 @@ contract PriviNFTReserval {
     uint256 price;
     uint256 pct;
     uint256 reservalID;
+    uint256 accetedOfferID;
   }
 
   struct Offer {
     address buyer;
     uint256 reservalID;
     uint256 offerID;
+    bool accepted;
   }
 
   uint256 cntReserval;
-  uint255 cntOffer;
+  uint256 cntOffer;
   address[] tokens;
   address nftPool;
   address priceOracle;
@@ -96,6 +100,10 @@ contract PriviNFTReserval {
 
   mapping(address => mapping (address => uint256)) reserves;
   mapping(address => bool) validToken;
+
+  mapping(address => StructuredLinkedList.List) listReserval;
+  mapping(address => StructuredLinkedList.List) listOffer;
+  mapping(uint256 => StructuredLinkedList.List) listOfferReq;
 
   constructor(
     address[] memory _tokens,
@@ -121,11 +129,11 @@ contract PriviNFTReserval {
     uint256 pct
   ) external returns (uint256 reservalID) {
     require(msg.sender == _nftOwner(nft), "Not Owner of NFT");
-    reservalID = cntReserval;
     cntReserval++;
-    NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID);
+    reservalID = cntReserval;
+    NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID, 0);
 
-    _addToLList(reserval.owner, reservalID);
+    _reserval_add(reserval.owner, reservalID);
     reservals[reservalID] = reserval;
     
     emit OReservalCreated(reserval.owner, nft, expiry, token, price, pct, reservalID);
@@ -138,9 +146,9 @@ contract PriviNFTReserval {
     require(reserval.owner != address(0), "No such reserval exists");
     require(reserval.owner == msg.sender, "Not owner of reserval");
 
-    _removeFromLList(reserval.owner, reservalID);
+    _reserval_remove(reserval.owner, reservalID);
     delete reservals[reservalID];
-
+    
     emit OReservalCanceled(reserval.owner, reservalID);
   }
   
@@ -150,18 +158,23 @@ contract PriviNFTReserval {
     NFTReserval storage reserval = _getReserval(reservalID);
     require(reserval.owner != address(0), "No such reserval exists");
 
-    offerID = cntOffer;
     cntOffer++;
-    NFTReserval memory offer = Offer(msg.sender, reservalID, offerID);
+    offerID = cntOffer;
+    Offer memory offer = Offer(msg.sender, reservalID, offerID, false);
 
-    emit BOfferCreated(offer.offerID, reservalID, offerID);
+    emit BOfferCreated(offer.buyer, reservalID, offerID);
   }
 
   function acceptOffer(
     uint256 offerID
   ) external {
-    Offer storage offer = _getOffer(offer);
+    Offer storage offer = _getOffer(offerID);
+    require(offer.buyer != address(0), "No such offer exists");
     
+    NFTReserval storage reserval = _getReserval(offer.reservalID);
+    require(msg.sender == reserval.owner, "Not owner of reserval");
+
+    emit OOfferAccepted(offerID);
   }
 
   function assignOffer(
@@ -207,6 +220,18 @@ contract PriviNFTReserval {
     return total;
   }
 
+  function getNFTReservals(address owner) external returns (uint256[] reservalIDs) {
+
+  }
+
+  function getOffers(address buyer) external returns (uint256[] offerIDs) {
+
+  }
+
+  function getOfferReqs(address owner) external returns (uint256[] offerIDs) {
+
+  }
+
   function _getReserval(uint256 reservalID) private returns (NFTReserval storage) {
     return reservals[reservalID];
   }
@@ -226,11 +251,31 @@ contract PriviNFTReserval {
     return IPriceOracle(priceOracle).price(token);
   }
 
-  function _addToLList(address key, uint256 item) private {
-
+  //-------------------------------------------------------------------------------//
+  //--------------------------- Linked List functions -----------------------------//
+  //-------------------------------------------------------------------------------//
+  function _reserval_add(address owner, uint256 reservalID) private {
+    StructuredLinkedList.pushBack(listReserval[owner], reservalID);
   }
 
-  function _removeFromLList(address key, uint256 item) private {
-
+  function _reserval_remove(address owner, uint256 reservalID) private {
+    StructuredLinkedList.remove(listReserval[owner], reservalID);
   }
+
+  function _offer_add(address buyer, uint256 offerID) private {
+    StructuredLinkedList.pushBack(listOffer[buyer], offerID);
+  }
+
+  function _offer_remove(address buyer, uint256 offerID) private {
+    StructuredLinkedList.remove(listOffer[buyer], offerID);
+  }
+
+  function _offerReq_add(uint256 reservalID, uint256 offerID) private {
+    StructuredLinkedList.pushBack(listOfferReq[reservalID], offerID);
+  }
+
+  function _offerReq_remove(uint256 reservalID, uint256 offerID) private {
+    StructuredLinkedList.remove(listOfferReq[reservalID], offerID);
+  }
+  //-------------------------------------------------------------------------------//
 }
