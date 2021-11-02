@@ -177,7 +177,7 @@ contract PriviNFTReserval {
     _lockNFT(reserval.nft);
 
     reserval.accetedOfferID = offerID;
-    offerID.accepted = true;
+    offer.accepted = true;
 
     emit OOfferAccepted(offerID);
   }
@@ -185,6 +185,29 @@ contract PriviNFTReserval {
   function assignOffer(
     uint256 offerID
   ) external {
+    Offer storage offer = _getOffer(offerID);
+    require(offer.buyer != address(0), "No such offer exists");
+    
+    NFTReserval storage reserval = _getReserval(offer.reservalID);
+    require(msg.sender == reserval.owner, "Not owner of reserval");
+
+    //_processAssign(true);
+
+    emit Assigned(true, offer.reservalID, offerID);
+  }
+
+  function unassignOffer(
+    uint256 offerID
+  ) external {
+    Offer storage offer = _getOffer(offerID);
+    require(offer.buyer != address(0), "No such offer exists");
+    
+    NFTReserval storage reserval = _getReserval(offer.reservalID);
+    require(msg.sender == reserval.owner, "Not owner of reserval");
+
+    //_processAssign(false);
+
+    emit Assigned(false, offer.reservalID, offerID);
   }
 
   function deposit(
@@ -225,16 +248,19 @@ contract PriviNFTReserval {
     return total;
   }
 
-  function getNFTReservals(address owner) external returns (uint256[] reservalIDs) {
+  function getNFTReservals(address owner) external returns (uint256[] memory reservalIDs) {
 
   }
 
-  function getOffers(address buyer) external returns (uint256[] offerIDs) {
+  function getOffers(address buyer) external returns (uint256[] memory offerIDs) {
 
   }
 
-  function getOfferReqs(address owner) external returns (uint256[] offerIDs) {
+  function getOfferReqs(address owner) external returns (uint256[] memory offerIDs) {
 
+  }
+
+  function checkAssign() external {
   }
 
   function _getReserval(uint256 reservalID) private returns (NFTReserval storage) {
@@ -247,6 +273,7 @@ contract PriviNFTReserval {
 
   function _nftOwner(address nft) private returns (address) {
     // not completed yet
+
     return address(0);
   }
 
