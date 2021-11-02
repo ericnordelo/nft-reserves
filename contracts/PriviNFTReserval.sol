@@ -174,6 +174,11 @@ contract PriviNFTReserval {
     NFTReserval storage reserval = _getReserval(offer.reservalID);
     require(msg.sender == reserval.owner, "Not owner of reserval");
 
+    _lockNFT(reserval.nft);
+
+    reserval.accetedOfferID = offerID;
+    offerID.accepted = true;
+
     emit OOfferAccepted(offerID);
   }
 
@@ -242,8 +247,11 @@ contract PriviNFTReserval {
 
   function _nftOwner(address nft) private returns (address) {
     // not completed yet
-
     return address(0);
+  }
+
+  function _lockNFT(address nft) private {
+    // not completed yet
   }
 
   function _tokenToUSD(address token) private returns (uint256) {
