@@ -24,7 +24,7 @@ BUYER:
 -  At future (expiration) the buyer needs to pay the Reserve Price within a period of 5 days max. If not, he loses the Reserval of buying
 */
 
-contract PriviNFTReserval {
+contract NFTReservalManager {
   using StructuredLinkedList for StructuredLinkedList.List;
 
   event OReservalCreated(
@@ -78,7 +78,7 @@ contract PriviNFTReserval {
     uint256 price;
     uint256 pct;
     uint256 reservalID;
-    uint256 accetedOfferID;
+    uint256 acceptedOfferID;
   }
 
   struct Offer {
@@ -176,7 +176,7 @@ contract PriviNFTReserval {
 
     _lockNFT(reserval.nft);
 
-    reserval.accetedOfferID = offerID;
+    reserval.acceptedOfferID = offerID;
     offer.accepted = true;
 
     emit OOfferAccepted(offerID);

@@ -1,5 +1,5 @@
-const PriviNFTReserval = artifacts.require("PriviNFTReserval");
+const NFTReservalManager = artifacts.require("NFTReservalManager");
 
 module.exports = function (deployer) {
-  deployer.deploy(PriviNFTReserval);
+  deployer.deploy(NFTReservalManager);
 };
