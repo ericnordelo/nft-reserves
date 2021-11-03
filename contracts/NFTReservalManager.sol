@@ -8,6 +8,7 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "solidity-linked-list/contracts/StructuredLinkedList.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
+import {NFTVault} from "./NFTVault.sol";
 
 /*
 OWNER:
@@ -91,7 +92,7 @@ contract NFTReservalManager {
   uint256 cntReserval;
   uint256 cntOffer;
   address[] tokens;
-  address nftPool;
+  address nftVault;
   address priceOracle;
   address admin;
 
@@ -107,11 +108,11 @@ contract NFTReservalManager {
 
   constructor(
     address[] memory _tokens,
-    address _nftPool,
+    address _nftVault,
     address _priceOracle
   ) public {
     tokens = _tokens;
-    nftPool = _nftPool;
+    nftVault = _nftVault;
     priceOracle = _priceOracle;
     admin = address(this);
     for (uint i = 0; i < _tokens.length; i++) {
