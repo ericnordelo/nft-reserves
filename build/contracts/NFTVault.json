@@ -21,15 +21,15 @@
     "absolutePath": "project:/contracts/NFTVault.sol",
     "exportedSymbols": {
       "NFTVault": [
-        1792
+        1862
       ]
     },
-    "id": 1793,
+    "id": 1863,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1787,
+        "id": 1857,
         "literals": [
           "solidity",
           ">=",
@@ -49,9 +49,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1792,
+        "id": 1862,
         "linearizedBaseContracts": [
-          1792
+          1862
         ],
         "name": "NFTVault",
         "nameLocation": "77:8:8",
@@ -59,12 +59,12 @@
         "nodes": [
           {
             "body": {
-              "id": 1790,
+              "id": 1860,
               "nodeType": "Block",
               "src": "112:6:8",
               "statements": []
             },
-            "id": 1791,
+            "id": 1861,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -72,25 +72,25 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1788,
+              "id": 1858,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "102:2:8"
             },
             "returnParameters": {
-              "id": 1789,
+              "id": 1859,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "112:0:8"
             },
-            "scope": 1792,
+            "scope": 1862,
             "src": "91:27:8",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 1793,
+        "scope": 1863,
         "src": "68:53:8",
         "usedErrors": []
       }
@@ -101,15 +101,15 @@
     "absolutePath": "project:/contracts/NFTVault.sol",
     "exportedSymbols": {
       "NFTVault": [
-        1792
+        1862
       ]
     },
-    "id": 1793,
+    "id": 1863,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1787,
+        "id": 1857,
         "literals": [
           "solidity",
           ">=",
@@ -129,9 +129,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1792,
+        "id": 1862,
         "linearizedBaseContracts": [
-          1792
+          1862
         ],
         "name": "NFTVault",
         "nameLocation": "77:8:8",
@@ -139,12 +139,12 @@
         "nodes": [
           {
             "body": {
-              "id": 1790,
+              "id": 1860,
               "nodeType": "Block",
               "src": "112:6:8",
               "statements": []
             },
-            "id": 1791,
+            "id": 1861,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -152,25 +152,25 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1788,
+              "id": 1858,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "102:2:8"
             },
             "returnParameters": {
-              "id": 1789,
+              "id": 1859,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "112:0:8"
             },
-            "scope": 1792,
+            "scope": 1862,
             "src": "91:27:8",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 1793,
+        "scope": 1863,
         "src": "68:53:8",
         "usedErrors": []
       }
@@ -183,7 +183,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-04T14:15:54.028Z",
+  "updatedAt": "2021-11-04T14:26:33.985Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

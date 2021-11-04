@@ -27,6 +27,7 @@ BUYER:
 
 contract NFTReservalManager {
   using StructuredLinkedList for StructuredLinkedList.List;
+  uint256 private constant PCT_DIVIDER = 100000;
 
   event OReservalCreated(
     address owner,
@@ -214,6 +215,7 @@ contract NFTReservalManager {
     NFTReserval storage reserval = _getReserval(offer.reservalID);
     require(msg.sender == reserval.owner, "Not owner of reserval");
 
+    require(_checkCollateral(offer), "Not enough collateral");
     _lockNFT(reserval.nft);
 
     reserval.acceptedOfferID = offerID;
@@ -324,6 +326,15 @@ contract NFTReservalManager {
   function _tokenToUSD(address token) private returns (uint256) {
     // not completed yet
     return IPriceOracle(priceOracle).price(token);
+  }
+
+  function _checkCollateral(Offer storage offer) private returns (bool) {
+    uint256 totalUSD = 0;
+    for (uint i = 0; i < offer.colTokens.length; i++) {
+      totalUSD = _tokenToUSD(offer.colTokens[i]) * offer.colAmounts[i];
+    }
+    uint256 requiredUSD = _tokenToUSD(offer.token) * offer.price * offer.pct / PCT_DIVIDER;
+    return requiredUSD <= totalUSD;
   }
 
   //-------------------------------------------------------------------------------//
