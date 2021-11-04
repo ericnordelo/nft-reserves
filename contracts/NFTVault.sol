@@ -6,6 +6,11 @@ import {INFTVault} from "./interface/INFTVault.sol";
 contract NFTVault is INFTVault {
   constructor() public {
   }
+  
+  function owner(address) external view returns(address) {
+    return address(0);
+  }
+
   function lockNFT(address) external view {
 
   }
@@ -15,6 +20,6 @@ contract NFTVault is INFTVault {
   }
 
   function transferNFT(address, address) external view {
-    
+
   }
 }

@@ -18,7 +18,7 @@ OWNER:
 -  Owner can withdraw collateral deposited by the buyer at any moment
 -  If owner wants to cancel the Reserval (Reserval), he needs to payback what he withdrawn +a fee
 BUYER:
--  Buyer can set offers for whitelisted NFTs. IMPORTANT: the offer does not lock the collateraal of the buyer. It only gets the proposal for that toekns aand amoiunt to the contrract. For example if i propose 10K SHIB, I approve the contract but i do not lock them.
+-  Buyer can set offers for whitelisted NFTs. IMPORTANT: the offer does not lock the collateral of the buyer. It only gets the proposal for that toekns aand amoiunt to the contrract. For example if i propose 10K SHIB, I approve the contract but i do not lock them.
 -  Buyer can reserve NFT directly if the owner has some offer
 -  Buyer needs to keep a level of collateral. Otherwise can be liquidaated and lose it.
 -  If collateral goes below the ratio, buyer needs to deposit more collateral.
@@ -65,16 +65,11 @@ contract NFTReservalManager {
     uint256 offerID
   );
   
-  event Deposit(
-    address account,
+  event CollateralDepost(
+    uint256 offerID,
     address token,
-    uint256 amount
-  );
-
-  event Withdraw(
-    address account,
-    address token,
-    uint256 amount
+    uint256 amount,
+    bool isDeposit
   );
   
   struct NFTReserval {
@@ -176,7 +171,6 @@ contract NFTReservalManager {
 
     cntOffer++;
     offerID = cntOffer;
-    // Offer memory offer = Offer(msg.sender, reservalID, offerID, false);
     address[] memory colTokens = new address[](TOKEN_CNT);
     uint256[] memory colAmounts = new uint256[](TOKEN_CNT);
 
@@ -216,6 +210,10 @@ contract NFTReservalManager {
     require(msg.sender == reserval.owner, "Not owner of reserval");
 
     require(_checkCollateral(offer), "Not enough collateral");
+    require(_checkAllownce(offer), "Not allowed enough"); 
+    for (uint i = 0; i < offer.colTokens.length; i++) {
+      IERC20(offer.colTokens[i]).transferFrom(offer.buyer, admin, offer.colAmounts[i]);
+    }
     _lockNFT(reserval.nft);
 
     reserval.acceptedOfferID = offerID;
@@ -252,18 +250,24 @@ contract NFTReservalManager {
     emit Assigned(false, offer.reservalID, offerID);
   }
 
-  function deposit(
+  function depositCollateral(
+    uint256 offerID,
     address token,
     uint256 amount
   ) external {
+    Offer storage offer = _getOffer(offerID);
+    require(offer.buyer != address(0), "No such offer exists");
+    require(msg.sender == offer.buyer, "Not buyer of offer");
+
     require(amount > 0, "INSUFFICIENT_INPUT_AMOUNT");
     IERC20(token).transferFrom(msg.sender, admin, amount);
     reserves[msg.sender][token] = reserves[msg.sender][token] + amount;
 
-    emit Deposit(msg.sender, token, amount);
+    emit CollateralDepost(offerID, token, amount, true);
   }
 
-  function withdraw(
+  function withdrawCollateral(
+    uint256 offerID,
     address token,
     uint256 amount
   ) external {
@@ -273,7 +277,7 @@ contract NFTReservalManager {
     IERC20(token).transferFrom(admin, msg.sender, amount);
     reserves[msg.sender][token] = reserves[msg.sender][token] - amount;
 
-    emit Withdraw(msg.sender, token, amount);
+    emit CollateralDepost(offerID, token, amount, false);
   }
 
   function recover(
@@ -335,6 +339,15 @@ contract NFTReservalManager {
     }
     uint256 requiredUSD = _tokenToUSD(offer.token) * offer.price * offer.pct / PCT_DIVIDER;
     return requiredUSD <= totalUSD;
+  }
+
+  function _checkAllownce(Offer storage offer) private returns (bool) {
+    uint256 totalUSD = 0;
+    for (uint i = 0; i < offer.colTokens.length; i++) {
+      uint256 allownce = IERC20(offer.colTokens[i]).allowance(offer.buyer, admin);
+      if (allownce < offer.colAmounts[i]) return false;
+    }
+    return true;
   }
 
   //-------------------------------------------------------------------------------//
