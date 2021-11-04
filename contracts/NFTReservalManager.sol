@@ -46,6 +46,11 @@ contract NFTReservalManager {
   event BOfferCreated(
     address buyer,
     uint256 reservalID,
+    address nft,
+    uint256 expiry,
+    address token,
+    uint256 price,
+    uint256 pct,
     uint256 offerID
   );
 
@@ -85,6 +90,13 @@ contract NFTReservalManager {
   struct Offer {
     address buyer;
     uint256 reservalID;
+    address nft;
+    uint256 expiry;
+    address token;
+    uint256 price;
+    uint256 pct;
+    address[] colTokens;
+    uint256[] colAmounts;
     uint256 offerID;
     bool accepted;
   }
@@ -92,6 +104,7 @@ contract NFTReservalManager {
   uint256 cntReserval;
   uint256 cntOffer;
   address[] tokens;
+  uint256 TOKEN_CNT;
   address nftVault;
   address priceOracle;
   address admin;
@@ -115,7 +128,8 @@ contract NFTReservalManager {
     nftVault = _nftVault;
     priceOracle = _priceOracle;
     admin = address(this);
-    for (uint i = 0; i < _tokens.length; i++) {
+    TOKEN_CNT = _tokens.length;
+    for (uint i = 0; i < TOKEN_CNT; i++) {
         validToken[_tokens[i]] = true;
     }
     cntReserval = 0;
@@ -161,9 +175,34 @@ contract NFTReservalManager {
 
     cntOffer++;
     offerID = cntOffer;
-    Offer memory offer = Offer(msg.sender, reservalID, offerID, false);
+    // Offer memory offer = Offer(msg.sender, reservalID, offerID, false);
+    address[] memory colTokens = new address[](TOKEN_CNT);
+    uint256[] memory colAmounts = new uint256[](TOKEN_CNT);
 
-    emit BOfferCreated(offer.buyer, reservalID, offerID);
+    Offer memory offer = Offer(
+      msg.sender,
+      reservalID,
+      reserval.nft,
+      reserval.expiry,
+      reserval.token,
+      reserval.price,
+      reserval.pct,
+      colTokens,
+      colAmounts,
+      offerID,
+      true
+      );
+
+    emit BOfferCreated(
+      offer.buyer, 
+      reservalID, 
+      reserval.nft,
+      reserval.expiry,
+      reserval.token,
+      reserval.price,
+      reserval.pct,
+      offerID
+      );
   }
 
   function acceptOffer(

@@ -1,0 +1,197 @@
+{
+  "contractName": "NFTVault",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/NFTVault.sol\":\"NFTVault\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/NFTVault.sol\":{\"keccak256\":\"0x779104b873d7f3e62a61f913cd6da5d8dd35b7aaff46805afa55dc70814bb919\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6de1400e5cd0d6c6f5fb4647d412e700e4b9332d48c335f42e8fa51a53ce9d87\",\"dweb:/ipfs/QmdoqYyfzcw81d3VheqyuQUkEaES7TgFN6u3nJMEpgkvdV\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220009084ed8443f6d6de605e9a300cec89927292d55a6581d131bf8700899ce09e64736f6c63430008090033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220009084ed8443f6d6de605e9a300cec89927292d55a6581d131bf8700899ce09e64736f6c63430008090033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "68:53:8:-:0;;;91:27;;;;;;;;;;68:53;;;;;;",
+  "deployedSourceMap": "68:53:8:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.8.0 <0.9.0;\r\n\r\ncontract NFTVault {\r\n  constructor() public {\r\n  }\r\n}\r\n",
+  "sourcePath": "E:\\Projects\\Privi2\\PriviNFTOptions\\privi-NFT-buying\\contracts\\NFTVault.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/NFTVault.sol",
+    "exportedSymbols": {
+      "NFTVault": [
+        1792
+      ]
+    },
+    "id": 1793,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1787,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".0",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:31:8"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "NFTVault",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 1792,
+        "linearizedBaseContracts": [
+          1792
+        ],
+        "name": "NFTVault",
+        "nameLocation": "77:8:8",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1790,
+              "nodeType": "Block",
+              "src": "112:6:8",
+              "statements": []
+            },
+            "id": 1791,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1788,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "102:2:8"
+            },
+            "returnParameters": {
+              "id": 1789,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "112:0:8"
+            },
+            "scope": 1792,
+            "src": "91:27:8",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1793,
+        "src": "68:53:8",
+        "usedErrors": []
+      }
+    ],
+    "src": "33:90:8"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/NFTVault.sol",
+    "exportedSymbols": {
+      "NFTVault": [
+        1792
+      ]
+    },
+    "id": 1793,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1787,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".0",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:31:8"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "NFTVault",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 1792,
+        "linearizedBaseContracts": [
+          1792
+        ],
+        "name": "NFTVault",
+        "nameLocation": "77:8:8",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1790,
+              "nodeType": "Block",
+              "src": "112:6:8",
+              "statements": []
+            },
+            "id": 1791,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1788,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "102:2:8"
+            },
+            "returnParameters": {
+              "id": 1789,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "112:0:8"
+            },
+            "scope": 1792,
+            "src": "91:27:8",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1793,
+        "src": "68:53:8",
+        "usedErrors": []
+      }
+    ],
+    "src": "33:90:8"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.9+commit.e5eed63a.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-11-04T14:15:54.028Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
