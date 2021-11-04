@@ -195,8 +195,8 @@ contract NFTReservalManager {
       );
 
     emit BOfferCreated(
-      offer.buyer, 
-      reservalID, 
+      offer.buyer,
+      reservalID,
       reserval.nft,
       reserval.expiry,
       reserval.token,

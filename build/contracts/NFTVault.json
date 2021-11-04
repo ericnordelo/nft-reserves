@@ -5,26 +5,597 @@
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "lockNFT",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "unlockNFT",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "transferNFT",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/NFTVault.sol\":\"NFTVault\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/NFTVault.sol\":{\"keccak256\":\"0x779104b873d7f3e62a61f913cd6da5d8dd35b7aaff46805afa55dc70814bb919\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6de1400e5cd0d6c6f5fb4647d412e700e4b9332d48c335f42e8fa51a53ce9d87\",\"dweb:/ipfs/QmdoqYyfzcw81d3VheqyuQUkEaES7TgFN6u3nJMEpgkvdV\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220009084ed8443f6d6de605e9a300cec89927292d55a6581d131bf8700899ce09e64736f6c63430008090033",
-  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220009084ed8443f6d6de605e9a300cec89927292d55a6581d131bf8700899ce09e64736f6c63430008090033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lockNFT\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"transferNFT\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"unlockNFT\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/NFTVault.sol\":\"NFTVault\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/NFTVault.sol\":{\"keccak256\":\"0x0d6c6309eaa364f6ba47e46dd39cc0882cb75a4e5854f8b945fa6d51aeab90ea\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://aea355e1bcc0cd226e13c8c2aa9fd8fdd2085250bcfc8456dcf7d62b1a128467\",\"dweb:/ipfs/QmetFtpG77dnk1t3Vj9reTaKFSAt21N1E22WE5nPhEKJXL\"]},\"project:/contracts/interface/INFTVault.sol\":{\"keccak256\":\"0xba5af580bee45cc2752422f01fd28be001fc44282dc0a18869706611f51c317f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ef61038d2e2701077e96699e25f5c87cf482815acf3ccf84a5968e05eda0ca4e\",\"dweb:/ipfs/QmUe6dv9JLvixdE3vHamTj1hHhi9qtt2jnY4nG6ET4N1HE\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060fe8061001f6000396000f3fe6080604052348015600f57600080fd5b5060043610603c5760003560e01c806340db04ee1460415780639c031be9146041578063e1268d6f146051575b600080fd5b604f604c366004607b565b50565b005b604f605c366004609a565b5050565b80356001600160a01b0381168114607657600080fd5b919050565b600060208284031215608c57600080fd5b6093826060565b9392505050565b6000806040838503121560ac57600080fd5b60b3836060565b915060bf602084016060565b9050925092905056fea2646970667358221220084cb57c5e4b78ede4eaffbd81d1a2d398c338b6c86d9f68fd088aded501f45764736f6c63430008090033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b5060043610603c5760003560e01c806340db04ee1460415780639c031be9146041578063e1268d6f146051575b600080fd5b604f604c366004607b565b50565b005b604f605c366004609a565b5050565b80356001600160a01b0381168114607657600080fd5b919050565b600060208284031215608c57600080fd5b6093826060565b9392505050565b6000806040838503121560ac57600080fd5b60b3836060565b915060bf602084016060565b9050925092905056fea2646970667358221220084cb57c5e4b78ede4eaffbd81d1a2d398c338b6c86d9f68fd088aded501f45764736f6c63430008090033",
   "immutableReferences": {},
   "generatedSources": [],
-  "deployedGeneratedSources": [],
-  "sourceMap": "68:53:8:-:0;;;91:27;;;;;;;;;;68:53;;;;;;",
-  "deployedSourceMap": "68:53:8:-:0;;;;;",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.8.0 <0.9.0;\r\n\r\ncontract NFTVault {\r\n  constructor() public {\r\n  }\r\n}\r\n",
+  "deployedGeneratedSources": [
+    {
+      "ast": {
+        "nodeType": "YulBlock",
+        "src": "0:645:12",
+        "statements": [
+          {
+            "nodeType": "YulBlock",
+            "src": "6:3:12",
+            "statements": []
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "63:124:12",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "73:29:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "offset",
+                        "nodeType": "YulIdentifier",
+                        "src": "95:6:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "calldataload",
+                      "nodeType": "YulIdentifier",
+                      "src": "82:12:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "82:20:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "value",
+                      "nodeType": "YulIdentifier",
+                      "src": "73:5:12"
+                    }
+                  ]
+                },
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "165:16:12",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "174:1:12",
+                              "type": "",
+                              "value": "0"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "177:1:12",
+                              "type": "",
+                              "value": "0"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "revert",
+                            "nodeType": "YulIdentifier",
+                            "src": "167:6:12"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "167:12:12"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "167:12:12"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "124:5:12"
+                          },
+                          {
+                            "arguments": [
+                              {
+                                "name": "value",
+                                "nodeType": "YulIdentifier",
+                                "src": "135:5:12"
+                              },
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "kind": "number",
+                                        "nodeType": "YulLiteral",
+                                        "src": "150:3:12",
+                                        "type": "",
+                                        "value": "160"
+                                      },
+                                      {
+                                        "kind": "number",
+                                        "nodeType": "YulLiteral",
+                                        "src": "155:1:12",
+                                        "type": "",
+                                        "value": "1"
+                                      }
+                                    ],
+                                    "functionName": {
+                                      "name": "shl",
+                                      "nodeType": "YulIdentifier",
+                                      "src": "146:3:12"
+                                    },
+                                    "nodeType": "YulFunctionCall",
+                                    "src": "146:11:12"
+                                  },
+                                  {
+                                    "kind": "number",
+                                    "nodeType": "YulLiteral",
+                                    "src": "159:1:12",
+                                    "type": "",
+                                    "value": "1"
+                                  }
+                                ],
+                                "functionName": {
+                                  "name": "sub",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "142:3:12"
+                                },
+                                "nodeType": "YulFunctionCall",
+                                "src": "142:19:12"
+                              }
+                            ],
+                            "functionName": {
+                              "name": "and",
+                              "nodeType": "YulIdentifier",
+                              "src": "131:3:12"
+                            },
+                            "nodeType": "YulFunctionCall",
+                            "src": "131:31:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "eq",
+                          "nodeType": "YulIdentifier",
+                          "src": "121:2:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "121:42:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "iszero",
+                      "nodeType": "YulIdentifier",
+                      "src": "114:6:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "114:50:12"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "111:70:12"
+                }
+              ]
+            },
+            "name": "abi_decode_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "offset",
+                "nodeType": "YulTypedName",
+                "src": "42:6:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "53:5:12",
+                "type": ""
+              }
+            ],
+            "src": "14:173:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "262:116:12",
+              "statements": [
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "308:16:12",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "317:1:12",
+                              "type": "",
+                              "value": "0"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "320:1:12",
+                              "type": "",
+                              "value": "0"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "revert",
+                            "nodeType": "YulIdentifier",
+                            "src": "310:6:12"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "310:12:12"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "310:12:12"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "dataEnd",
+                            "nodeType": "YulIdentifier",
+                            "src": "283:7:12"
+                          },
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "292:9:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "sub",
+                          "nodeType": "YulIdentifier",
+                          "src": "279:3:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "279:23:12"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "304:2:12",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "slt",
+                      "nodeType": "YulIdentifier",
+                      "src": "275:3:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "275:32:12"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "272:52:12"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "333:39:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "362:9:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_decode_address",
+                      "nodeType": "YulIdentifier",
+                      "src": "343:18:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "343:29:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "value0",
+                      "nodeType": "YulIdentifier",
+                      "src": "333:6:12"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_decode_tuple_t_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "228:9:12",
+                "type": ""
+              },
+              {
+                "name": "dataEnd",
+                "nodeType": "YulTypedName",
+                "src": "239:7:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "251:6:12",
+                "type": ""
+              }
+            ],
+            "src": "192:186:12"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "470:173:12",
+              "statements": [
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "516:16:12",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "525:1:12",
+                              "type": "",
+                              "value": "0"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "528:1:12",
+                              "type": "",
+                              "value": "0"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "revert",
+                            "nodeType": "YulIdentifier",
+                            "src": "518:6:12"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "518:12:12"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "518:12:12"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "dataEnd",
+                            "nodeType": "YulIdentifier",
+                            "src": "491:7:12"
+                          },
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "500:9:12"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "sub",
+                          "nodeType": "YulIdentifier",
+                          "src": "487:3:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "487:23:12"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "512:2:12",
+                        "type": "",
+                        "value": "64"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "slt",
+                      "nodeType": "YulIdentifier",
+                      "src": "483:3:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "483:32:12"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "480:52:12"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "541:39:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "570:9:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_decode_address",
+                      "nodeType": "YulIdentifier",
+                      "src": "551:18:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "551:29:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "value0",
+                      "nodeType": "YulIdentifier",
+                      "src": "541:6:12"
+                    }
+                  ]
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "589:48:12",
+                  "value": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "622:9:12"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "633:2:12",
+                            "type": "",
+                            "value": "32"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "618:3:12"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "618:18:12"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_decode_address",
+                      "nodeType": "YulIdentifier",
+                      "src": "599:18:12"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "599:38:12"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "value1",
+                      "nodeType": "YulIdentifier",
+                      "src": "589:6:12"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_decode_tuple_t_addresst_address",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "428:9:12",
+                "type": ""
+              },
+              {
+                "name": "dataEnd",
+                "nodeType": "YulTypedName",
+                "src": "439:7:12",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "451:6:12",
+                "type": ""
+              },
+              {
+                "name": "value1",
+                "nodeType": "YulTypedName",
+                "src": "459:6:12",
+                "type": ""
+              }
+            ],
+            "src": "383:260:12"
+          }
+        ]
+      },
+      "contents": "{\n    { }\n    function abi_decode_address(offset) -> value\n    {\n        value := calldataload(offset)\n        if iszero(eq(value, and(value, sub(shl(160, 1), 1)))) { revert(0, 0) }\n    }\n    function abi_decode_tuple_t_address(headStart, dataEnd) -> value0\n    {\n        if slt(sub(dataEnd, headStart), 32) { revert(0, 0) }\n        value0 := abi_decode_address(headStart)\n    }\n    function abi_decode_tuple_t_addresst_address(headStart, dataEnd) -> value0, value1\n    {\n        if slt(sub(dataEnd, headStart), 64) { revert(0, 0) }\n        value0 := abi_decode_address(headStart)\n        value1 := abi_decode_address(add(headStart, 32))\n    }\n}",
+      "id": 12,
+      "language": "Yul",
+      "name": "#utility.yul"
+    }
+  ],
+  "sourceMap": "124:245:8:-:0;;;160:27;;;;;;;;;;124:245;;;;;;",
+  "deployedSourceMap": "124:245:8:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;191:48;;;;;;:::i;:::-;;;;;301:65;;;;;;:::i;:::-;;;;14:173:12;82:20;;-1:-1:-1;;;;;131:31:12;;121:42;;111:70;;177:1;174;167:12;111:70;14:173;;;:::o;192:186::-;251:6;304:2;292:9;283:7;279:23;275:32;272:52;;;320:1;317;310:12;272:52;343:29;362:9;343:29;:::i;:::-;333:39;192:186;-1:-1:-1;;;192:186:12:o;383:260::-;451:6;459;512:2;500:9;491:7;487:23;483:32;480:52;;;528:1;525;518:12;480:52;551:29;570:9;551:29;:::i;:::-;541:39;;599:38;633:2;622:9;618:18;599:38;:::i;:::-;589:48;;383:260;;;;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.8.0 <0.9.0;\r\n\r\nimport {INFTVault} from \"./interface/INFTVault.sol\";\r\n\r\ncontract NFTVault is INFTVault {\r\n  constructor() public {\r\n  }\r\n  function lockNFT(address) external view {\r\n\r\n  }\r\n\r\n  function unlockNFT(address) external view {\r\n\r\n  }\r\n\r\n  function transferNFT(address, address) external view {\r\n    \r\n  }\r\n}\r\n",
   "sourcePath": "E:\\Projects\\Privi2\\PriviNFTOptions\\privi-NFT-buying\\contracts\\NFTVault.sol",
   "ast": {
     "absolutePath": "project:/contracts/NFTVault.sol",
     "exportedSymbols": {
+      "INFTVault": [
+        1906
+      ],
       "NFTVault": [
-        1862
+        1886
       ]
     },
-    "id": 1863,
+    "id": 1887,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
@@ -43,28 +614,66 @@
         "src": "33:31:8"
       },
       {
+        "absolutePath": "project:/contracts/interface/INFTVault.sol",
+        "file": "./interface/INFTVault.sol",
+        "id": 1859,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 1887,
+        "sourceUnit": 1907,
+        "src": "68:52:8",
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 1858,
+              "name": "INFTVault",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "src": "76:9:8",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
         "abstract": false,
-        "baseContracts": [],
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 1860,
+              "name": "INFTVault",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 1906,
+              "src": "145:9:8"
+            },
+            "id": 1861,
+            "nodeType": "InheritanceSpecifier",
+            "src": "145:9:8"
+          }
+        ],
         "canonicalName": "NFTVault",
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1862,
+        "id": 1886,
         "linearizedBaseContracts": [
-          1862
+          1886,
+          1906
         ],
         "name": "NFTVault",
-        "nameLocation": "77:8:8",
+        "nameLocation": "133:8:8",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1860,
+              "id": 1864,
               "nodeType": "Block",
-              "src": "112:6:8",
+              "src": "181:6:8",
               "statements": []
             },
-            "id": 1861,
+            "id": 1865,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -72,39 +681,265 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1858,
+              "id": 1862,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "102:2:8"
+              "src": "171:2:8"
             },
             "returnParameters": {
-              "id": 1859,
+              "id": 1863,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "112:0:8"
+              "src": "181:0:8"
             },
-            "scope": 1862,
-            "src": "91:27:8",
+            "scope": 1886,
+            "src": "160:27:8",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
+          },
+          {
+            "baseFunctions": [
+              1893
+            ],
+            "body": {
+              "id": 1870,
+              "nodeType": "Block",
+              "src": "231:8:8",
+              "statements": []
+            },
+            "functionSelector": "40db04ee",
+            "id": 1871,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "lockNFT",
+            "nameLocation": "200:7:8",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1868,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1867,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1871,
+                  "src": "208:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1866,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "208:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "207:9:8"
+            },
+            "returnParameters": {
+              "id": 1869,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "231:0:8"
+            },
+            "scope": 1886,
+            "src": "191:48:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "baseFunctions": [
+              1898
+            ],
+            "body": {
+              "id": 1876,
+              "nodeType": "Block",
+              "src": "287:8:8",
+              "statements": []
+            },
+            "functionSelector": "9c031be9",
+            "id": 1877,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "unlockNFT",
+            "nameLocation": "254:9:8",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1874,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1873,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1877,
+                  "src": "264:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1872,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "264:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "263:9:8"
+            },
+            "returnParameters": {
+              "id": 1875,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "287:0:8"
+            },
+            "scope": 1886,
+            "src": "245:50:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "baseFunctions": [
+              1905
+            ],
+            "body": {
+              "id": 1884,
+              "nodeType": "Block",
+              "src": "354:12:8",
+              "statements": []
+            },
+            "functionSelector": "e1268d6f",
+            "id": 1885,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferNFT",
+            "nameLocation": "310:11:8",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1882,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1879,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1885,
+                  "src": "322:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1878,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "322:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1881,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1885,
+                  "src": "331:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1880,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "331:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "321:18:8"
+            },
+            "returnParameters": {
+              "id": 1883,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "354:0:8"
+            },
+            "scope": 1886,
+            "src": "301:65:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
           }
         ],
-        "scope": 1863,
-        "src": "68:53:8",
+        "scope": 1887,
+        "src": "124:245:8",
         "usedErrors": []
       }
     ],
-    "src": "33:90:8"
+    "src": "33:338:8"
   },
   "legacyAST": {
     "absolutePath": "project:/contracts/NFTVault.sol",
     "exportedSymbols": {
+      "INFTVault": [
+        1906
+      ],
       "NFTVault": [
-        1862
+        1886
       ]
     },
-    "id": 1863,
+    "id": 1887,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
@@ -123,28 +958,66 @@
         "src": "33:31:8"
       },
       {
+        "absolutePath": "project:/contracts/interface/INFTVault.sol",
+        "file": "./interface/INFTVault.sol",
+        "id": 1859,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 1887,
+        "sourceUnit": 1907,
+        "src": "68:52:8",
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 1858,
+              "name": "INFTVault",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "src": "76:9:8",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
         "abstract": false,
-        "baseContracts": [],
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 1860,
+              "name": "INFTVault",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 1906,
+              "src": "145:9:8"
+            },
+            "id": 1861,
+            "nodeType": "InheritanceSpecifier",
+            "src": "145:9:8"
+          }
+        ],
         "canonicalName": "NFTVault",
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1862,
+        "id": 1886,
         "linearizedBaseContracts": [
-          1862
+          1886,
+          1906
         ],
         "name": "NFTVault",
-        "nameLocation": "77:8:8",
+        "nameLocation": "133:8:8",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1860,
+              "id": 1864,
               "nodeType": "Block",
-              "src": "112:6:8",
+              "src": "181:6:8",
               "statements": []
             },
-            "id": 1861,
+            "id": 1865,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -152,30 +1025,253 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1858,
+              "id": 1862,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "102:2:8"
+              "src": "171:2:8"
             },
             "returnParameters": {
-              "id": 1859,
+              "id": 1863,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "112:0:8"
+              "src": "181:0:8"
             },
-            "scope": 1862,
-            "src": "91:27:8",
+            "scope": 1886,
+            "src": "160:27:8",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
+          },
+          {
+            "baseFunctions": [
+              1893
+            ],
+            "body": {
+              "id": 1870,
+              "nodeType": "Block",
+              "src": "231:8:8",
+              "statements": []
+            },
+            "functionSelector": "40db04ee",
+            "id": 1871,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "lockNFT",
+            "nameLocation": "200:7:8",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1868,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1867,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1871,
+                  "src": "208:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1866,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "208:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "207:9:8"
+            },
+            "returnParameters": {
+              "id": 1869,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "231:0:8"
+            },
+            "scope": 1886,
+            "src": "191:48:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "baseFunctions": [
+              1898
+            ],
+            "body": {
+              "id": 1876,
+              "nodeType": "Block",
+              "src": "287:8:8",
+              "statements": []
+            },
+            "functionSelector": "9c031be9",
+            "id": 1877,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "unlockNFT",
+            "nameLocation": "254:9:8",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1874,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1873,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1877,
+                  "src": "264:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1872,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "264:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "263:9:8"
+            },
+            "returnParameters": {
+              "id": 1875,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "287:0:8"
+            },
+            "scope": 1886,
+            "src": "245:50:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "baseFunctions": [
+              1905
+            ],
+            "body": {
+              "id": 1884,
+              "nodeType": "Block",
+              "src": "354:12:8",
+              "statements": []
+            },
+            "functionSelector": "e1268d6f",
+            "id": 1885,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferNFT",
+            "nameLocation": "310:11:8",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1882,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1879,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1885,
+                  "src": "322:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1878,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "322:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1881,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1885,
+                  "src": "331:7:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1880,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "331:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "321:18:8"
+            },
+            "returnParameters": {
+              "id": 1883,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "354:0:8"
+            },
+            "scope": 1886,
+            "src": "301:65:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
           }
         ],
-        "scope": 1863,
-        "src": "68:53:8",
+        "scope": 1887,
+        "src": "124:245:8",
         "usedErrors": []
       }
     ],
-    "src": "33:90:8"
+    "src": "33:338:8"
   },
   "compiler": {
     "name": "solc",
@@ -183,7 +1279,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-04T14:26:33.985Z",
+  "updatedAt": "2021-11-04T14:35:07.070Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
