@@ -318,6 +318,18 @@ contract NFTReservalManager {
   function checkAssign() external {
   }
 
+  function getReserval(uint256 reservalID) external returns (NFTReserval memory reserval) {
+    NFTReserval storage _reserval = _getReserval(reservalID);
+    require(_reserval.owner != address(0), "No such reserval exists");
+    reserval = _reserval;
+  }
+
+  function getOffer(uint256 offerID) external returns (Offer memory offer) {
+    Offer storage _offer = _getOffer(offerID);
+    require(_offer.buyer != address(0), "No such offer exists");
+    offer = _offer;
+  }
+
   function _getReserval(uint256 reservalID) private returns (NFTReserval storage) {
     return reservals[reservalID];
   }
