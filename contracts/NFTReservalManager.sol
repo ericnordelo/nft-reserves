@@ -95,6 +95,7 @@ contract NFTReservalManager {
     uint256[] colAmounts;
     uint256 offerID;
     bool accepted;
+    bool reservePayed;
   }
 
   uint256 cntReserval;
@@ -184,7 +185,8 @@ contract NFTReservalManager {
       colTokens,
       colAmounts,
       offerID,
-      true
+      false,
+      false
       );
 
     emit BOfferCreated(
@@ -238,18 +240,13 @@ contract NFTReservalManager {
     emit Assigned(true, offer.reservalID, offerID);
   }
 
-  function unassignOffer(
+  function payReserve(
     uint256 offerID
   ) external {
     Offer storage offer = _getOffer(offerID);
     require(offer.buyer != address(0), "No such offer exists");
     
     NFTReserval storage reserval = _getReserval(offer.reservalID);
-    require(msg.sender == reserval.owner, "Not owner of reserval");
-
-    //_processAssign(false);
-
-    emit Assigned(false, offer.reservalID, offerID);
   }
 
   function depositCollateral(
