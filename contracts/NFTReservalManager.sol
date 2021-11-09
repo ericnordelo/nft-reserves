@@ -207,7 +207,7 @@ contract NFTReservalManager {
     require(_checkCollateral(offer), "Not enough collateral");
     require(_checkAllowance(offer), "Not allowed enough");
     for (uint i = 0; i < offer.colTokens.length; i++) {
-      _putInCollateral(offer.buyer, offer.colTokens[i], offer.colAmounts[i]);
+      _putIn(offer.buyer, offer.colTokens[i], offer.colAmounts[i]);
     }
     _lockNFT(reserval.nft);
 
@@ -253,7 +253,6 @@ contract NFTReservalManager {
 
     delete offers[offerID];
     delete reservals[reserval.reservalID];
-
   }
 
   function payReserve(
@@ -262,8 +261,14 @@ contract NFTReservalManager {
     Offer storage offer = _getOffer(offerID);
     require(offer.buyer != address(0), "No such offer exists");
     require(offer.accepted, "Not accepted offer");
+    require(!offer.ReservePayed, "Already payReserved");
     
     NFTReserval storage reserval = _getReserval(offer.reservalID);
+
+    _putIn(offer.buyer, offer.token, offer.price);
+    for (uint i = 0; i < offer.colTokens.length; i++) {
+      _putOut(offer.buyer, offer.colTokens[i], offer.colAmounts[i]);
+    }
 
     offer.reservePayed = true;
 
@@ -292,7 +297,7 @@ contract NFTReservalManager {
       offer.colAmounts.push(0);
     }
     if (offer.accepted) {
-      _putInCollateral(offer.buyer, token, amount);
+      _putIn(offer.buyer, token, amount);
     }
     offer.colAmounts[id] += amount;
 
@@ -319,7 +324,7 @@ contract NFTReservalManager {
     require((offer.colTokens.length > id) && (offer.colAmounts[id] >= amount), "Not enough amount deposited");
 
     if (offer.accepted) {
-      _putOutCollateral(token, msg.sender, amount);
+      _putOut(token, msg.sender, amount);
     }
     offer.colAmounts[id] -= amount;
 
@@ -398,11 +403,11 @@ contract NFTReservalManager {
     return true;
   }
 
-  function _putInCollateral(address account, address token, uint256 amount) private {
+  function _putIn(address account, address token, uint256 amount) private {
     IERC20(token).transferFrom(account, admin, amount);
   }
 
-  function _putOutCollateral(address account, address token, uint256 amount) private {
+  function _putOut(address account, address token, uint256 amount) private {
     IERC20(token).transferFrom(admin, account, amount);
   }
 
