@@ -28,6 +28,7 @@ BUYER:
 contract NFTReservalManager {
   using StructuredLinkedList for StructuredLinkedList.List;
   uint256 private constant PCT_DIVIDER = 100000;
+  bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
   event OReservalCreated(
     address owner,
@@ -65,11 +66,15 @@ contract NFTReservalManager {
     uint256 offerID
   );
   
-  event CollateralDepost(
+  event CollateralDeposit(
     uint256 offerID,
     address token,
     uint256 amount,
     bool isDeposit
+  );
+
+  event ReservePayed(
+    uint256 offerID
   );
   
   struct NFTReserval {
@@ -216,7 +221,7 @@ contract NFTReservalManager {
     require(_checkCollateral(offer), "Not enough collateral");
     require(_checkAllowance(offer), "Not allowed enough");
     for (uint i = 0; i < offer.colTokens.length; i++) {
-      _putInCollateral(offer.colTokens[i], offer.buyer, offer.colAmounts[i]);
+      _putInCollateral(offer.buyer, offer.colTokens[i], offer.colAmounts[i]);
     }
     _lockNFT(reserval.nft);
 
@@ -231,13 +236,30 @@ contract NFTReservalManager {
   ) external {
     Offer storage offer = _getOffer(offerID);
     require(offer.buyer != address(0), "No such offer exists");
+    require(offer.accepted, "Not accepted offer");
     
     NFTReserval storage reserval = _getReserval(offer.reservalID);
     require(msg.sender == reserval.owner, "Not owner of reserval");
 
-    //_processAssign(true);
+    if (offer.reservePayed) {
+      _safeTransfer(reserval.token, reserval.owner, reserval.price);
+      _transferNFT(reserval.nft, reserval.owner, offer.buyer);
+    }
+    else {
+      uint256 sum = 0;
+      for (uint i = 0; i < offer.colTokens.length; i++) {
+        sum += ;
+      }
 
-    emit Assigned(true, offer.reservalID, offerID);
+    }
+
+    _reserval_remove(reserval.owner, reserval.reservalID);
+    _offer_remove(offer.buyer, offerID);
+
+    delete offers[offerID];
+    delete reservals[reserval.reservalID];
+
+    emit Assigned(offer.reservePayed, offer.reservalID, offerID);
   }
 
   function payReserve(
@@ -245,8 +267,13 @@ contract NFTReservalManager {
   ) external {
     Offer storage offer = _getOffer(offerID);
     require(offer.buyer != address(0), "No such offer exists");
+    require(offer.accepted, "Not accepted offer");
     
     NFTReserval storage reserval = _getReserval(offer.reservalID);
+
+    offer.reservePayed = true;
+
+    emit ReservePayed(offerID);
   }
 
   function depositCollateral(
@@ -258,6 +285,7 @@ contract NFTReservalManager {
     Offer storage offer = _getOffer(offerID);
     require(offer.buyer != address(0), "No such offer exists");
     require(msg.sender == offer.buyer, "Not buyer of offer");
+    require(offer.accepted, "Not accepted offer");
 
     require(amount > 0, "INSUFFICIENT_INPUT_AMOUNT");
 
@@ -270,11 +298,11 @@ contract NFTReservalManager {
       offer.colAmounts.push(0);
     }
     if (offer.accepted) {
-      _putInCollateral(token, token, amount);
+      _putInCollateral(offer.buyer, token, amount);
     }
     offer.colAmounts[id] += amount;
 
-    emit CollateralDepost(offerID, token, amount, true);
+    emit CollateralDeposit(offerID, token, amount, true);
   }
 
   function withdrawCollateral(
@@ -286,6 +314,7 @@ contract NFTReservalManager {
     Offer storage offer = _getOffer(offerID);
     require(offer.buyer != address(0), "No such offer exists");
     require(msg.sender == offer.buyer, "Not buyer of offer");
+    require(offer.accepted, "Not accepted offer");
 
     require(amount > 0, "INSUFFICIENT_INPUT_AMOUNT");
     
@@ -300,7 +329,7 @@ contract NFTReservalManager {
     }
     offer.colAmounts[id] -= amount;
 
-    emit CollateralDepost(offerID, token, amount, false);
+    emit CollateralDeposit(offerID, token, amount, false);
   }
 
   function getNFTReservals(address owner) external returns (uint256[] memory reservalIDs) {
@@ -348,6 +377,10 @@ contract NFTReservalManager {
     // not completed yet
   }
 
+  function _transferNFT(address nft, address from, address to) private {
+    // not completed yet
+  }
+
   function _tokenToUSD(address token) private returns (uint256) {
     // not completed yet
     return IPriceOracle(priceOracle).price(token);
@@ -377,6 +410,20 @@ contract NFTReservalManager {
 
   function _putOutCollateral(address account, address token, uint256 amount) private {
     IERC20(token).transferFrom(admin, account, amount);
+  }
+
+  function _safeTransfer(
+      address token,
+      address to,
+      uint value
+  ) private {
+      (bool success, bytes memory data) = token.call(
+          abi.encodeWithSelector(SELECTOR, to, value)
+      );
+      require(
+          success && (data.length == 0 || abi.decode(data, (bool))),
+          "AMM: TRANSFER_FAILED"
+      );
   }
 
   //-------------------------------------------------------------------------------//
