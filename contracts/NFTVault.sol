@@ -12,14 +12,11 @@ contract NFTVault is INFTVault {
   }
 
   function lockNFT(address) external view {
-
   }
 
   function unlockNFT(address) external view {
-
   }
 
   function transferNFT(address, address) external view {
-
   }
 }

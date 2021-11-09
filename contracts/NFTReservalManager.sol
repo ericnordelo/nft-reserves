@@ -155,24 +155,30 @@ contract NFTReservalManager {
   }
   
   function createOffer(
-    uint256 reservalID
+    uint256 reservalID,
+    address nft,
+    uint256 expiry,
+    address token,
+    uint256 price,
+    uint256 pct
   ) external returns (uint256 offerID) {
     NFTReserval storage reserval = _getReserval(reservalID);
     require(reserval.owner != address(0), "No such reserval exists");
+    require(reserval.nft == nft, "NFT is not matched");
 
     cntOffer++;
     offerID = cntOffer;
-    address[] memory colTokens = new address[]();
-    uint256[] memory colAmounts = new uint256[]();
+    address[] memory colTokens = new address[](TOKEN_CNT);
+    uint256[] memory colAmounts = new uint256[](TOKEN_CNT);
 
     Offer memory offer = Offer(
       msg.sender,
       reservalID,
-      reserval.nft,
-      reserval.expiry,
-      reserval.token,
-      reserval.price,
-      reserval.pct,
+      nft,
+      expiry,
+      token,
+      price,
+      pct,
       colTokens,
       colAmounts,
       offerID,
@@ -187,11 +193,11 @@ contract NFTReservalManager {
     emit BOfferCreated(
       offer.buyer,
       reservalID,
-      reserval.nft,
-      reserval.expiry,
-      reserval.token,
-      reserval.price,
-      reserval.pct,
+      nft,
+      expiry,
+      token,
+      price,
+      pct,
       offerID
       );
   }
@@ -213,7 +219,7 @@ contract NFTReservalManager {
     for (uint i = 0; i < offer.colTokens.length; i++) {
       _putIn(offer.buyer, offer.colTokens[i], offer.colAmounts[i]);
     }
-    _lockNFT(reserval.nft);
+    _lockNFT(offer.nft);
 
     reserval.acceptedOfferID = offerID;
     offer.accepted = true;
@@ -232,8 +238,8 @@ contract NFTReservalManager {
     require(msg.sender == reserval.owner, "Not owner of reserval");
 
     if (offer.reservePayed) {
-      _putOut(reserval.owner, reserval.token, reserval.price);
-      _transferNFT(reserval.nft, offer.buyer);
+      _putOut(reserval.owner, offer.token, offer.price);
+      _transferNFT(offer.nft, offer.buyer);
     }
     else {
       uint256 unpayed = _tokenToUSD(offer.token) * offer.price * offer.pct / PCT_DIVIDER;
@@ -361,7 +367,7 @@ contract NFTReservalManager {
   }
 
   //-------------------------------------------------------------------------------//
-  //---------------------------- private functions ------------------------------//
+  //----------------------------- private functions -------------------------------//
   //-------------------------------------------------------------------------------//
   function _getReserval(uint256 reservalID) private returns (NFTReserval storage) {
     return reservals[reservalID];
