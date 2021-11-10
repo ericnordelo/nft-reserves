@@ -107,20 +107,25 @@ contract NFTReservalManager {
   mapping(uint256 => StructuredLinkedList.List) listOfferReq;
 
   constructor(
-    address[] memory _tokens,
     address _nftVault,
     address _priceOracle
   ) public {
-    tokens = _tokens;
+    tokens = new address[](0);
     nftVault = _nftVault;
     priceOracle = _priceOracle;
     admin = address(this);
+    cntReserval = 0;
+    cntOffer = 0;
+  }
+
+  function registerValidToken(
+    address[] memory _tokens
+  ) external {
+    tokens = _tokens;
     TOKEN_CNT = _tokens.length;
     for (uint i = 0; i < TOKEN_CNT; i++) {
         validToken[_tokens[i]] = true;
     }
-    cntReserval = 0;
-    cntOffer = 0;
   }
   
   function createReserval(
