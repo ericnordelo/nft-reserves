@@ -22,38 +22,4 @@ contract('NFT Option test', async(accounts) => {
             await optionManager.registerValidToken(validToken);
         });
     })
-
-    
-    it('test1', async() => {
-        console.log("step 0, get deployed object");
-        const optionManager = await NFTReservalManager.deployed();
-
-        console.log("step 1, register valid tokens");
-        VALID_TOKENS.forEach(validToken => {
-            await optionManager.registerValidToken(validToken);
-        });
-    })
-
-
-    it('test2', async() => {
-        console.log("step 0, get deployed object");
-        const optionManager = await NFTReservalManager.deployed();
-
-        console.log("step 1, register valid tokens");
-        VALID_TOKENS.forEach(validToken => {
-            await optionManager.registerValidToken(validToken);
-        });
-    })
-
-    
-
-    it('test3', async() => {
-        console.log("step 0, get deployed object");
-        const optionManager = await NFTReservalManager.deployed();
-
-        console.log("step 1, register valid tokens");
-        VALID_TOKENS.forEach(validToken => {
-            await optionManager.registerValidToken(validToken);
-        });
-    })
 })

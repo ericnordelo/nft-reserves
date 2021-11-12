@@ -64276,15 +64276,239 @@
           ],
           "name": "ReservePayed",
           "type": "event"
+        },
+        "0xe73d115bebeed704ea17fe3828b1ba9467a8b3e93f71fb62ade207db83156924": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "assigned",
+              "type": "bool"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "reservalID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EAssigned",
+          "type": "event"
+        },
+        "0x2a88be962965895c4b957ab19d9efe6f6b3acc2a5de11dea4b8bb06e0dd718a1": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "isDeposit",
+              "type": "bool"
+            }
+          ],
+          "name": "ECollateralDeposit",
+          "type": "event"
+        },
+        "0x4fa8395a7e1538f35ebecd3098e8984254465fad50ba7199ccac2cf34e6fcd73": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EOfferAccepted",
+          "type": "event"
+        },
+        "0x24db3de7842f0b57478cb97bd44f7eb02df8b05c1ff03366bd7645220b7a5788": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "buyer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EOfferCanceled",
+          "type": "event"
+        },
+        "0x4e94422b4eca88a08bfaa0166f2203e786e706a72396fafe66d56a51a040f558": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "buyer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "reservalID",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "nft",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "expiry",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "pct",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EOfferUpdated",
+          "type": "event"
+        },
+        "0x9217e92f1b3644099e21b80e65d8f8287f3e6bb0cbf70fd7db40abc2e3082542": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "reservalID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EReservalCanceled",
+          "type": "event"
+        },
+        "0xb008aea72b86702d351c35472e3ba1df9305b3a305dfb02158328d67c9c8ca7e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "nft",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "expiry",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "pct",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "reservalID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EReservalUpdated",
+          "type": "event"
+        },
+        "0xaf4469f7787856d3557cfe70c4d8db147d70f22e6be9964f40b7df8df3d67ce1": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "offerID",
+              "type": "uint256"
+            }
+          ],
+          "name": "EReservePayed",
+          "type": "event"
         }
       },
       "links": {},
-      "address": "0x55F083B49752C163f484e23b4606b1b1C788a5eA",
-      "transactionHash": "0x88505d683144e11fb9cbc4bde25e55787dd60e52f26f6d911353b2132e48fe45"
+      "address": "0x2C556dCc83b8027a6D2379b20c23D797eA28888d",
+      "transactionHash": "0xd74bfd1fc127b213ed650b391b057d07a72c7ea14c0cedb5cf6ba8213105a229"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-12T13:58:57.585Z",
+  "updatedAt": "2021-11-12T14:00:20.439Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -244,6 +244,8 @@ contract NFTReservalManager {
     require(offer.buyer != address(0), "No such offer exists");
     require(offer.buyer == msg.sender, "Not buyer of offer");
 
+    require(!offer.accepted, "Offer is already accepted");
+
     _offer_remove(offer.buyer, offerID);
     _offerReq_remove(offer.reservalID, offerID);
     delete offers[offerID];
