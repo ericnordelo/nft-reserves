@@ -16,7 +16,7 @@ contract NFTReservalManager {
   uint256 private constant PCT_DIVIDER = 100000;
   bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
-  event OReservalCreated(
+  event EReservalUpdated(
     address owner,
     address nft,
     uint256 expiry,
@@ -26,12 +26,12 @@ contract NFTReservalManager {
     uint256 reservalID
   );
 
-  event OReservalCanceled(
+  event EReservalCanceled(
     address owner,
     uint256 reservalID
   );
 
-  event BOfferCreated(
+  event EOfferUpdated(
     address buyer,
     uint256 reservalID,
     address nft,
@@ -42,24 +42,29 @@ contract NFTReservalManager {
     uint256 offerID
   );
 
-  event OOfferAccepted(
+  event EOfferCanceled(
+    address buyer,
     uint256 offerID
   );
 
-  event Assigned(
+  event EOfferAccepted(
+    uint256 offerID
+  );
+
+  event EAssigned(
     bool assigned,
     uint256 reservalID,
     uint256 offerID
   );
   
-  event CollateralDeposit(
+  event ECollateralDeposit(
     uint256 offerID,
     address token,
     uint256 amount,
     bool isDeposit
   );
 
-  event ReservePayed(
+  event EReservePayed(
     uint256 offerID
   );
   
@@ -128,22 +133,33 @@ contract NFTReservalManager {
     }
   }
   
-  function createReserval(
+  function updateReserval(
     address nft,
     uint256 expiry,
     address token,
     uint256 price,
-    uint256 pct
+    uint256 pct,
+    uint256 id
   ) external returns (uint256 reservalID) {
     require(msg.sender == _nftOwner(nft), "Not Owner of NFT");
-    cntReserval++;
-    reservalID = cntReserval;
-    NFTReserval memory reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID, 0);
+    if (id != 0) {
+      reservalID = id;
+      NFTReserval storage reserval = _getReserval(reservalID);
+      require(reserval.owner != address(0), "No such reserval exists");
+      require(reserval.owner == msg.sender, "Not owner of reserval");
 
-    _reserval_add(reserval.owner, reservalID);
-    reservals[reservalID] = reserval;
+      _reserval_remove(reserval.owner, reservalID);
+      delete reservals[reservalID];
+    }
+    else {
+      cntReserval++;
+      reservalID = cntReserval;
+    }
+    NFTReserval memory _reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID, 0);
+    _reserval_add(_reserval.owner, reservalID);
+    reservals[reservalID] = _reserval;
     
-    emit OReservalCreated(reserval.owner, nft, expiry, token, price, pct, reservalID);
+    emit EReservalUpdated(_reserval.owner, nft, expiry, token, price, pct, reservalID);
   }
   
   function cancelReserval(
@@ -156,27 +172,41 @@ contract NFTReservalManager {
     _reserval_remove(reserval.owner, reservalID);
     delete reservals[reservalID];
     
-    emit OReservalCanceled(reserval.owner, reservalID);
+    emit EReservalCanceled(msg.sender, reservalID);
   }
   
-  function createOffer(
+  function updateOffer(
     uint256 reservalID,
     address nft,
     uint256 expiry,
     address token,
     uint256 price,
-    uint256 pct
+    uint256 pct,
+    uint256 id
   ) external returns (uint256 offerID) {
+    if (id != 0) {
+      offerID = id;
+      Offer storage offer = _getOffer(offerID);
+      require(offer.buyer != address(0), "No such offer exists");
+      require(offer.buyer == msg.sender, "Not buyer of offer");
+
+      _offer_remove(offer.buyer, offerID);
+      _offerReq_remove(offer.reservalID, offerID);
+      delete offers[offerID];
+    }
+    else {
+      cntOffer++;
+      offerID = cntOffer;
+    }
+
     NFTReserval storage reserval = _getReserval(reservalID);
     require(reserval.owner != address(0), "No such reserval exists");
     require(reserval.nft == nft, "NFT is not matched");
 
-    cntOffer++;
-    offerID = cntOffer;
     address[] memory colTokens = new address[](TOKEN_CNT);
     uint256[] memory colAmounts = new uint256[](TOKEN_CNT);
 
-    Offer memory offer = Offer(
+    Offer memory _offer = Offer(
       msg.sender,
       reservalID,
       nft,
@@ -191,12 +221,12 @@ contract NFTReservalManager {
       false
       );
 
-    offers[offerID] = offer;
+    offers[offerID] = _offer;
     _offerReq_add(reservalID, offerID);
-    _offer_add(offer.buyer, offerID);
+    _offer_add(_offer.buyer, offerID);
 
-    emit BOfferCreated(
-      offer.buyer,
+    emit EOfferUpdated(
+      _offer.buyer,
       reservalID,
       nft,
       expiry,
@@ -205,6 +235,20 @@ contract NFTReservalManager {
       pct,
       offerID
       );
+  }
+
+  function cancelOffer(
+    uint256 offerID
+  ) external {
+    Offer storage offer = _getOffer(offerID);
+    require(offer.buyer != address(0), "No such offer exists");
+    require(offer.buyer == msg.sender, "Not buyer of offer");
+
+    _offer_remove(offer.buyer, offerID);
+    _offerReq_remove(offer.reservalID, offerID);
+    delete offers[offerID];
+
+    emit EOfferCanceled(msg.sender, offerID);
   }
 
   function acceptOffer(
@@ -229,7 +273,7 @@ contract NFTReservalManager {
     reserval.acceptedOfferID = offerID;
     offer.accepted = true;
 
-    emit OOfferAccepted(offerID);
+    emit EOfferAccepted(offerID);
   }
 
   function assignOffer(
@@ -265,7 +309,7 @@ contract NFTReservalManager {
     _reserval_remove(reserval.owner, reserval.reservalID);
     _offer_remove(offer.buyer, offerID);
     _offerReq_remove(offer.reservalID, offerID);
-    emit Assigned(offer.reservePayed, offer.reservalID, offerID);
+    emit EAssigned(offer.reservePayed, offer.reservalID, offerID);
 
     delete offers[offerID];
     delete reservals[reserval.reservalID];
@@ -288,7 +332,7 @@ contract NFTReservalManager {
 
     offer.reservePayed = true;
 
-    emit ReservePayed(offerID);
+    emit EReservePayed(offerID);
   }
 
   function depositCollateral(
@@ -317,7 +361,7 @@ contract NFTReservalManager {
     }
     offer.colAmounts[id] += amount;
 
-    emit CollateralDeposit(offerID, token, amount, true);
+    emit ECollateralDeposit(offerID, token, amount, true);
   }
 
   function withdrawCollateral(
@@ -344,7 +388,7 @@ contract NFTReservalManager {
     }
     offer.colAmounts[id] -= amount;
 
-    emit CollateralDeposit(offerID, token, amount, false);
+    emit ECollateralDeposit(offerID, token, amount, false);
   }
 
   function getNFTReservals(address owner) external returns (uint256[] memory) {

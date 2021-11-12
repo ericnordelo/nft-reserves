@@ -15569,7 +15569,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-10T20:10:02.053Z",
+  "updatedAt": "2021-11-11T13:39:57.308Z",
   "devdoc": {
     "author": "Vittorio Minacori (https://github.com/vittominacori)",
     "details": "An utility library for using sorted linked list data structures in your Solidity project.",
