@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "solidity-linked-list/contracts/StructuredLinkedList.sol";
 import {IPriceOracle} from "./interface/IPriceOracle.sol";
 import {INFTVault} from "./interface/INFTVault.sol";
+import {NFTVault} from "./NFTVault.sol";
 
 
 contract NFTReservalManager {
@@ -19,6 +20,7 @@ contract NFTReservalManager {
   event EReservalUpdated(
     address owner,
     address nft,
+    uint256 nftID,
     uint256 expiry,
     address token,
     uint256 price,
@@ -35,6 +37,7 @@ contract NFTReservalManager {
     address buyer,
     uint256 reservalID,
     address nft,
+    uint256 nftID,
     uint256 expiry,
     address token,
     uint256 price,
@@ -71,6 +74,7 @@ contract NFTReservalManager {
   struct NFTReserval {
     address owner;
     address nft;
+    uint256 nftID;
     uint256 expiry;
     address token;
     uint256 price;
@@ -83,6 +87,7 @@ contract NFTReservalManager {
     address buyer;
     uint256 reservalID;
     address nft;
+    uint256 nftID;
     uint256 expiry;
     address token;
     uint256 price;
@@ -112,13 +117,12 @@ contract NFTReservalManager {
   mapping(uint256 => StructuredLinkedList.List) listOfferReq;
 
   constructor(
-    address _nftVault,
     address _priceOracle
   ) public {
     tokens = new address[](0);
-    nftVault = _nftVault;
-    priceOracle = _priceOracle;
     admin = address(this);
+    nftVault = address(new NFTVault(admin));
+    priceOracle = _priceOracle;
     cntReserval = 0;
     cntOffer = 0;
   }
@@ -135,13 +139,14 @@ contract NFTReservalManager {
   
   function updateReserval(
     address nft,
+    uint256 nftID,
     uint256 expiry,
     address token,
     uint256 price,
     uint256 pct,
     uint256 id
   ) external returns (uint256 reservalID) {
-    require(msg.sender == _nftOwner(nft), "Not Owner of NFT");
+    require(msg.sender == _nftOwner(nft, nftID), "Not Owner of NFT");
     if (id != 0) {
       reservalID = id;
       NFTReserval storage reserval = _getReserval(reservalID);
@@ -155,11 +160,11 @@ contract NFTReservalManager {
       cntReserval++;
       reservalID = cntReserval;
     }
-    NFTReserval memory _reserval = NFTReserval(msg.sender, nft, expiry, token, price, pct, reservalID, 0);
+    NFTReserval memory _reserval = NFTReserval(msg.sender, nft, nftID, expiry, token, price, pct, reservalID, 0);
     _reserval_add(_reserval.owner, reservalID);
     reservals[reservalID] = _reserval;
     
-    emit EReservalUpdated(_reserval.owner, nft, expiry, token, price, pct, reservalID);
+    emit EReservalUpdated(_reserval.owner, nft, nftID, expiry, token, price, pct, reservalID);
   }
   
   function cancelReserval(
@@ -178,6 +183,7 @@ contract NFTReservalManager {
   function updateOffer(
     uint256 reservalID,
     address nft,
+    uint256 nftID,
     uint256 expiry,
     address token,
     uint256 price,
@@ -202,6 +208,7 @@ contract NFTReservalManager {
     NFTReserval storage reserval = _getReserval(reservalID);
     require(reserval.owner != address(0), "No such reserval exists");
     require(reserval.nft == nft, "NFT is not matched");
+    require(reserval.nftID == nftID, "NFT tokenID is not matched");
 
     address[] memory colTokens = new address[](TOKEN_CNT);
     uint256[] memory colAmounts = new uint256[](TOKEN_CNT);
@@ -210,6 +217,7 @@ contract NFTReservalManager {
       msg.sender,
       reservalID,
       nft,
+      nftID,
       expiry,
       token,
       price,
@@ -229,6 +237,7 @@ contract NFTReservalManager {
       _offer.buyer,
       reservalID,
       nft,
+      nftID,
       expiry,
       token,
       price,
@@ -270,7 +279,7 @@ contract NFTReservalManager {
     for (uint i = 0; i < offer.colTokens.length; i++) {
       _putIn(offer.buyer, offer.colTokens[i], offer.colAmounts[i]);
     }
-    _lockNFT(offer.nft);
+    _lockNFT(offer.nft, offer.nftID);
 
     reserval.acceptedOfferID = offerID;
     offer.accepted = true;
@@ -290,7 +299,7 @@ contract NFTReservalManager {
 
     if (offer.reservePayed) {
       _putOut(reserval.owner, offer.token, offer.price);
-      _transferNFT(offer.nft, offer.buyer);
+      _transferNFT(offer.nft, offer.nftID, offer.buyer);
     }
     else {
       uint256 unpayed = _tokenToUSD(offer.token) * offer.price * offer.pct / PCT_DIVIDER;
@@ -465,20 +474,20 @@ contract NFTReservalManager {
   //-------------------------------------------------------------------------------//
   //---------------------------- Interface functions ------------------------------//
   //-------------------------------------------------------------------------------//
-  function _nftOwner(address nft) private returns (address) {
-    return INFTVault(nftVault).owner(nft);
+  function _nftOwner(address nft, uint256 nftID) private returns (address) {
+    return INFTVault(nftVault).owner(nft, nftID);
   }
 
-  function _lockNFT(address nft) private {
-    INFTVault(nftVault).lockNFT(nft);
+  function _lockNFT(address nft, uint256 nftID) private {
+    INFTVault(nftVault).lockNFT(nft, nftID);
   }
 
-  function _unlockNFT(address nft) private {
-    INFTVault(nftVault).unlockNFT(nft);
+  function _unlockNFT(address nft, uint256 nftID) private {
+    INFTVault(nftVault).unlockNFT(nft, nftID);
   }
 
-  function _transferNFT(address nft, address to) private {
-    INFTVault(nftVault).transferNFT(nft, to);
+  function _transferNFT(address nft, uint256 nftID, address to) private {
+    INFTVault(nftVault).transferNFT(nft, nftID, to);
   }
 
   function _tokenToUSD(address token) private returns (uint256) {
