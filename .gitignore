@@ -1,9 +1,15 @@
-# python
-.ipynb_checkpoints
-venv/
-
-# typescript
+.env
 node_modules
+package-lock.json
 
-# solidity
-.secret
+# hardhat files
+cache
+artifacts
+
+coverage/
+coverage.json
+
+deployments/
+
+.vscode/
+build/
