@@ -51,7 +51,12 @@ library ReserveProposal {
             )
         {
             // if the previous transfer was successfull transfer the NFT
-            IERC20(saleProposal_.paymentToken).transferFrom(msg.sender, address(this), saleProposal_.price);
+            IERC20(saleProposal_.paymentToken).transferFrom(
+                msg.sender,
+                address(this),
+                (saleProposal_.collateralPercent * saleProposal_.price) /
+                    (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS)
+            );
         } catch {
             return false;
         }
