@@ -99,7 +99,7 @@ contract NFTReservalManager {
     constructor(address _priceOracle) {
         tokens = new address[](0);
         admin = address(this);
-        nftVault = address(new NFTVault(admin));
+        // nftVault = address(new NFTVault(admin));
         priceOracle = _priceOracle;
         cntReserval = 0;
         cntOffer = 0;

@@ -3,7 +3,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deployer } = await getNamedAccounts();
 
   // this contract is upgradeable through uups (EIP-1822)
-  await deploy('OpenSalesManager', {
+  await deploy('NFTVault', {
     from: deployer,
     proxy: {
       proxyContract: 'UUPSProxy',
@@ -19,4 +19,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   });
 };
 
-module.exports.tags = ['open_sales'];
+module.exports.tags = ['nft_vault'];
