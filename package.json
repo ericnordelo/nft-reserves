@@ -19,6 +19,7 @@
     "hardhat-contract-sizer": "^2.1.0",
     "hardhat-deploy": "^0.9.1",
     "solidity-coverage": "^0.7.17",
+    "solidity-linked-list": "^5.0.0",
     "web3": "^1.5.3"
   },
   "dependencies": {
