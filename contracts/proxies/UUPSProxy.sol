@@ -11,5 +11,5 @@ contract UUPSProxy is ERC1967Proxy {
         address _logic,
         address,
         bytes memory _data
-    ) payable ERC1967Proxy(_logic, _data) {} // solhint-disable-line
+    ) payable ERC1967Proxy(_logic, _data) {} // solhint-disable-line no-empty-blocks
 }
