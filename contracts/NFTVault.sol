@@ -65,6 +65,22 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
     );
 
     /**
+     * @dev emitted when a sale reserve proposal is canceled
+     * @param collection the address of the NFT collection contract
+     * @param tokenId the id of the NFT
+     * @param paymentToken the address of the ERC20 token that should be used for payment
+     * @param price the amount of paymentToken that should be paid
+     * @param collateralPercent the percent of the price as collateral
+     */
+    event SaleReserveProposalCanceled(
+        address collection,
+        uint256 tokenId,
+        address paymentToken,
+        uint256 price,
+        uint256 collateralPercent
+    );
+
+    /**
      * @dev emitted when a purchase reserve is completed
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
@@ -89,6 +105,22 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
      * @param collateralPercent the percent of the price as collateral
      */
     event PurchaseReserveProposed(
+        address collection,
+        uint256 tokenId,
+        address paymentToken,
+        uint256 price,
+        uint256 collateralPercent
+    );
+
+    /**
+     * @dev emitted when a purchase reserve proposal is canceled
+     * @param collection the address of the NFT collection contract
+     * @param tokenId the id of the NFT
+     * @param paymentToken the address of the ERC20 token that should be used for payment
+     * @param price the amount of paymentToken that should be paid
+     * @param collateralPercent the percent of the price as collateral
+     */
+    event PurchaseReserveProposalCanceled(
         address collection,
         uint256 tokenId,
         address paymentToken,
@@ -276,6 +308,148 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
         });
 
         emit PurchaseReserveProposed(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
+    }
+
+    /**
+     * @notice allows to cancel a sale reserve proposal
+     * @param collection_ the address of the collection where the token belongs to
+     * @param tokenId_ the id of the token to sell
+     * @param paymentToken_ the address of the token to use for payment
+     * @param price_ the price of the proposal
+     * @param collateralPercent_ the percent representing the collateral
+     * @param owner_ the owner of the token
+     */
+    function cancelSaleReserveProposal(
+        address collection_,
+        uint256 tokenId_,
+        address paymentToken_,
+        uint256 price_,
+        uint80 collateralPercent_,
+        address owner_
+    ) external {
+        (SaleReserveProposal memory proposal, bytes32 id) = getSaleReserveProposal(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            owner_
+        );
+
+        require(proposal.owner == msg.sender, "Only owner can cancel");
+
+        delete _saleReserveProposals[id];
+
+        emit SaleReserveProposalCanceled(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
+    }
+
+    /**
+     * @notice allows to cancel a purchase reserve proposal
+     * @param collection_ the address of the collection where the token belongs to
+     * @param tokenId_ the id of the token to sell
+     * @param paymentToken_ the address of the token to use for payment
+     * @param price_ the price of the proposal
+     * @param collateralPercent_ the percent representing the collateral
+     * @param buyer_ the buyer
+     */
+    function cancelPurchaseReserveProposal(
+        address collection_,
+        uint256 tokenId_,
+        address paymentToken_,
+        uint256 price_,
+        uint80 collateralPercent_,
+        address buyer_
+    ) external {
+        (PurchaseReserveProposal memory proposal, bytes32 id) = getPurchaseReserveProposal(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            buyer_
+        );
+
+        require(proposal.buyer == msg.sender, "Only buyer can cancel");
+
+        delete _purchaseReserveProposals[id];
+
+        emit PurchaseReserveProposalCanceled(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_
+        );
+    }
+
+    /**
+     * @notice getter to consult a sale reserve proposal definition by id
+     * @param id_ the id of the proposal (keccak256 hash of the params)
+     */
+    function getSaleReserveProposalById(bytes32 id_)
+        public
+        view
+        returns (SaleReserveProposal memory proposal)
+    {
+        require(_saleReserveProposals[id_].price > 0, "Non-existent proposal");
+        proposal = _saleReserveProposals[id_];
+    }
+
+    /**
+     * @notice getter to consult a sale proposal definition
+     * @param collection_ the address of the collection where the token belongs to
+     * @param tokenId_ the id of the token to sell
+     * @param paymentToken_ the address of the token to use for payment
+     * @param price_ the price of the proposal
+     * @param collateralPercent_ the percent representing the collateral
+     * @param owner_ the owner of the token
+     */
+    function getSaleReserveProposal(
+        address collection_,
+        uint256 tokenId_,
+        address paymentToken_,
+        uint256 price_,
+        uint80 collateralPercent_,
+        address owner_
+    ) public view returns (SaleReserveProposal memory proposal, bytes32 id) {
+        // not using encodePacked to avoid collisions
+        id = keccak256(abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, owner_));
+        proposal = getSaleReserveProposalById(id);
+    }
+
+    /**
+     * @notice getter to consult a purchase reserve proposal definition by id
+     * @param id_ the id of the proposal (keccak256 hash of the params)
+     */
+    function getPurchaseReserveProposalById(bytes32 id_)
+        public
+        view
+        returns (PurchaseReserveProposal memory proposal)
+    {
+        require(_purchaseReserveProposals[id_].price > 0, "Non-existent proposal");
+        proposal = _purchaseReserveProposals[id_];
+    }
+
+    /**
+     * @notice getter to consult a purchase proposal definition
+     * @param collection_ the address of the collection where the token belongs to
+     * @param tokenId_ the id of the token to sell
+     * @param paymentToken_ the address of the token to use for payment
+     * @param price_ the price of the proposal
+     * @param collateralPercent_ the percent representing the collateral
+     * @param buyer_ the buyer
+     */
+    function getPurchaseReserveProposal(
+        address collection_,
+        uint256 tokenId_,
+        address paymentToken_,
+        uint256 price_,
+        uint80 collateralPercent_,
+        address buyer_
+    ) public view returns (PurchaseReserveProposal memory proposal, bytes32 id) {
+        // not using encodePacked to avoid collisions
+        id = keccak256(abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, buyer_));
+        proposal = getPurchaseReserveProposalById(id);
     }
 
     // solhint-disable-next-line no-empty-blocks
