@@ -8,11 +8,6 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract NFTVault is INFTVault {
     address public admin;
 
-    uint128 public immutable a = 1;
-    uint128 public immutable b = 1;
-    uint256 public immutable c = 1;
-    uint256 public constant k = 1;
-
     mapping(address => mapping(uint256 => address)) private _lockedNFTOwner;
 
     constructor(address _admin) {
