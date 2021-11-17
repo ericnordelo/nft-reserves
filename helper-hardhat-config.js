@@ -15,6 +15,9 @@ const networkConfig = {
   },
   80001: {
     name: 'mumbai',
+    defaultProtocolParameters: {
+      minimumReservePeriod: String(time.duration.minutes(5)),
+    },
   },
   137: {
     name: 'polygon',
