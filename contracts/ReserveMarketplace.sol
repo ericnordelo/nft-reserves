@@ -12,7 +12,7 @@ import "./libraries/Constants.sol";
 import "./Structs.sol";
 
 /**
- * @title the vault holding the assets
+ * @title the contract for buying and selling reserves
  * @dev the owner should be a governance contract because manage upgrades
  */
 contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
