@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./libraries/ReserveProposal.sol";
+import "./libraries/Constants.sol";
 import "./Structs.sol";
 
 /**
@@ -16,9 +17,6 @@ import "./Structs.sol";
 contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
     using ReserveProposal for SaleReserveProposal;
     using ReserveProposal for PurchaseReserveProposal;
-
-    /// @notice the decimals of the collateral percent
-    uint256 public constant COLLATERAL_PERCENT_DECIMALS = 2;
 
     /// @dev the sale reserve proposal data structures
     mapping(bytes32 => SaleReserveProposal) private _saleReserveProposals;
@@ -39,13 +37,17 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
      * @param paymentToken the address of the ERC20 token used for payment
      * @param price the amount of paymentToken used for payment
      * @param collateralPercent the percent of the price as collateral
+     * @param seller the address of the seller
+     * @param buyer the address of the buyer
      */
     event SaleReserved(
         address collection,
         uint256 tokenId,
         address paymentToken,
         uint256 price,
-        uint256 collateralPercent
+        uint256 collateralPercent,
+        address seller,
+        address buyer
     );
 
     /**
@@ -87,13 +89,17 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
      * @param paymentToken the address of the ERC20 token used for payment
      * @param price the amount of paymentToken used for payment
      * @param collateralPercent the percent of the price as collateral
+     * @param seller the address of the seller
+     * @param buyer the address of the buyer
      */
     event PurchaseReserved(
         address collection,
         uint256 tokenId,
         address paymentToken,
         uint256 price,
-        uint256 collateralPercent
+        uint256 collateralPercent,
+        address seller,
+        address buyer
     );
 
     /**
@@ -167,7 +173,10 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
         require(IERC721(collection_).ownerOf(tokenId_) == msg.sender, "Only owner can approve");
 
         // check collateral percent
-        require(collateralPercent_ < 100 * 10**COLLATERAL_PERCENT_DECIMALS, "Invalid collateral percent");
+        require(
+            collateralPercent_ < 100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS,
+            "Invalid collateral percent"
+        );
 
         // not using encodePacked to avoid collisions
         bytes32 id = keccak256(
@@ -183,16 +192,11 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
             if (_purchaseReserveProposals[matchId].price > 0) {
                 PurchaseReserveProposal memory purchaseProposal = _purchaseReserveProposals[matchId];
 
-                // if the amount is enough
-                if (purchaseProposal.price >= price_) {
-                    // allowance can't be enough at this moment, or could have been canceled
+                // if the amount matches
+                if (purchaseProposal.price == price_) {
+                    // allowance can be not enough at this moment, or could have been canceled
                     if (purchaseProposal.tryToSellReserve()) {
                         delete _purchaseReserveProposals[matchId];
-
-                        // if there was a previous SaleProposal delete it, because the sale was already executed
-                        if (_saleReserveProposals[id].collection != address(0)) {
-                            delete _saleReserveProposals[id];
-                        }
 
                         // not using encodePacked to avoid collisions
                         bytes32 reserveId = keccak256(
@@ -210,7 +214,15 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
                             price: price_
                         });
 
-                        emit SaleReserved(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
+                        emit SaleReserved(
+                            collection_,
+                            tokenId_,
+                            paymentToken_,
+                            price_,
+                            collateralPercent_,
+                            msg.sender,
+                            purchaseProposal.buyer
+                        );
                         return;
                     } else {
                         // the proposal has not the right allowance, so has to be removed
@@ -272,20 +284,36 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
             if (_saleReserveProposals[matchId].price > 0) {
                 SaleReserveProposal memory saleProposal = _saleReserveProposals[matchId];
 
-                // if the amount is enough
-                if (saleProposal.price <= price_) {
-                    // allowance can't be enough at this moment, or could have been canceled
+                // if the amount matches
+                if (saleProposal.price == price_) {
+                    // allowance can be not enough at this moment, or could have been canceled
                     if (saleProposal.tryToBuyReserve()) {
                         delete _saleReserveProposals[matchId];
 
-                        // if there was another PurchaseProposal keep it
+                        // not using encodePacked to avoid collisions
+                        bytes32 reserveId = keccak256(
+                            abi.encode(collection_, tokenId_, saleProposal.owner, msg.sender)
+                        );
+
+                        //safe the struct with the reserve info
+                        activeReserves[reserveId] = ActiveReserve({
+                            collection: collection_,
+                            tokenId: tokenId_,
+                            seller: saleProposal.owner,
+                            buyer: msg.sender,
+                            paymentToken: paymentToken_,
+                            collateralPercent: collateralPercent_,
+                            price: price_
+                        });
 
                         emit PurchaseReserved(
                             collection_,
                             tokenId_,
                             paymentToken_,
                             price_,
-                            collateralPercent_
+                            collateralPercent_,
+                            saleProposal.owner,
+                            msg.sender
                         );
                         return;
                     } else {
