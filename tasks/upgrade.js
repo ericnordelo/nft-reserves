@@ -1,5 +1,6 @@
 task('upgrade', 'Upgrades an upgradeable contract')
-  .addParam('contract', 'The contract name')
+  .addPositionalParam('contract', 'The contract name')
+  .addOptionalParam('args', 'The inputs for the constructor if needed')
   .setAction(async (taskArgs) => {
     const contract = taskArgs.contract;
     const { deployer } = await getNamedAccounts();
@@ -23,13 +24,19 @@ task('upgrade', 'Upgrades an upgradeable contract')
     // compile contracts
     await hre.run('compile');
 
+    let args = [];
+
+    if (taskArgs.args) {
+      args = taskArgs.args.split(',');
+    }
+
     try {
       // deploy new implementation
       let implementation = await deployments.deploy(contract + '_Implementation', {
         contract: contract,
         from: deployer,
         log: true,
-        args: [],
+        args,
       });
 
       if (implementation.newlyDeployed) {
