@@ -1,3 +1,4 @@
+require('@ericnordelo/hardhat-upgrade');
 require('@nomiclabs/hardhat-ethers');
 require('@nomiclabs/hardhat-waffle');
 require('@nomiclabs/hardhat-web3');
@@ -8,7 +9,6 @@ require('hardhat-contract-sizer');
 require('hardhat-deploy');
 require('./tasks/accounts');
 require('./tasks/balance');
-require('./tasks/upgrade');
 
 require('dotenv').config();
 
@@ -51,6 +51,9 @@ module.exports = {
   },
   mocha: {
     timeout: 999999,
+  },
+  upgradeable: {
+    uups: ['ReservesManager', 'ReserveMarketplace', 'ProtocolParameters'],
   },
   solidity: {
     compilers: [
