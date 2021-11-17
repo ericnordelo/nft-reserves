@@ -19,7 +19,7 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
      * @dev the initializer modifier is to avoid someone initializing
      *      the implementation contract after deployment
      */
-    constructor() initializer {}
+    constructor() initializer {} // solhint-disable-line no-empty-blocks
 
     /**
      * @dev initializes the contract,
