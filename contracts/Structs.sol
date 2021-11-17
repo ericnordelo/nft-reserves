@@ -9,6 +9,7 @@ struct SaleReserveProposal {
     uint80 collateralPercent;
     address owner;
     address beneficiary;
+    uint64 reservePeriod;
 }
 
 struct PurchaseReserveProposal {
@@ -19,11 +20,13 @@ struct PurchaseReserveProposal {
     uint80 collateralPercent;
     address buyer;
     address beneficiary;
+    uint64 reservePeriod;
 }
 
 struct ActiveReserve {
     address collection;
     uint256 tokenId;
+    uint64 reservePeriod;
     address seller;
     address buyer;
     address paymentToken;

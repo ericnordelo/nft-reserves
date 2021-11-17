@@ -5,7 +5,7 @@ task('upgrade', 'Upgrades an upgradeable contract')
     const { deployer } = await getNamedAccounts();
 
     const beacons = [];
-    const uups = ['NFTVault'];
+    const uups = ['ReserveMarketplace'];
 
     const isBeacon = (cont) => {
       return beacons.includes(cont);

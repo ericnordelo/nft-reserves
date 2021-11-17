@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./governance/ProtocolParameters.sol";
 import "./libraries/ReserveProposal.sol";
 import "./libraries/Constants.sol";
 import "./Structs.sol";
@@ -14,9 +15,12 @@ import "./Structs.sol";
  * @title the vault holding the assets
  * @dev the owner should be a governance contract because manage upgrades
  */
-contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
+contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
     using ReserveProposal for SaleReserveProposal;
     using ReserveProposal for PurchaseReserveProposal;
+
+    /// @notice the address of the protocol parameters contract controlled by governance
+    ProtocolParameters public immutable protocol;
 
     /// @dev the sale reserve proposal data structures
     mapping(bytes32 => SaleReserveProposal) private _saleReserveProposals;
@@ -138,7 +142,9 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
      * @dev the initializer modifier is to avoid someone initializing
      *      the implementation contract after deployment
      */
-    constructor() initializer {} // solhint-disable-line no-empty-blocks
+    constructor(address protocolParameters_) initializer {
+        protocol = ProtocolParameters(protocolParameters_);
+    }
 
     /**
      * @dev initializes the contract
@@ -158,6 +164,7 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
      * @param price_ the price of the sale proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
+     * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param buyerToMatch_ the address to get the id for the match
      */
     function approveReserveToSell(
@@ -167,6 +174,7 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
         uint256 price_,
         address beneficiary_,
         uint80 collateralPercent_,
+        uint64 reservePeriod_,
         address buyerToMatch_
     ) external nonReentrant {
         // check if is the token owner
@@ -180,13 +188,29 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
 
         // not using encodePacked to avoid collisions
         bytes32 id = keccak256(
-            abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, msg.sender)
+            abi.encode(
+                collection_,
+                tokenId_,
+                paymentToken_,
+                price_,
+                collateralPercent_,
+                reservePeriod_,
+                msg.sender
+            )
         );
 
         // try to sell the reserve in the moment if possible
         if (buyerToMatch_ != address(0)) {
             bytes32 matchId = keccak256(
-                abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, buyerToMatch_)
+                abi.encode(
+                    collection_,
+                    tokenId_,
+                    paymentToken_,
+                    price_,
+                    collateralPercent_,
+                    reservePeriod_,
+                    buyerToMatch_
+                )
             );
 
             if (_purchaseReserveProposals[matchId].price > 0) {
@@ -211,7 +235,8 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
                             buyer: purchaseProposal.buyer,
                             paymentToken: paymentToken_,
                             collateralPercent: collateralPercent_,
-                            price: price_
+                            price: price_,
+                            reservePeriod: reservePeriod_
                         });
 
                         emit SaleReserved(
@@ -240,7 +265,8 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
             owner: msg.sender,
             beneficiary: beneficiary_,
             price: price_,
-            collateralPercent: collateralPercent_
+            collateralPercent: collateralPercent_,
+            reservePeriod: reservePeriod_
         });
 
         emit SaleReserveProposed(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
@@ -255,22 +281,32 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
      * @param price_ the price of the sale proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
+     * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param sellerToMatch_ the address to get the id for the match
      */
-    function approvePurchase(
+    function approveReserveToBuy(
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
         uint256 price_,
         uint80 collateralPercent_,
         address beneficiary_,
+        uint64 reservePeriod_,
         address sellerToMatch_
     ) external nonReentrant {
         require(IERC20(paymentToken_).balanceOf(msg.sender) >= price_, "Not enough balance");
 
         // not using encodePacked to avoid collisions
         bytes32 id = keccak256(
-            abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, msg.sender)
+            abi.encode(
+                collection_,
+                tokenId_,
+                paymentToken_,
+                price_,
+                collateralPercent_,
+                reservePeriod_,
+                msg.sender
+            )
         );
 
         require(price_ > 0, "Price can't be 0");
@@ -278,7 +314,15 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
         // try to purchase the reserve in the moment if possible
         if (sellerToMatch_ != address(0)) {
             bytes32 matchId = keccak256(
-                abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, sellerToMatch_)
+                abi.encode(
+                    collection_,
+                    tokenId_,
+                    paymentToken_,
+                    price_,
+                    collateralPercent_,
+                    reservePeriod_,
+                    sellerToMatch_
+                )
             );
 
             if (_saleReserveProposals[matchId].price > 0) {
@@ -303,7 +347,8 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
                             buyer: msg.sender,
                             paymentToken: paymentToken_,
                             collateralPercent: collateralPercent_,
-                            price: price_
+                            price: price_,
+                            reservePeriod: reservePeriod_
                         });
 
                         emit PurchaseReserved(
@@ -332,7 +377,8 @@ contract NFTVault is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgrade
             buyer: msg.sender,
             beneficiary: beneficiary_,
             price: price_,
-            collateralPercent: collateralPercent_
+            collateralPercent: collateralPercent_,
+            reservePeriod: reservePeriod_
         });
 
         emit PurchaseReserveProposed(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
