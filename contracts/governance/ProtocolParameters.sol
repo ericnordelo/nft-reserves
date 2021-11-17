@@ -28,7 +28,7 @@ contract ProtocolParameters is Ownable {
     }
 
     function setMinimumReservePeriod(uint256 minimumReservePeriod_) external onlyOwner {
-        require(minimumReservePeriod_ > 15 minutes, "Flipping Interval should be greater than 15 minutes");
+        require(minimumReservePeriod_ > 0, "Invalid minimum reserve period");
         emit MinimumReservePeriodUpdated(minimumReservePeriod, minimumReservePeriod_);
         minimumReservePeriod = minimumReservePeriod_;
     }
