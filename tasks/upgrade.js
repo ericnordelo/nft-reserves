@@ -5,7 +5,7 @@ task('upgrade', 'Upgrades an upgradeable contract')
     const { deployer } = await getNamedAccounts();
 
     const beacons = [];
-    const uups = ['ReserveMarketplace'];
+    const uups = ['ReserveMarketplace', 'ReservesManager', 'ProtocolParameters'];
 
     const isBeacon = (cont) => {
       return beacons.includes(cont);
