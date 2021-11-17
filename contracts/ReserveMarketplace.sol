@@ -43,6 +43,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collateralPercent the percent of the price as collateral
      * @param seller the address of the seller
      * @param buyer the address of the buyer
+     * @param reservePeriod the duration in seconds of the reserve
      */
     event SaleReserved(
         address collection,
@@ -51,7 +52,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         uint256 price,
         uint256 collateralPercent,
         address seller,
-        address buyer
+        address buyer,
+        uint256 reservePeriod
     );
 
     /**
@@ -61,13 +63,15 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken the address of the ERC20 token that should be used for payment
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
+     * @param reservePeriod the duration in seconds of the reserve
      */
     event SaleReserveProposed(
         address collection,
         uint256 tokenId,
         address paymentToken,
         uint256 price,
-        uint256 collateralPercent
+        uint256 collateralPercent,
+        uint256 reservePeriod
     );
 
     /**
@@ -77,13 +81,15 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken the address of the ERC20 token that should be used for payment
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
+     * @param reservePeriod the duration in seconds of the reserve
      */
     event SaleReserveProposalCanceled(
         address collection,
         uint256 tokenId,
         address paymentToken,
         uint256 price,
-        uint256 collateralPercent
+        uint256 collateralPercent,
+        uint256 reservePeriod
     );
 
     /**
@@ -95,6 +101,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collateralPercent the percent of the price as collateral
      * @param seller the address of the seller
      * @param buyer the address of the buyer
+     * @param reservePeriod the duration in seconds of the reserve
      */
     event PurchaseReserved(
         address collection,
@@ -103,7 +110,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         uint256 price,
         uint256 collateralPercent,
         address seller,
-        address buyer
+        address buyer,
+        uint256 reservePeriod
     );
 
     /**
@@ -113,13 +121,15 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken the address of the ERC20 token that should be used for payment
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
+     * @param reservePeriod the duration in seconds of the reserve
      */
     event PurchaseReserveProposed(
         address collection,
         uint256 tokenId,
         address paymentToken,
         uint256 price,
-        uint256 collateralPercent
+        uint256 collateralPercent,
+        uint256 reservePeriod
     );
 
     /**
@@ -129,13 +139,15 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken the address of the ERC20 token that should be used for payment
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
+     * @param reservePeriod the duration in seconds of the reserve
      */
     event PurchaseReserveProposalCanceled(
         address collection,
         uint256 tokenId,
         address paymentToken,
         uint256 price,
-        uint256 collateralPercent
+        uint256 collateralPercent,
+        uint256 reservePeriod
     );
 
     /**
@@ -179,6 +191,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
     ) external nonReentrant {
         // check if is the token owner
         require(IERC721(collection_).ownerOf(tokenId_) == msg.sender, "Only owner can approve");
+        require(reservePeriod_ > protocol.minimumReservePeriod(), "Reserve period must be greater");
 
         // check collateral percent
         require(
@@ -246,7 +259,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             price_,
                             collateralPercent_,
                             msg.sender,
-                            purchaseProposal.buyer
+                            purchaseProposal.buyer,
+                            reservePeriod_
                         );
                         return;
                     } else {
@@ -269,7 +283,14 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             reservePeriod: reservePeriod_
         });
 
-        emit SaleReserveProposed(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
+        emit SaleReserveProposed(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            reservePeriod_
+        );
     }
 
     /**
@@ -295,6 +316,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address sellerToMatch_
     ) external nonReentrant {
         require(IERC20(paymentToken_).balanceOf(msg.sender) >= price_, "Not enough balance");
+        require(reservePeriod_ > protocol.minimumReservePeriod(), "Reserve period must be greater");
 
         // not using encodePacked to avoid collisions
         bytes32 id = keccak256(
@@ -358,7 +380,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             price_,
                             collateralPercent_,
                             saleProposal.owner,
-                            msg.sender
+                            msg.sender,
+                            reservePeriod_
                         );
                         return;
                     } else {
@@ -381,7 +404,14 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             reservePeriod: reservePeriod_
         });
 
-        emit PurchaseReserveProposed(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
+        emit PurchaseReserveProposed(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            reservePeriod_
+        );
     }
 
     /**
@@ -391,6 +421,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
+     * @param reservePeriod_ the duration in seconds of the reserve
      * @param owner_ the owner of the token
      */
     function cancelSaleReserveProposal(
@@ -399,6 +430,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address paymentToken_,
         uint256 price_,
         uint80 collateralPercent_,
+        uint64 reservePeriod_,
         address owner_
     ) external {
         (SaleReserveProposal memory proposal, bytes32 id) = getSaleReserveProposal(
@@ -407,6 +439,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             paymentToken_,
             price_,
             collateralPercent_,
+            reservePeriod_,
             owner_
         );
 
@@ -414,7 +447,14 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
 
         delete _saleReserveProposals[id];
 
-        emit SaleReserveProposalCanceled(collection_, tokenId_, paymentToken_, price_, collateralPercent_);
+        emit SaleReserveProposalCanceled(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            reservePeriod_
+        );
     }
 
     /**
@@ -424,6 +464,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
+     * @param reservePeriod_ the duration in seconds of the reserve
      * @param buyer_ the buyer
      */
     function cancelPurchaseReserveProposal(
@@ -432,6 +473,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address paymentToken_,
         uint256 price_,
         uint80 collateralPercent_,
+        uint64 reservePeriod_,
         address buyer_
     ) external {
         (PurchaseReserveProposal memory proposal, bytes32 id) = getPurchaseReserveProposal(
@@ -440,6 +482,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             paymentToken_,
             price_,
             collateralPercent_,
+            reservePeriod_,
             buyer_
         );
 
@@ -452,7 +495,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             tokenId_,
             paymentToken_,
             price_,
-            collateralPercent_
+            collateralPercent_,
+            reservePeriod_
         );
     }
 
@@ -476,6 +520,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
+     * @param reservePeriod_ the duration in seconds of the reserve
      * @param owner_ the owner of the token
      */
     function getSaleReserveProposal(
@@ -484,10 +529,21 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address paymentToken_,
         uint256 price_,
         uint80 collateralPercent_,
+        uint64 reservePeriod_,
         address owner_
     ) public view returns (SaleReserveProposal memory proposal, bytes32 id) {
         // not using encodePacked to avoid collisions
-        id = keccak256(abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, owner_));
+        id = keccak256(
+            abi.encode(
+                collection_,
+                tokenId_,
+                paymentToken_,
+                price_,
+                collateralPercent_,
+                reservePeriod_,
+                owner_
+            )
+        );
         proposal = getSaleReserveProposalById(id);
     }
 
@@ -511,6 +567,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
+     * @param reservePeriod_ the duration in seconds of the reserve
      * @param buyer_ the buyer
      */
     function getPurchaseReserveProposal(
@@ -519,10 +576,21 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address paymentToken_,
         uint256 price_,
         uint80 collateralPercent_,
+        uint64 reservePeriod_,
         address buyer_
     ) public view returns (PurchaseReserveProposal memory proposal, bytes32 id) {
         // not using encodePacked to avoid collisions
-        id = keccak256(abi.encode(collection_, tokenId_, paymentToken_, price_, collateralPercent_, buyer_));
+        id = keccak256(
+            abi.encode(
+                collection_,
+                tokenId_,
+                paymentToken_,
+                price_,
+                collateralPercent_,
+                reservePeriod_,
+                buyer_
+            )
+        );
         proposal = getPurchaseReserveProposalById(id);
     }
 
