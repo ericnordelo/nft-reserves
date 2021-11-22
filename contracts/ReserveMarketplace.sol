@@ -249,7 +249,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             paymentToken: paymentToken_,
                             collateralPercent: collateralPercent_,
                             price: price_,
-                            reservePeriod: reservePeriod_
+                            reservePeriod: reservePeriod_,
+                            activationTimestamp: uint64(block.timestamp) // solhint-disable-line not-rely-on-time
                         });
 
                         emit SaleReserved(
@@ -374,7 +375,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             paymentToken: paymentToken_,
                             collateralPercent: collateralPercent_,
                             price: price_,
-                            reservePeriod: reservePeriod_
+                            reservePeriod: reservePeriod_,
+                            activationTimestamp: uint64(block.timestamp) // solhint-disable-line not-rely-on-time
                         });
 
                         emit PurchaseReserved(

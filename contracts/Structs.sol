@@ -28,6 +28,7 @@ struct ActiveReserve {
     uint256 tokenId;
     uint64 reservePeriod;
     address seller;
+    uint64 activationTimestamp;
     address buyer;
     address paymentToken;
     uint80 collateralPercent;

@@ -13,7 +13,15 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
     /// @notice minimum duration in seconds of a reserve
     uint256 public minimumReservePeriod;
 
+    /// @notice the percent of the price the seller has to pay for cancelling a reserve
+    uint256 public sellerCancelFeePercent;
+
+    /// @notice the percent of the price the buyer has to pay for cancelling a reserve
+    uint256 public buyerCancelFeePercent;
+
     event MinimumReservePeriodUpdated(uint256 from, uint256 to);
+    event SellerCancelFeePercentUpdated(uint256 from, uint256 to);
+    event BuyerCancelFeePercentUpdated(uint256 from, uint256 to);
 
     /**
      * @dev the initializer modifier is to avoid someone initializing
@@ -26,12 +34,20 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
      *      sets the default (initial) values of the parameters
      *      and also transfers the ownership to the governance
      */
-    function initialize(uint256 minimumReservePeriod_, address governanceContractAddress_)
-        public
-        initializer
-    {
+    function initialize(
+        uint256 minimumReservePeriod_,
+        uint256 sellerCancelFeePercent_,
+        uint256 buyerCancelFeePercent_,
+        address governanceContractAddress_
+    ) public initializer {
         require(minimumReservePeriod_ > 0, "Invalid minimum reserve period");
         minimumReservePeriod = minimumReservePeriod_;
+
+        require(sellerCancelFeePercent_ < 100, "Invalid seller cancel fee percent");
+        sellerCancelFeePercent = sellerCancelFeePercent_;
+
+        require(sellerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
+        buyerCancelFeePercent = buyerCancelFeePercent_;
 
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -44,6 +60,18 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
         require(minimumReservePeriod_ > 0, "Invalid minimum reserve period");
         emit MinimumReservePeriodUpdated(minimumReservePeriod, minimumReservePeriod_);
         minimumReservePeriod = minimumReservePeriod_;
+    }
+
+    function setSellerCancelFeePercent(uint256 sellerCancelFeePercent_) external onlyOwner {
+        require(sellerCancelFeePercent_ < 100, "Invalid seller cancel fee percent");
+        emit SellerCancelFeePercentUpdated(sellerCancelFeePercent, sellerCancelFeePercent_);
+        sellerCancelFeePercent = sellerCancelFeePercent_;
+    }
+
+    function setBuyerCancelFeePercent(uint256 buyerCancelFeePercent_) external onlyOwner {
+        require(buyerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
+        emit BuyerCancelFeePercentUpdated(buyerCancelFeePercent, buyerCancelFeePercent_);
+        buyerCancelFeePercent = buyerCancelFeePercent_;
     }
 
     // solhint-disable-next-line no-empty-blocks

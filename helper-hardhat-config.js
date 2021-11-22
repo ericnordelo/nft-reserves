@@ -8,6 +8,8 @@ const networkConfig = {
     name: 'hardhat',
     defaultProtocolParameters: {
       minimumReservePeriod: String(time.duration.minutes(5)),
+      sellerCancelFeePercent: '5',
+      buyerCancelFeePercent: '5',
     },
   },
   56: {
@@ -17,6 +19,8 @@ const networkConfig = {
     name: 'mumbai',
     defaultProtocolParameters: {
       minimumReservePeriod: String(time.duration.minutes(5)),
+      sellerCancelFeePercent: '5',
+      buyerCancelFeePercent: '5',
     },
   },
   137: {
