@@ -64,6 +64,26 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     );
 
     /**
+     * @dev emitted when a purchase is executed in the grace period
+     * @param collection the address of the NFT collection contract
+     * @param tokenId the id of the NFT
+     * @param paymentToken the address of the ERC20 token used for payment
+     * @param price the amount of paymentToken used for payment
+     * @param collateralPercent the percent of the price as collateral
+     * @param seller the address of the seller
+     * @param buyer the address of the buyer
+     */
+    event ReserveClaimed(
+        address collection,
+        uint256 tokenId,
+        address paymentToken,
+        uint256 price,
+        uint256 collateralPercent,
+        address seller,
+        address buyer
+    );
+
+    /**
      * @dev the initializer modifier is to avoid someone initializing
      *      the implementation contract after deployment
      */
@@ -187,7 +207,42 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
      *
      * @param activeReserveId_ the id of the reserve
      */
-    function retrieveTokenAndCollateral(bytes32 activeReserveId_) external {}
+    function retrieveTokenAndCollateral(bytes32 activeReserveId_) external nonReentrant {
+        (
+            address collection,
+            uint256 tokenId,
+            uint64 reservePeriod,
+            address seller,
+            uint64 activationTimestamp,
+            address buyer,
+            address paymentToken,
+            uint80 collateralPercent,
+            uint256 price
+        ) = marketplace.activeReserves(activeReserveId_);
+
+        require(price > 0, "Non-existent active proposal");
+        require(msg.sender == seller, "Only the seller can claim");
+
+        // the reserve period and the buyer grace period should be over
+        require(
+            reservePeriod + activationTimestamp + protocol.buyerPurchaseGracePeriod() < block.timestamp, // solhint-disable-line not-rely-on-time
+            "Grace period not finished yet"
+        );
+
+        // transfer the corresponding funds
+        uint256 collateral = (collateralPercent * price) / (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS);
+
+        // transfer the collateral
+        require(IERC20(paymentToken).transferFrom(address(this), seller, collateral), "Fail to transfer");
+
+        // transfer the NFT
+        IERC721(collection).transferFrom(address(this), seller, tokenId);
+
+        // remove the reserve
+        marketplace.removeActiveReserve(activeReserveId_);
+
+        emit ReserveClaimed(collection, tokenId, paymentToken, price, collateralPercent, seller, buyer);
+    }
 
     /**
      * @dev helper to cancel from seller
