@@ -22,6 +22,9 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
     /// @notice the address of the protocol parameters contract controlled by governance
     ProtocolParameters public immutable protocol;
 
+    /// @notice the address of the reserves manager contract hanlding the funds and the active reserves
+    address public reservesManagerAddress;
+
     /// @dev the sale reserve proposal data structures
     mapping(bytes32 => SaleReserveProposal) private _saleReserveProposals;
 
@@ -161,7 +164,9 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
     /**
      * @dev initializes the contract
      */
-    function initialize() public initializer {
+    function initialize(address reservesManagerAddress_) public initializer {
+        reservesManagerAddress = reservesManagerAddress_;
+
         __Ownable_init();
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
@@ -232,7 +237,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 // if the amount matches
                 if (purchaseProposal.price == price_) {
                     // allowance can be not enough at this moment, or could have been canceled
-                    if (purchaseProposal.tryToSellReserve()) {
+                    if (purchaseProposal.tryToSellReserve(reservesManagerAddress)) {
                         delete _purchaseReserveProposals[matchId];
 
                         // not using encodePacked to avoid collisions
@@ -358,7 +363,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 // if the amount matches
                 if (saleProposal.price == price_) {
                     // allowance can be not enough at this moment, or could have been canceled
-                    if (saleProposal.tryToBuyReserve()) {
+                    if (saleProposal.tryToBuyReserve(reservesManagerAddress)) {
                         delete _saleReserveProposals[matchId];
 
                         // not using encodePacked to avoid collisions

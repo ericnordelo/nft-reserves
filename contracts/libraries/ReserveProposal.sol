@@ -11,12 +11,15 @@ library ReserveProposal {
      * @dev helper for trying to automatically sell a reserve sale proposal
      *      tranferring the collateral and the NFT
      */
-    function tryToSellReserve(PurchaseReserveProposal memory purchaseProposal_) internal returns (bool sold) {
+    function tryToSellReserve(PurchaseReserveProposal memory purchaseProposal_, address fundsManager_)
+        internal
+        returns (bool sold)
+    {
         // try to make the transfer from the buyer (the collateral)
         try
             IERC20(purchaseProposal_.paymentToken).transferFrom(
                 purchaseProposal_.buyer,
-                address(this),
+                fundsManager_,
                 (purchaseProposal_.collateralPercent * purchaseProposal_.price) /
                     (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS)
             )
@@ -31,7 +34,7 @@ library ReserveProposal {
         // if the previous transfer was successfull transfer the NFT
         IERC721(purchaseProposal_.collection).transferFrom(
             msg.sender,
-            address(this),
+            fundsManager_,
             purchaseProposal_.tokenId
         );
 
@@ -41,12 +44,15 @@ library ReserveProposal {
     /**
      * @dev helper for trying to automatically buy from a purchase proposal
      */
-    function tryToBuyReserve(SaleReserveProposal memory saleProposal_) internal returns (bool bought) {
+    function tryToBuyReserve(SaleReserveProposal memory saleProposal_, address fundsManager_)
+        internal
+        returns (bool bought)
+    {
         // try to make the transfer from the seller
         try
             IERC721(saleProposal_.collection).transferFrom(
                 saleProposal_.owner,
-                address(this),
+                fundsManager_,
                 saleProposal_.tokenId
             )
         {
@@ -54,7 +60,7 @@ library ReserveProposal {
             require(
                 IERC20(saleProposal_.paymentToken).transferFrom(
                     msg.sender,
-                    address(this),
+                    fundsManager_,
                     (saleProposal_.collateralPercent * saleProposal_.price) /
                         (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS)
                 ),

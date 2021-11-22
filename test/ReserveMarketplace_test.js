@@ -6,7 +6,7 @@ const { constants, expectRevert, expectEvent, time } = require('@openzeppelin/te
 
 describe('ReserveMarketplace', function () {
   beforeEach(async () => {
-    await deployments.fixture(['reserve_marketplace', 'collection_mock', 'usdt_mock']);
+    await deployments.fixture(['reserves_manager', 'collection_mock', 'usdt_mock']);
     let deployment = await deployments.get('ReserveMarketplace');
     this.marketplace = await ReserveMarketplace.at(deployment.address);
   });
@@ -172,19 +172,17 @@ describe('ReserveMarketplace', function () {
               }
             );
 
-            // marketplace should have received the collateral
+            let manager = await this.marketplace.reservesManagerAddress();
+
+            // manager should have received the collateral
             assert.strictEqual(
-              (await this.usdt.balanceOf(this.marketplace.address)).toNumber(),
+              (await this.usdt.balanceOf(manager)).toNumber(),
               (purchasePriceOffer * 10) / 100,
               'Invalid locked balance in marketplace'
             );
 
-            // marketplace should have received the nft
-            assert.strictEqual(
-              await this.collection.ownerOf(0),
-              this.marketplace.address,
-              'Invalid locked nft in marketplace'
-            );
+            // manager should have received the nft
+            assert.strictEqual(await this.collection.ownerOf(0), manager, 'Invalid locked nft in marketplace');
 
             expectEvent.notEmitted(tx, 'SaleReserveProposed');
             expectEvent(tx, 'SaleReserved', {
@@ -476,10 +474,12 @@ describe('ReserveMarketplace', function () {
               }
             );
 
-            // marketplace should have locked the tokens
-            assert.strictEqual(await this.collection.ownerOf(0), this.marketplace.address, 'Invalid locked token');
+            let manager = await this.marketplace.reservesManagerAddress();
+
+            // manager should have locked the tokens
+            assert.strictEqual(await this.collection.ownerOf(0), manager, 'Invalid locked token');
             assert.strictEqual(
-              (await this.usdt.balanceOf(this.marketplace.address)).toNumber(),
+              (await this.usdt.balanceOf(manager)).toNumber(),
               (salePriceOffer * 10) / 100,
               'Invalid locked balance in marketplace'
             );

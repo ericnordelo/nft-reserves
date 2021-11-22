@@ -12,12 +12,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     from: deployer,
     proxy: {
       proxyContract: 'UUPSProxy',
-      execute: {
-        init: {
-          methodName: 'initialize',
-          args: [],
-        },
-      },
     },
     log: true,
     args: [protocolParameters.address],
