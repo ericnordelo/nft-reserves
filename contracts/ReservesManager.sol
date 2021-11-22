@@ -22,6 +22,28 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     ProtocolParameters public immutable protocol;
 
     /**
+     * @dev emitted when a reserve is canceled
+     * @param collection the address of the NFT collection contract
+     * @param tokenId the id of the NFT
+     * @param paymentToken the address of the ERC20 token used for payment
+     * @param price the amount of paymentToken used for payment
+     * @param collateralPercent the percent of the price as collateral
+     * @param seller the address of the seller
+     * @param buyer the address of the buyer
+     * @param executer the address who canceled
+     */
+    event ReserveCanceled(
+        address collection,
+        uint256 tokenId,
+        address paymentToken,
+        uint256 price,
+        uint256 collateralPercent,
+        address seller,
+        address buyer,
+        address executer
+    );
+
+    /**
      * @dev the initializer modifier is to avoid someone initializing
      *      the implementation contract after deployment
      */
@@ -109,6 +131,17 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
 
         // now return the token to the seller
         IERC721(collection_).transferFrom(address(this), msg.sender, tokenId_);
+
+        emit ReserveCanceled(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            msg.sender,
+            buyer_,
+            msg.sender
+        );
     }
 
     /**
@@ -134,6 +167,17 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         require(
             IERC20(paymentToken_).transferFrom(address(this), msg.sender, collateral),
             "Fail to transfer"
+        );
+
+        emit ReserveCanceled(
+            collection_,
+            tokenId_,
+            paymentToken_,
+            price_,
+            collateralPercent_,
+            seller_,
+            msg.sender,
+            msg.sender
         );
     }
 
