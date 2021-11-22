@@ -300,8 +300,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
      * @param price_ the price of the sale proposal
-     * @param collateralPercent_ the percent representing the collateral
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
+     * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param sellerToMatch_ the address to get the id for the match
      */
@@ -310,12 +310,16 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         uint256 tokenId_,
         address paymentToken_,
         uint256 price_,
-        uint80 collateralPercent_,
         address beneficiary_,
+        uint80 collateralPercent_,
         uint64 reservePeriod_,
         address sellerToMatch_
     ) external nonReentrant {
-        require(IERC20(paymentToken_).balanceOf(msg.sender) >= price_, "Not enough balance");
+        require(
+            IERC20(paymentToken_).balanceOf(msg.sender) >=
+                (price_ * collateralPercent_) / (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS),
+            "Not enough balance to pay for collateral"
+        );
         require(reservePeriod_ > protocol.minimumReservePeriod(), "Reserve period must be greater");
 
         // not using encodePacked to avoid collisions
