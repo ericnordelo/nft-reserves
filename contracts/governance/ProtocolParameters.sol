@@ -19,9 +19,13 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
     /// @notice the percent of the price the buyer has to pay for cancelling a reserve
     uint256 public buyerCancelFeePercent;
 
+    /// @notice the period when the buyer is able to execute the purchase
+    uint256 public buyerPurchaseGracePeriod;
+
     event MinimumReservePeriodUpdated(uint256 from, uint256 to);
     event SellerCancelFeePercentUpdated(uint256 from, uint256 to);
     event BuyerCancelFeePercentUpdated(uint256 from, uint256 to);
+    event BuyerPurchaseGracePeriodUpdated(uint256 from, uint256 to);
 
     /**
      * @dev the initializer modifier is to avoid someone initializing
@@ -38,6 +42,7 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
         uint256 minimumReservePeriod_,
         uint256 sellerCancelFeePercent_,
         uint256 buyerCancelFeePercent_,
+        uint256 buyerPurchaseGracePeriod_,
         address governanceContractAddress_
     ) public initializer {
         require(minimumReservePeriod_ > 0, "Invalid minimum reserve period");
@@ -48,6 +53,9 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
 
         require(sellerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
         buyerCancelFeePercent = buyerCancelFeePercent_;
+
+        require(buyerPurchaseGracePeriod_ > 15 minutes, "Invalid buyer puchase grace period");
+        buyerPurchaseGracePeriod = buyerPurchaseGracePeriod_;
 
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -72,6 +80,12 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
         require(buyerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
         emit BuyerCancelFeePercentUpdated(buyerCancelFeePercent, buyerCancelFeePercent_);
         buyerCancelFeePercent = buyerCancelFeePercent_;
+    }
+
+    function setBuyerPurchaseGracePeriod(uint256 buyerPurchaseGracePeriod_) external onlyOwner {
+        require(buyerPurchaseGracePeriod_ > 15 minutes, "Invalid buyer puchase grace period");
+        emit BuyerPurchaseGracePeriodUpdated(buyerPurchaseGracePeriod, buyerPurchaseGracePeriod_);
+        buyerPurchaseGracePeriod = buyerPurchaseGracePeriod_;
     }
 
     // solhint-disable-next-line no-empty-blocks

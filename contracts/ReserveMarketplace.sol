@@ -605,6 +605,16 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         proposal = getPurchaseReserveProposalById(id);
     }
 
+    /**
+     * @dev helper to clean the struct, only callable by the manager
+     * @param reserveId_ the id of the reserve
+     */
+    function removeActiveReserve(bytes32 reserveId_) external {
+        require(msg.sender == reservesManagerAddress, "Invalid manager");
+
+        delete activeReserves[reserveId_];
+    }
+
     // solhint-disable-next-line no-empty-blocks
     function _authorizeUpgrade(address) internal view override onlyOwner {}
 }

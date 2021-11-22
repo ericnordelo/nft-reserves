@@ -30,7 +30,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
      * @param collateralPercent the percent of the price as collateral
      * @param seller the address of the seller
      * @param buyer the address of the buyer
-     * @param executer the address who canceled
+     * @param executor the address who canceled
      */
     event ReserveCanceled(
         address collection,
@@ -40,7 +40,27 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         uint256 collateralPercent,
         address seller,
         address buyer,
-        address executer
+        address executor
+    );
+
+    /**
+     * @dev emitted when a purchase is executed in the grace period
+     * @param collection the address of the NFT collection contract
+     * @param tokenId the id of the NFT
+     * @param paymentToken the address of the ERC20 token used for payment
+     * @param price the amount of paymentToken used for payment
+     * @param collateralPercent the percent of the price as collateral
+     * @param seller the address of the seller
+     * @param buyer the address of the buyer
+     */
+    event PurchaseExecuted(
+        address collection,
+        uint256 tokenId,
+        address paymentToken,
+        uint256 price,
+        uint256 collateralPercent,
+        address seller,
+        address buyer
     );
 
     /**
@@ -94,13 +114,72 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         } else {
             revert("Invalid caller. Should be buyer or seller");
         }
+
+        // remove the reserve
+        marketplace.removeActiveReserve(activeReserveId_);
+
+        emit ReserveCanceled(
+            collection,
+            tokenId,
+            paymentToken,
+            price,
+            collateralPercent,
+            seller,
+            buyer,
+            msg.sender
+        );
     }
 
     /**
-     * @notice allows to execute a purchase when the reserve period finishes
+     * @notice allows to execute a purchase when the reserve period finishes (within the buyer period of grace)
      * @param activeReserveId_ the id of the reserve
      */
-    function executePurchase(bytes32 activeReserveId_) external {}
+    function executePurchase(bytes32 activeReserveId_) external nonReentrant {
+        (
+            address collection,
+            uint256 tokenId,
+            uint64 reservePeriod,
+            address seller,
+            uint64 activationTimestamp,
+            address buyer,
+            address paymentToken,
+            uint80 collateralPercent,
+            uint256 price
+        ) = marketplace.activeReserves(activeReserveId_);
+
+        require(price > 0, "Non-existent active proposal");
+        require(msg.sender == buyer, "Only the buyer can execute the purchase");
+
+        // the reserve period should be over and the buyer grace period active
+        require(
+            reservePeriod + activationTimestamp < block.timestamp, // solhint-disable-line not-rely-on-time
+            "Reserve period not finished yet"
+        );
+        require(
+            reservePeriod + activationTimestamp + protocol.buyerPurchaseGracePeriod() > block.timestamp, // solhint-disable-line not-rely-on-time
+            "Grace period finished"
+        );
+
+        // transfer the corresponding funds
+        uint256 collateral = (collateralPercent * price) / (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS);
+
+        // transfer the rest of the funds to reach the price
+        require(
+            IERC20(paymentToken).transferFrom(msg.sender, seller, price - collateral),
+            "Fail to transfer"
+        );
+
+        // transfer the collateral
+        require(IERC20(paymentToken).transferFrom(address(this), seller, collateral), "Fail to transfer");
+
+        // transfer the NFT
+        IERC721(collection).transferFrom(address(this), buyer, tokenId);
+
+        // remove the reserve
+        marketplace.removeActiveReserve(activeReserveId_);
+
+        emit PurchaseExecuted(collection, tokenId, paymentToken, price, collateralPercent, seller, buyer);
+    }
 
     /**
      * @notice allows a seller to get his token back, and the collateral, when
@@ -131,17 +210,6 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
 
         // now return the token to the seller
         IERC721(collection_).transferFrom(address(this), msg.sender, tokenId_);
-
-        emit ReserveCanceled(
-            collection_,
-            tokenId_,
-            paymentToken_,
-            price_,
-            collateralPercent_,
-            msg.sender,
-            buyer_,
-            msg.sender
-        );
     }
 
     /**
@@ -167,17 +235,6 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         require(
             IERC20(paymentToken_).transferFrom(address(this), msg.sender, collateral),
             "Fail to transfer"
-        );
-
-        emit ReserveCanceled(
-            collection_,
-            tokenId_,
-            paymentToken_,
-            price_,
-            collateralPercent_,
-            seller_,
-            msg.sender,
-            msg.sender
         );
     }
 
