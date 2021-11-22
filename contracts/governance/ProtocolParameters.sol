@@ -54,7 +54,7 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
         require(sellerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
         buyerCancelFeePercent = buyerCancelFeePercent_;
 
-        require(buyerPurchaseGracePeriod_ > 15 minutes, "Invalid buyer puchase grace period");
+        require(buyerPurchaseGracePeriod_ >= 15 minutes, "Invalid buyer puchase grace period");
         buyerPurchaseGracePeriod = buyerPurchaseGracePeriod_;
 
         __Ownable_init();
@@ -83,7 +83,7 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
     }
 
     function setBuyerPurchaseGracePeriod(uint256 buyerPurchaseGracePeriod_) external onlyOwner {
-        require(buyerPurchaseGracePeriod_ > 15 minutes, "Invalid buyer puchase grace period");
+        require(buyerPurchaseGracePeriod_ >= 15 minutes, "Invalid buyer puchase grace period");
         emit BuyerPurchaseGracePeriodUpdated(buyerPurchaseGracePeriod, buyerPurchaseGracePeriod_);
         buyerPurchaseGracePeriod = buyerPurchaseGracePeriod_;
     }
