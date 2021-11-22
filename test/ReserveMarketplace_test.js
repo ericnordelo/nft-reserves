@@ -225,31 +225,6 @@ describe('ReserveMarketplace', function () {
             });
           });
         });
-
-        // it.only('emits SaleReserveProposed if match found but the amount is not enough', async () => {
-        //   const { user } = await getNamedAccounts();
-
-        //   // sale with enough price
-        //   let tx = await this.marketplace.approveReserveToSell(
-        //     this.collection.address,
-        //     0,
-        //     this.usdt.address,
-        //     purchasePriceOffer + 100,
-        //     user,
-        //     1000,
-        //     user,
-        //     {
-        //       from: user,
-        //     }
-        //   );
-
-        //   expectEvent(tx, 'SaleProposed', {
-        //     collection: this.collection.address,
-        //     tokenId: '0',
-        //     paymentToken: this.usdt.address,
-        //     price: String(purchasePriceOffer + 100),
-        //   });
-        // });
       });
     });
 

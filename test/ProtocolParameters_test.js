@@ -22,6 +22,24 @@ describe('ProtocolParameters', function () {
     });
   });
 
+  describe('setters', () => {
+    it('minimumReservePeriod', async () => {
+      // check the validations
+      await expectRevert(this.protocol.setMinimumReservePeriod(0), 'Invalid minimum reserve period');
+
+      // check the updates
+      expectEvent(
+        await this.protocol.setMinimumReservePeriod(time.duration.minutes(50)),
+        'MinimumReservePeriodUpdated',
+        { from: time.duration.minutes(5), to: time.duration.minutes(50) }
+      );
+
+      let minimumReservePeriod = await this.protocol.minimumReservePeriod();
+
+      assert.strictEqual(String(minimumReservePeriod), String(time.duration.minutes(50)));
+    });
+  });
+
   describe('upgrade', () => {
     it("can't upgrade with wrong accounts", async () => {
       const { user } = await getNamedAccounts();
