@@ -33,6 +33,12 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable {
         __UUPSUpgradeable_init();
     }
 
+    /**
+     * @notice allows to execute a purchase when the reserve period finishes
+     * @param activeReserveId_ the id of the reserve
+     */
+    function executePurchase(bytes32 activeReserveId_) external {}
+
     // solhint-disable-next-line no-empty-blocks
     function _authorizeUpgrade(address) internal view override onlyOwner {}
 }
