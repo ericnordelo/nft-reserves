@@ -190,7 +190,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         );
 
         // transfer the collateral
-        require(IERC20(paymentToken).transferFrom(address(this), seller, collateral), "Fail to transfer");
+        require(IERC20(paymentToken).transfer(seller, collateral), "Fail to transfer");
 
         // transfer the NFT
         IERC721(collection).transferFrom(address(this), buyer, tokenId);
