@@ -109,11 +109,18 @@ describe('ReservesManager', function () {
       await expectRevert(this.manager.cancelReserve(this.reserveId), 'Invalid caller. Should be buyer or seller');
     });
 
-    it('fails to purchase without enough allowance', async () => {
-      const { user } = await getNamedAccounts();
+    it('fails to cancel without enough allowance', async () => {
+      const { user, bob } = await getNamedAccounts();
 
+      // buyer
       await expectRevert(
         this.manager.cancelReserve(this.reserveId, { from: user }),
+        'ERC20: transfer amount exceeds allowance'
+      );
+
+      // seller
+      await expectRevert(
+        this.manager.cancelReserve(this.reserveId, { from: bob }),
         'ERC20: transfer amount exceeds allowance'
       );
     });
@@ -234,6 +241,56 @@ describe('ReservesManager', function () {
       let tx = await this.manager.executePurchase(this.reserveId, { from: user });
 
       expectEvent(tx, 'PurchaseExecuted', {
+        collection: this.collection.address,
+        tokenId: '0',
+        paymentToken: this.usdt.address,
+        price: String(purchasePriceOffer),
+        collateralPercent: '1000',
+        seller: bob,
+        buyer: user,
+      });
+    });
+  });
+
+  describe('retrieve token and collateral', () => {
+    it('fails to claim non active reserve', async () => {
+      const { user, bob } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.retrieveTokenAndCollateral(
+          web3.utils.keccak256(
+            web3.eth.abi.encodeParameters(
+              ['address', 'uint256', 'address', 'address'],
+              [this.collection.address, 1, bob, user]
+            )
+          )
+        ),
+        'Non-existent active proposal'
+      );
+    });
+
+    it('fails to claim not expired reserve', async () => {
+      const { bob } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.retrieveTokenAndCollateral(this.reserveId, { from: bob }),
+        'Grace period not finished yet'
+      );
+    });
+
+    it('fails to claim from invalid account', async () => {
+      await expectRevert(this.manager.retrieveTokenAndCollateral(this.reserveId), 'Only the seller can claim');
+    });
+
+    it('should allow to claim', async () => {
+      const { user, bob } = await getNamedAccounts();
+
+      // advance the time
+      await time.increase(time.duration.weeks(2));
+
+      let tx = await this.manager.retrieveTokenAndCollateral(this.reserveId, { from: bob });
+
+      expectEvent(tx, 'ReserveClaimed', {
         collection: this.collection.address,
         tokenId: '0',
         paymentToken: this.usdt.address,
