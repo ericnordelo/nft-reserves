@@ -261,7 +261,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
 
         // return the collateral plus the seller cancel fee to the buyer
         require(IERC20(paymentToken_).transferFrom(msg.sender, buyer_, cancelFee), "Fail to transfer");
-        require(IERC20(paymentToken_).transferFrom(address(this), buyer_, collateral), "Fail to transfer");
+        require(IERC20(paymentToken_).transfer(buyer_, collateral), "Fail to transfer");
 
         // now return the token to the seller
         IERC721(collection_).transferFrom(address(this), msg.sender, tokenId_);
@@ -287,10 +287,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         IERC721(collection_).transferFrom(address(this), seller_, tokenId_);
 
         // now return the collateral to the buyer
-        require(
-            IERC20(paymentToken_).transferFrom(address(this), msg.sender, collateral),
-            "Fail to transfer"
-        );
+        require(IERC20(paymentToken_).transfer(msg.sender, collateral), "Fail to transfer");
     }
 
     // solhint-disable-next-line no-empty-blocks

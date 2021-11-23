@@ -1,17 +1,161 @@
 const ReservesManager = artifacts.require('ReservesManager');
+const ReserveMarketplace = artifacts.require('ReserveMarketplace');
+const CollectionMock = artifacts.require('CollectionMock');
+const USDTMock = artifacts.require('USDTMock');
 
-const { constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
+const { constants, expectRevert, expectEvent, time } = require('@openzeppelin/test-helpers');
 
 describe('ReservesManager', function () {
+  let purchasePriceOffer = 1000;
+
   beforeEach(async () => {
-    await deployments.fixture(['reserves_manager']);
+    const { user, bob, alice } = await getNamedAccounts();
+
+    await deployments.fixture(['reserves_manager', 'collection_mock', 'usdt_mock']);
     let deployment = await deployments.get('ReservesManager');
 
     this.manager = await ReservesManager.at(deployment.address);
+
+    deployment = await deployments.get('ReserveMarketplace');
+    this.marketplace = await ReserveMarketplace.at(deployment.address);
+
+    deployment = await deployments.get('CollectionMock');
+    this.collection = await CollectionMock.at(deployment.address);
+
+    // mint the token
+    await this.collection.safeMint(user);
+
+    deployment = await deployments.get('USDTMock');
+    this.usdt = await USDTMock.at(deployment.address);
+
+    // transfer the balance first
+    await this.usdt.transfer(user, purchasePriceOffer);
+
+    // create the purchase proposal
+    await this.marketplace.approveReserveToBuy(
+      this.collection.address,
+      0,
+      this.usdt.address,
+      purchasePriceOffer,
+      user,
+      1000,
+      time.duration.weeks(1),
+      constants.ZERO_ADDRESS,
+      {
+        from: user,
+      }
+    );
+
+    // transfer the balances first
+    await this.usdt.transfer(bob, purchasePriceOffer);
+    await this.collection.transferFrom(user, bob, 0, { from: user });
+
+    // set the allowances
+    await this.usdt.approve(this.marketplace.address, purchasePriceOffer, { from: user });
+    await this.collection.approve(this.marketplace.address, 0, { from: bob });
+
+    // sale with enough price
+    await this.marketplace.approveReserveToSell(
+      this.collection.address,
+      0,
+      this.usdt.address,
+      purchasePriceOffer,
+      alice,
+      1000,
+      time.duration.weeks(1),
+      user,
+      {
+        from: bob,
+      }
+    );
+
+    this.reserveId = web3.utils.keccak256(
+      web3.eth.abi.encodeParameters(
+        ['address', 'uint256', 'address', 'address'],
+        [this.collection.address, 0, bob, user]
+      )
+    );
   });
 
   it('should be deployed', async () => {
     assert.isOk(this.manager.address);
+  });
+
+  describe('canceling a reserve', () => {
+    it('fail to cancel non active reserve', async () => {
+      const { user, bob } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.cancelReserve(
+          web3.utils.keccak256(
+            web3.eth.abi.encodeParameters(
+              ['address', 'uint256', 'address', 'address'],
+              [this.collection.address, 1, bob, user]
+            )
+          )
+        ),
+        'Non-existent active proposal'
+      );
+    });
+
+    it('fail to cancel expired reserve', async () => {
+      // advance the time
+      await time.increase(time.duration.weeks(1));
+
+      await expectRevert(this.manager.cancelReserve(this.reserveId), 'Reserve expired. Pay or claim');
+    });
+
+    it('fail to cancel from invalid account', async () => {
+      await expectRevert(this.manager.cancelReserve(this.reserveId), 'Invalid caller. Should be buyer or seller');
+    });
+
+    it('should allow to cancel from buyer', async () => {
+      const { deployer, user, bob } = await getNamedAccounts();
+
+      // compute cancel fee
+      let cancelFee = (purchasePriceOffer * 5) / 100;
+
+      // get and approve the funds for the fee
+      this.usdt.transfer(user, cancelFee, { from: deployer });
+      this.usdt.approve(this.manager.address, cancelFee, { from: user });
+
+      let tx = await this.manager.cancelReserve(this.reserveId, { from: user });
+
+      expectEvent(tx, 'ReserveCanceled', {
+        collection: this.collection.address,
+        tokenId: '0',
+        paymentToken: this.usdt.address,
+        price: String(purchasePriceOffer),
+        collateralPercent: '1000',
+        seller: bob,
+        buyer: user,
+        executor: user,
+      });
+    });
+
+    it('should allow to cancel from seller', async () => {
+      const { deployer, user, bob } = await getNamedAccounts();
+
+      // compute cancel fee
+      let cancelFee = (purchasePriceOffer * 5) / 100;
+
+      // get and approve the funds for the fee
+      this.usdt.transfer(bob, cancelFee, { from: deployer });
+      this.usdt.approve(this.manager.address, cancelFee, { from: bob });
+
+      let tx = await this.manager.cancelReserve(this.reserveId, { from: bob });
+
+      expectEvent(tx, 'ReserveCanceled', {
+        collection: this.collection.address,
+        tokenId: '0',
+        paymentToken: this.usdt.address,
+        price: String(purchasePriceOffer),
+        collateralPercent: '1000',
+        seller: bob,
+        buyer: user,
+        executor: bob,
+      });
+    });
   });
 
   describe('upgrade', () => {
