@@ -51,7 +51,7 @@ contract ProtocolParameters is UUPSUpgradeable, OwnableUpgradeable {
         require(sellerCancelFeePercent_ < 100, "Invalid seller cancel fee percent");
         sellerCancelFeePercent = sellerCancelFeePercent_;
 
-        require(sellerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
+        require(buyerCancelFeePercent_ < 100, "Invalid buyer cancel fee percent");
         buyerCancelFeePercent = buyerCancelFeePercent_;
 
         require(buyerPurchaseGracePeriod_ >= 15 minutes, "Invalid buyer puchase grace period");
