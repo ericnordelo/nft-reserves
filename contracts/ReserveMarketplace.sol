@@ -245,7 +245,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             abi.encode(collection_, tokenId_, msg.sender, purchaseProposal.buyer)
                         );
 
-                        //safe the struct with the reserve info
+                        // save the struct with the reserve info
                         activeReserves[reserveId] = ActiveReserve({
                             collection: collection_,
                             tokenId: tokenId_,
