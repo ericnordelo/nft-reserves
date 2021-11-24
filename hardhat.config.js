@@ -26,7 +26,7 @@ module.exports = {
       url: 'http://127.0.0.1:8545',
       tags: ['local'],
     },
-    kovan: {
+    rinkeby: {
       url: `https://kovan.infura.io/v3/${INFURA_API_KEY}`,
       accounts: { mnemonic: MNEMONIC },
     },

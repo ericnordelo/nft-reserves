@@ -16,6 +16,15 @@ const networkConfig = {
   56: {
     name: 'bsc',
   },
+  4: {
+    name: 'rinkeby',
+    defaultProtocolParameters: {
+      minimumReservePeriod: String(time.duration.minutes(5)),
+      sellerCancelFeePercent: '5',
+      buyerCancelFeePercent: '5',
+      buyerPurchaseGracePeriod: String(time.duration.minutes(15)),
+    },
+  },
   80001: {
     name: 'mumbai',
     defaultProtocolParameters: {
