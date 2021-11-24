@@ -27,12 +27,9 @@ module.exports = {
       tags: ['local'],
     },
     rinkeby: {
-      url: `https://kovan.infura.io/v3/${INFURA_API_KEY}`,
+      url: `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`,
       accounts: { mnemonic: MNEMONIC },
-    },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: { mnemonic: MNEMONIC },
+      tags: ['testnet'],
     },
     mumbai: {
       url: MUMBAI_RPC_URL,
