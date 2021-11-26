@@ -43,6 +43,7 @@ describe('ReserveMarketplace', function () {
           user,
           1000, // ten percent
           time.duration.weeks(1),
+          time.duration.weeks(1),
           constants.ZERO_ADDRESS,
           {
             from: user,
@@ -70,6 +71,7 @@ describe('ReserveMarketplace', function () {
           1000,
           user,
           1000,
+          time.duration.weeks(1),
           time.duration.weeks(1),
           constants.ZERO_ADDRESS,
           {
@@ -138,6 +140,7 @@ describe('ReserveMarketplace', function () {
             user,
             1000,
             time.duration.weeks(1),
+            time.duration.weeks(1),
             constants.ZERO_ADDRESS,
             {
               from: user,
@@ -165,6 +168,7 @@ describe('ReserveMarketplace', function () {
               purchasePriceOffer,
               alice,
               1000,
+              time.duration.weeks(1),
               time.duration.weeks(1),
               user,
               {
@@ -207,6 +211,7 @@ describe('ReserveMarketplace', function () {
               user,
               1000,
               time.duration.weeks(1),
+              time.duration.weeks(1),
               user,
               {
                 from: user,
@@ -221,6 +226,36 @@ describe('ReserveMarketplace', function () {
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
             });
+          });
+
+          it('return false if expirationTimesamp is passed', async () => {
+            const { user, bob, alice } = await getNamedAccounts();
+
+            // transfer the balances first
+            await this.usdt.transfer(bob, purchasePriceOffer);
+            await this.collection.transferFrom(user, bob, 0, { from: user });
+
+            // set the allowances
+            await this.usdt.approve(this.marketplace.address, purchasePriceOffer, { from: user });
+            await this.collection.approve(this.marketplace.address, 0, { from: bob });
+
+            await time.increase(time.duration.weeks(2));
+
+            // sale after expiration time
+            await this.marketplace.approveReserveToSell(
+              this.collection.address,
+              0,
+              this.usdt.address,
+              purchasePriceOffer,
+              alice,
+              1000,
+              time.duration.weeks(1),
+              0,
+              user,
+              {
+                from: bob,
+              }
+            );
           });
         });
       });
@@ -238,6 +273,7 @@ describe('ReserveMarketplace', function () {
           constants.ZERO_ADDRESS,
           1000,
           time.duration.seconds(5),
+          time.duration.weeks(1),
           constants.ZERO_ADDRESS,
           { from: user }
         ),
@@ -257,6 +293,7 @@ describe('ReserveMarketplace', function () {
           constants.ZERO_ADDRESS,
           10000,
           time.duration.weeks(5),
+          time.duration.weeks(1),
           constants.ZERO_ADDRESS,
           { from: user }
         ),
@@ -274,6 +311,7 @@ describe('ReserveMarketplace', function () {
           constants.ZERO_ADDRESS,
           1000,
           time.duration.days(5),
+          time.duration.weeks(1),
           constants.ZERO_ADDRESS
         ),
         'Only owner can approve'
@@ -290,6 +328,7 @@ describe('ReserveMarketplace', function () {
           constants.ZERO_ADDRESS,
           1000,
           time.duration.days(5),
+          time.duration.weeks(1),
           constants.ZERO_ADDRESS
         ),
         'ERC721: owner query for nonexistent token'
@@ -326,6 +365,7 @@ describe('ReserveMarketplace', function () {
             constants.ZERO_ADDRESS,
             1000,
             time.duration.weeks(1),
+            time.duration.weeks(1),
             constants.ZERO_ADDRESS,
             { from: user }
           ),
@@ -346,6 +386,7 @@ describe('ReserveMarketplace', function () {
           1000,
           user,
           1000,
+          time.duration.weeks(1),
           time.duration.weeks(1),
           constants.ZERO_ADDRESS,
           {
@@ -377,6 +418,7 @@ describe('ReserveMarketplace', function () {
           1000,
           user,
           1000,
+          time.duration.weeks(1),
           time.duration.weeks(1),
           constants.ZERO_ADDRESS,
           {
@@ -442,6 +484,7 @@ describe('ReserveMarketplace', function () {
             user,
             1000,
             time.duration.weeks(1),
+            time.duration.weeks(1),
             constants.ZERO_ADDRESS,
             {
               from: user,
@@ -467,6 +510,7 @@ describe('ReserveMarketplace', function () {
               salePriceOffer,
               alice,
               1000,
+              time.duration.weeks(1),
               time.duration.weeks(1),
               user,
               {
@@ -513,6 +557,7 @@ describe('ReserveMarketplace', function () {
               alice,
               1000,
               time.duration.weeks(1),
+              time.duration.weeks(1),
               user,
               {
                 from: bob,
@@ -528,6 +573,35 @@ describe('ReserveMarketplace', function () {
               reservePeriod: time.duration.weeks(1),
             });
           });
+
+          it('return false if expirationTimesamp is passed', async () => {
+            const { user, bob, alice } = await getNamedAccounts();
+
+            // transfer the balances first
+            await this.usdt.transfer(bob, salePriceOffer);
+
+            // set the allowances
+            await this.usdt.approve(this.marketplace.address, salePriceOffer, { from: bob });
+            await this.collection.approve(this.marketplace.address, 0, { from: user });
+
+            await time.increase(time.duration.weeks(2));
+
+            // sale after expiration time
+            await this.marketplace.approveReserveToBuy(
+              this.collection.address,
+              0,
+              this.usdt.address,
+              salePriceOffer,
+              alice,
+              1000,
+              time.duration.weeks(1),
+              time.duration.weeks(1),
+              user,
+              {
+                from: bob,
+              }
+            );
+          });
         });
 
         it('emits PurchaseReserveProposed if match found but the amount is not enough', async () => {
@@ -541,6 +615,7 @@ describe('ReserveMarketplace', function () {
             salePriceOffer - 100,
             user,
             1000,
+            time.duration.weeks(1),
             time.duration.weeks(1),
             user,
             {
@@ -581,6 +656,7 @@ describe('ReserveMarketplace', function () {
         1000,
         user,
         1000,
+        time.duration.weeks(1),
         time.duration.weeks(1),
         constants.ZERO_ADDRESS,
         {
@@ -657,6 +733,7 @@ describe('ReserveMarketplace', function () {
         1000,
         user,
         1000,
+        time.duration.weeks(1),
         time.duration.weeks(1),
         constants.ZERO_ADDRESS,
         {

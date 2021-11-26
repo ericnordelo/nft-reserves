@@ -40,6 +40,7 @@ describe('ReservesManager', function () {
       user,
       1000,
       time.duration.weeks(1),
+      time.duration.weeks(1),
       constants.ZERO_ADDRESS,
       {
         from: user,
@@ -62,6 +63,7 @@ describe('ReservesManager', function () {
       purchasePriceOffer,
       alice,
       1000,
+      time.duration.weeks(1),
       time.duration.weeks(1),
       user,
       {

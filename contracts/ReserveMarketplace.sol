@@ -67,6 +67,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
      * @param reservePeriod the duration in seconds of the reserve
+     * @param validityPeriod the duration in seconds of the proposal availability
      */
     event SaleReserveProposed(
         address collection,
@@ -74,7 +75,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address paymentToken,
         uint256 price,
         uint256 collateralPercent,
-        uint256 reservePeriod
+        uint256 reservePeriod,
+        uint256 validityPeriod
     );
 
     /**
@@ -125,6 +127,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
      * @param reservePeriod the duration in seconds of the reserve
+     * @param validityPeriod the duration in seconds of the proposal availability
      */
     event PurchaseReserveProposed(
         address collection,
@@ -132,7 +135,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address paymentToken,
         uint256 price,
         uint256 collateralPercent,
-        uint256 reservePeriod
+        uint256 reservePeriod,
+        uint256 validityPeriod
     );
 
     /**
@@ -182,6 +186,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collateralPercent_ the percent representing the collateral
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
+     * @param validityPeriod_ the duration in seconds of the proposal availability
      * @param buyerToMatch_ the address to get the id for the match
      */
     function approveReserveToSell(
@@ -192,6 +197,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address beneficiary_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
+        uint64 validityPeriod_,
         address buyerToMatch_
     ) external nonReentrant {
         // check if is the token owner
@@ -286,7 +292,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             beneficiary: beneficiary_,
             price: price_,
             collateralPercent: collateralPercent_,
-            reservePeriod: reservePeriod_
+            reservePeriod: reservePeriod_,
+            expirationTimestamp: uint64(block.timestamp + validityPeriod_) // solhint-disable-line not-rely-on-time
         });
 
         emit SaleReserveProposed(
@@ -295,7 +302,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             paymentToken_,
             price_,
             collateralPercent_,
-            reservePeriod_
+            reservePeriod_,
+            validityPeriod_
         );
     }
 
@@ -309,6 +317,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
+     * @param validityPeriod_ the duration in seconds of the proposal availability
      * @param sellerToMatch_ the address to get the id for the match
      */
     function approveReserveToBuy(
@@ -319,6 +328,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address beneficiary_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
+        uint64 validityPeriod_,
         address sellerToMatch_
     ) external nonReentrant {
         require(
@@ -412,7 +422,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             beneficiary: beneficiary_,
             price: price_,
             collateralPercent: collateralPercent_,
-            reservePeriod: reservePeriod_
+            reservePeriod: reservePeriod_,
+            expirationTimestamp: uint64(block.timestamp + validityPeriod_) // solhint-disable-line not-rely-on-time
         });
 
         emit PurchaseReserveProposed(
@@ -421,7 +432,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             paymentToken_,
             price_,
             collateralPercent_,
-            reservePeriod_
+            reservePeriod_,
+            validityPeriod_
         );
     }
 

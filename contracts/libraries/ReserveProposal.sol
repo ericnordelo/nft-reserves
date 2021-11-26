@@ -15,6 +15,12 @@ library ReserveProposal {
         internal
         returns (bool sold)
     {
+        // check if proposal is expired
+        // solhint-disable-next-line not-rely-on-time
+        if (block.timestamp > purchaseProposal_.expirationTimestamp) {
+            return false;
+        }
+
         // try to make the transfer from the buyer (the collateral)
         try
             IERC20(purchaseProposal_.paymentToken).transferFrom(
@@ -48,6 +54,12 @@ library ReserveProposal {
         internal
         returns (bool bought)
     {
+        // check if proposal is expired
+        // solhint-disable-next-line not-rely-on-time
+        if (block.timestamp > saleProposal_.expirationTimestamp) {
+            return false;
+        }
+
         // try to make the transfer from the seller
         try
             IERC721(saleProposal_.collection).transferFrom(
