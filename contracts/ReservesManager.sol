@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./governance/ProtocolParameters.sol";
 import "./libraries/Constants.sol";
 import "./ReserveMarketplace.sol";
@@ -15,6 +16,8 @@ import "./Structs.sol";
  * @title contract managing the active reserves
  */
 contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
+    using SafeERC20 for IERC20;
+
     /// @notice the address of the reserves marketplace
     ReserveMarketplace public immutable marketplace;
 
@@ -303,10 +306,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         reserveAmounts[activeReserveId_].payment = reserve.price;
 
         // lock the price to the manager
-        require(
-            IERC20(reserve.paymentToken).transferFrom(msg.sender, address(this), reserve.price),
-            "Fail to transfer"
-        );
+        IERC20(reserve.paymentToken).safeTransferFrom(msg.sender, address(this), reserve.price);
 
         emit ReservePricePaid(
             reserve.collection,
@@ -372,7 +372,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     function increaseReserveCollateral(bytes32 activeReserveId_, uint256 amount_) external {
         ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        require(reserve.price > 0, "Non-existent active proposal");
+        require(reserve.price > 0, "Non-existent active reserve");
         require(msg.sender == reserve.buyer, "Only buyer allowed");
 
         ReserveAmounts memory amounts = reserveAmounts[activeReserveId_];
@@ -382,10 +382,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         reserveAmounts[activeReserveId_].collateral = amounts.collateral + amount_;
 
         // get the funds in collateral token
-        require(
-            IERC20(reserve.collateralToken).transferFrom(msg.sender, address(this), amount_),
-            "Fail to transfer"
-        );
+        IERC20(reserve.collateralToken).safeTransferFrom(msg.sender, address(this), amount_);
 
         emit CollateralIncreased(activeReserveId_, amount_);
     }
@@ -398,7 +395,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     function decreaseReserveCollateral(bytes32 activeReserveId_, uint256 amount_) external {
         ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        require(reserve.price > 0, "Non-existent active proposal");
+        require(reserve.price > 0, "Non-existent active reserve");
         require(msg.sender == reserve.buyer, "Only buyer allowed");
 
         ReserveAmounts memory amounts = reserveAmounts[activeReserveId_];
@@ -410,13 +407,15 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
                 (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS);
 
             require(minimumCollateral <= amounts.collateral - amount_, "Attemp to uncollateralize reserve");
+        } else {
+            require(amounts.collateral >= amount_, "Insufficient amount for request");
         }
 
         // decrement the collateral
         reserveAmounts[activeReserveId_].collateral = amounts.collateral - amount_;
 
         // return the funds in collateral token
-        require(IERC20(reserve.collateralToken).transfer(msg.sender, amount_), "Fail to transfer");
+        IERC20(reserve.collateralToken).safeTransfer(msg.sender, amount_);
 
         emit CollateralDecreased(activeReserveId_, amount_);
     }
@@ -436,7 +435,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         uint256 cancelFee = (price_ * protocol.sellerCancelFeePercent()) / 100;
 
         // return the collateral plus the seller cancel fee to the buyer
-        require(IERC20(paymentToken_).transferFrom(msg.sender, buyer_, cancelFee), "Fail to transfer");
+        IERC20(paymentToken_).safeTransferFrom(msg.sender, buyer_, cancelFee);
         require(IERC20(collateralToken_).transfer(buyer_, amounts_.collateral), "Fail to transfer");
 
         // return the payment if was made
@@ -463,15 +462,15 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         uint256 cancelFee = (price_ * protocol.buyerCancelFeePercent()) / 100;
 
         // return the token plus the buyer cancel fee to the seller
-        require(IERC20(paymentToken_).transferFrom(msg.sender, seller_, cancelFee), "Fail to transfer");
+        IERC20(paymentToken_).safeTransferFrom(msg.sender, seller_, cancelFee);
         IERC721(collection_).transferFrom(address(this), seller_, tokenId_);
 
         // now return the collateral to the buyer
-        require(IERC20(collateralToken_).transfer(msg.sender, amounts_.collateral), "Fail to transfer");
+        IERC20(collateralToken_).safeTransfer(msg.sender, amounts_.collateral);
 
         // return the payment if was made
         if (amounts_.payment > 0) {
-            require(IERC20(paymentToken_).transfer(msg.sender, amounts_.payment), "Fail to transfer");
+            IERC20(paymentToken_).safeTransfer(msg.sender, amounts_.payment);
         }
     }
 
@@ -490,10 +489,10 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         address buyer_
     ) internal {
         // transfer the corresponding funds
-        require(IERC20(paymentToken_).transfer(seller_, amounts_.payment), "Fail to transfer");
+        IERC20(paymentToken_).safeTransfer(seller_, amounts_.payment);
 
         // return the collateral
-        require(IERC20(collateralToken_).transfer(buyer_, amounts_.collateral), "Fail to transfer");
+        IERC20(collateralToken_).safeTransfer(buyer_, amounts_.collateral);
 
         // transfer the NFT
         IERC721(collection_).transferFrom(address(this), buyer_, tokenId_);
@@ -525,7 +524,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         address buyer_
     ) internal {
         // transfer the collateral
-        require(IERC20(collateralToken_).transfer(seller_, amounts_.collateral), "Fail to transfer");
+        IERC20(collateralToken_).safeTransfer(seller_, amounts_.collateral);
 
         // transfer the NFT
         IERC721(collection_).transferFrom(address(this), seller_, tokenId_);
