@@ -5,7 +5,7 @@ const USDTMock = artifacts.require('USDTMock');
 
 const { constants, expectRevert, expectEvent, time } = require('@openzeppelin/test-helpers');
 
-describe.only('ReservesManager', function () {
+describe('ReservesManager', function () {
   let purchasePriceOffer = 1000;
 
   beforeEach(async () => {

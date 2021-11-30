@@ -49,13 +49,6 @@ describe('ProtocolParameters', function () {
       );
 
       defaultProtocolParameters.buyerCancelFeePercent = '5';
-
-      await expectRevert(
-        newProtocol.initialize(...Object.values(defaultProtocolParameters), governance),
-        'Invalid buyer puchase grace period'
-      );
-
-      defaultProtocolParameters.buyerPurchaseGracePeriod = String(time.duration.weeks(1));
     });
   });
 
@@ -133,9 +126,6 @@ describe('ProtocolParameters', function () {
     });
 
     it('buyerPurchaseGracePeriod', async () => {
-      // check the validations
-      await expectRevert(this.protocol.setBuyerPurchaseGracePeriod(0), 'Invalid buyer puchase grace period');
-
       // check the updates
       expectEvent(
         await this.protocol.setBuyerPurchaseGracePeriod(time.duration.minutes(50)),

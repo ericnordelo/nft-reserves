@@ -436,7 +436,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
 
         // return the collateral plus the seller cancel fee to the buyer
         IERC20(paymentToken_).safeTransferFrom(msg.sender, buyer_, cancelFee);
-        require(IERC20(collateralToken_).transfer(buyer_, amounts_.collateral), "Fail to transfer");
+        IERC20(collateralToken_).safeTransfer(buyer_, amounts_.collateral);
 
         // return the payment if was made
         if (amounts_.payment > 0) {
