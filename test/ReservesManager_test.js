@@ -5,7 +5,7 @@ const USDTMock = artifacts.require('USDTMock');
 
 const { constants, expectRevert, expectEvent, time } = require('@openzeppelin/test-helpers');
 
-describe('ReservesManager', function () {
+describe.only('ReservesManager', function () {
   let purchasePriceOffer = 1000;
 
   beforeEach(async () => {
@@ -177,11 +177,11 @@ describe('ReservesManager', function () {
   });
 
   describe('liquidate a reserve', () => {
-    it('fails to purchase non active reserve', async () => {
+    it('fails to liquidate a non active reserve', async () => {
       const { user, bob } = await getNamedAccounts();
 
       await expectRevert(
-        this.manager.executePurchase(
+        this.manager.liquidateReserve(
           web3.utils.keccak256(
             web3.eth.abi.encodeParameters(
               ['address', 'uint256', 'address', 'address'],
@@ -192,85 +192,64 @@ describe('ReservesManager', function () {
         'Non-existent active proposal'
       );
     });
+
+    it('fails to liquidate not expired reserve from buyer', async () => {
+      const { user } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.liquidateReserve(this.reserveId, { from: user }),
+        'Reserve period not finished yet'
+      );
+    });
+
+    it('fails to liquidate not expired reserve from seller', async () => {
+      const { bob } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.liquidateReserve(this.reserveId, { from: bob }),
+        'Buyer period to pay not finished yet'
+      );
+    });
+
+    it('fails to purchase from invalid account', async () => {
+      await expectRevert(this.manager.liquidateReserve(this.reserveId), 'Invalid caller. Should be buyer or seller');
+    });
+
+    it('should allow to liquidate a non paid reserve', async () => {
+      const { user, bob } = await getNamedAccounts();
+
+      // advance the time
+      await time.increase(time.duration.weeks(2));
+
+      // compute collateral
+      const { collateral } = await this.manager.reserveAmounts(this.reserveId);
+
+      let tx = await this.manager.liquidateReserve(this.reserveId, { from: bob });
+
+      expectEvent(tx, 'PurchaseCanceled', {
+        collection: this.collection.address,
+        tokenId: '0',
+        paymentToken: this.usdt.address,
+        collateralToken: this.usdt.address,
+        price: String(purchasePriceOffer),
+        collateralPercent: '1000',
+        seller: bob,
+        buyer: user,
+      });
+
+      await expectEvent.inTransaction(tx.tx, this.usdt, 'Transfer', {
+        from: this.manager.address,
+        to: bob,
+        value: collateral,
+      });
+
+      await expectEvent.inTransaction(tx.tx, this.collection, 'Transfer', {
+        from: this.manager.address,
+        to: bob,
+        tokenId: '0',
+      });
+    });
   });
-
-  // describe('executing the purchase of a reserve', () => {
-  //   it('fails to purchase non active reserve', async () => {
-  //     const { user, bob } = await getNamedAccounts();
-
-  //     await expectRevert(
-  //       this.manager.executePurchase(
-  //         web3.utils.keccak256(
-  //           web3.eth.abi.encodeParameters(
-  //             ['address', 'uint256', 'address', 'address'],
-  //             [this.collection.address, 1, bob, user]
-  //           )
-  //         )
-  //       ),
-  //       'Non-existent active proposal'
-  //     );
-  //   });
-
-  //   it('fails to purchase not expired reserve', async () => {
-  //     const { user } = await getNamedAccounts();
-
-  //     await expectRevert(
-  //       this.manager.executePurchase(this.reserveId, { from: user }),
-  //       'Reserve period not finished yet'
-  //     );
-  //   });
-
-  //   it('fails to purchase expired reserve after grace period', async () => {
-  //     const { user } = await getNamedAccounts();
-
-  //     // advance the time
-  //     await time.increase(time.duration.weeks(2));
-
-  //     await expectRevert(this.manager.executePurchase(this.reserveId, { from: user }), 'Grace period finished');
-  //   });
-
-  //   it('fails to purchase from invalid account', async () => {
-  //     await expectRevert(this.manager.executePurchase(this.reserveId), 'Only the buyer can execute the purchase');
-  //   });
-
-  //   it('fails to purchase without enough allowance', async () => {
-  //     const { user } = await getNamedAccounts();
-
-  //     // advance the time
-  //     await time.increase(time.duration.weeks(1));
-
-  //     await expectRevert(
-  //       this.manager.executePurchase(this.reserveId, { from: user }),
-  //       'ERC20: transfer amount exceeds allowance'
-  //     );
-  //   });
-
-  //   it('should allow to execute purchase', async () => {
-  //     const { deployer, user, bob } = await getNamedAccounts();
-
-  //     // advance the time
-  //     await time.increase(time.duration.weeks(1));
-
-  //     // compute collateral
-  //     let collateral = (purchasePriceOffer * 10) / 100;
-
-  //     // get and approve the funds for the fee
-  //     this.usdt.transfer(user, purchasePriceOffer - collateral, { from: deployer });
-  //     this.usdt.approve(this.manager.address, purchasePriceOffer - collateral, { from: user });
-
-  //     let tx = await this.manager.executePurchase(this.reserveId, { from: user });
-
-  //     expectEvent(tx, 'PurchaseExecuted', {
-  //       collection: this.collection.address,
-  //       tokenId: '0',
-  //       paymentToken: this.usdt.address,
-  //       price: String(purchasePriceOffer),
-  //       collateralPercent: '1000',
-  //       seller: bob,
-  //       buyer: user,
-  //     });
-  //   });
-  // });
 
   // describe('retrieve token and collateral', () => {
   //   it('fails to claim non active reserve', async () => {

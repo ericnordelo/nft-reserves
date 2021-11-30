@@ -236,13 +236,13 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
             require(
                 reserve.reservePeriod + reserve.activationTimestamp + protocol.buyerPurchaseGracePeriod() <
                     block.timestamp, // solhint-disable-line not-rely-on-time
-                "Buyer period to pay not finished"
+                "Buyer period to pay not finished yet"
             );
         } else if (msg.sender == reserve.buyer) {
             // the reserve period should be over (the buyer grace period could be active)
             require(
                 reserve.reservePeriod + reserve.activationTimestamp < block.timestamp, // solhint-disable-line not-rely-on-time
-                "Reserve expiration not reached"
+                "Reserve period not finished yet"
             );
         } else {
             revert("Invalid caller. Should be buyer or seller");
@@ -357,6 +357,11 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
             reservePeriod: reservePeriod_,
             activationTimestamp: uint64(block.timestamp) // solhint-disable-line not-rely-on-time
         });
+
+        uint256 minimumCollateral = (collateralPercent_ * price_) /
+            (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS);
+
+        reserveAmounts[reserveId].collateral = minimumCollateral;
     }
 
     /**
