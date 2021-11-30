@@ -22,7 +22,7 @@ const networkConfig = {
       minimumReservePeriod: String(time.duration.minutes(5)),
       sellerCancelFeePercent: '5',
       buyerCancelFeePercent: '5',
-      buyerPurchaseGracePeriod: String(time.duration.minutes(15)),
+      buyerPurchaseGracePeriod: 0,
     },
   },
   80001: {
