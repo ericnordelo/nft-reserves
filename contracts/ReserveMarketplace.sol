@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./governance/ProtocolParameters.sol";
 import "./libraries/ReserveProposal.sol";
 import "./libraries/Constants.sol";
+import "./ReservesManager.sol";
 import "./Structs.sol";
 
 /**
@@ -30,12 +31,6 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
 
     /// @dev the purchase reserve proposal data structures
     mapping(bytes32 => PurchaseReserveProposal) private _purchaseReserveProposals;
-
-    /**
-     * @notice the active reserves by id:
-     *         Id = keccak256(collection, tokenId, sellerAddress, buyerAddress)
-     */
-    mapping(bytes32 => ActiveReserve) public activeReserves;
 
     /**
      * @dev emitted when a sale reserve is completed
@@ -246,23 +241,17 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                     if (purchaseProposal.tryToSellReserve(reservesManagerAddress)) {
                         delete _purchaseReserveProposals[matchId];
 
-                        // not using encodePacked to avoid collisions
-                        bytes32 reserveId = keccak256(
-                            abi.encode(collection_, tokenId_, msg.sender, purchaseProposal.buyer)
-                        );
-
                         // save the struct with the reserve info
-                        activeReserves[reserveId] = ActiveReserve({
-                            collection: collection_,
-                            tokenId: tokenId_,
-                            seller: msg.sender,
-                            buyer: purchaseProposal.buyer,
-                            paymentToken: paymentToken_,
-                            collateralPercent: collateralPercent_,
-                            price: price_,
-                            reservePeriod: reservePeriod_,
-                            activationTimestamp: uint64(block.timestamp) // solhint-disable-line not-rely-on-time
-                        });
+                        ReservesManager(reservesManagerAddress).startReserve(
+                            collection_,
+                            tokenId_,
+                            paymentToken_,
+                            price_,
+                            collateralPercent_,
+                            reservePeriod_,
+                            msg.sender,
+                            purchaseProposal.buyer
+                        );
 
                         emit SaleReserved(
                             collection_,
@@ -376,23 +365,17 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                     if (saleProposal.tryToBuyReserve(reservesManagerAddress)) {
                         delete _saleReserveProposals[matchId];
 
-                        // not using encodePacked to avoid collisions
-                        bytes32 reserveId = keccak256(
-                            abi.encode(collection_, tokenId_, saleProposal.owner, msg.sender)
+                        // save the struct with the reserve info
+                        ReservesManager(reservesManagerAddress).startReserve(
+                            collection_,
+                            tokenId_,
+                            paymentToken_,
+                            price_,
+                            collateralPercent_,
+                            reservePeriod_,
+                            saleProposal.owner,
+                            msg.sender
                         );
-
-                        //safe the struct with the reserve info
-                        activeReserves[reserveId] = ActiveReserve({
-                            collection: collection_,
-                            tokenId: tokenId_,
-                            seller: saleProposal.owner,
-                            buyer: msg.sender,
-                            paymentToken: paymentToken_,
-                            collateralPercent: collateralPercent_,
-                            price: price_,
-                            reservePeriod: reservePeriod_,
-                            activationTimestamp: uint64(block.timestamp) // solhint-disable-line not-rely-on-time
-                        });
 
                         emit PurchaseReserved(
                             collection_,
@@ -615,16 +598,6 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             )
         );
         proposal = getPurchaseReserveProposalById(id);
-    }
-
-    /**
-     * @dev helper to clean the struct, only callable by the manager
-     * @param reserveId_ the id of the reserve
-     */
-    function removeActiveReserve(bytes32 reserveId_) external {
-        require(msg.sender == reservesManagerAddress, "Invalid manager");
-
-        delete activeReserves[reserveId_];
     }
 
     // solhint-disable-next-line no-empty-blocks

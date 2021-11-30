@@ -33,6 +33,12 @@ struct ActiveReserve {
     uint64 activationTimestamp;
     address buyer;
     address paymentToken;
+    address collateralToken;
     uint80 collateralPercent;
     uint256 price;
+}
+
+struct ReserveAmounts {
+    uint256 collateral;
+    uint256 payment;
 }
