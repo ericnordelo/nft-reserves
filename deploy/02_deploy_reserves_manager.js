@@ -1,10 +1,19 @@
-module.exports = async ({ getNamedAccounts, deployments }) => {
+const { networkConfig } = require('../helper-hardhat-config');
+
+module.exports = async ({ getNamedAccounts, deployments, network, getChainId }) => {
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
+  const chainId = await getChainId();
 
   // get previously deployed contracts
   let marketplace = await ethers.getContract('ReserveMarketplace');
   let protocolParameters = await ethers.getContract('ProtocolParameters');
+
+  let priceOracleAddress = networkConfig[chainId].priceOracleAddress;
+
+  if (network.tags.local || network.tags.testnet) {
+    priceOracleAddress = (await ethers.getContract('PriceOracleMock')).address;
+  }
 
   // ! IN PRODUCTION THE OWNERSHIP OF THIS CONTRACT SHOULD BE TRANSFERRED TO GOVERNANCE
 
@@ -16,7 +25,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
       execute: {
         init: {
           methodName: 'initialize',
-          args: [],
+          args: [priceOracleAddress],
         },
       },
     },
@@ -31,4 +40,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 };
 
 module.exports.tags = ['reserves_manager'];
-module.exports.dependencies = ['reserve_marketplace', 'protocol_parameters'];
+module.exports.dependencies = ['reserve_marketplace', 'protocol_parameters', 'price_oracle_mock'];

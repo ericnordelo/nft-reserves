@@ -4,9 +4,11 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./oracles/interfaces/IPriceOracle.sol";
 import "./governance/ProtocolParameters.sol";
 import "./libraries/Constants.sol";
 import "./ReserveMarketplace.sol";
@@ -32,6 +34,9 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
 
     /// @notice the amounts of tokens the active reserve has
     mapping(bytes32 => ReserveAmounts) public reserveAmounts;
+
+    /// @notice the price oracle address
+    IPriceOracle public priceOracle;
 
     /**
      * @dev emitted when a reserve is canceled
@@ -138,6 +143,28 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     event CollateralDecreased(bytes32 reserveId, uint256 amount);
 
     /**
+     * @dev emitted when an undercollateralized reserve is claimed
+     * @param collection the address of the NFT collection contract
+     * @param tokenId the id of the NFT
+     * @param paymentToken the address of the ERC20 token used for payment
+     * @param collateralToken the address of the ERC20 token used for collateral
+     * @param price the amount of paymentToken used for payment
+     * @param collateralPercent the percent of the price as collateral
+     * @param seller the address of the seller
+     * @param buyer the address of the buyer
+     */
+    event CollateralClaimed(
+        address collection,
+        uint256 tokenId,
+        address paymentToken,
+        address collateralToken,
+        uint256 price,
+        uint256 collateralPercent,
+        address seller,
+        address buyer
+    );
+
+    /**
      * @dev validates callability only from marketplace
      */
     modifier onlyMarketplace() {
@@ -157,7 +184,9 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     /**
      * @dev initializes the contract
      */
-    function initialize() public initializer {
+    function initialize(address priceOracle_) public initializer {
+        priceOracle = IPriceOracle(priceOracle_);
+
         __Ownable_init();
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
@@ -282,6 +311,52 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         }
 
         // remove the reserve
+        delete activeReserves[activeReserveId_];
+    }
+
+    /**
+     * @notice allows to liquidate the reserve if gets undercollateralized
+     * @param activeReserveId_ the id of the reserve
+     */
+    function liquidateUndercollateralization(bytes32 activeReserveId_) external nonReentrant {
+        ActiveReserve memory reserve = activeReserves[activeReserveId_];
+
+        require(reserve.price > 0, "Non-existent active proposal");
+
+        ReserveAmounts memory amounts = reserveAmounts[activeReserveId_];
+
+        require(amounts.payment < reserve.price, "Reserve already paid");
+
+        // check undercollateralization with price oracle
+        // cToken is the collateral token and pToken is the payment token
+        uint256 cDecimals = IERC20Metadata(reserve.collateralToken).decimals();
+        uint256 pDecimals = IERC20Metadata(reserve.paymentToken).decimals();
+
+        // (price oracle return 6 decimals)
+        uint256 cTokenToUSDPure = priceOracle.price(reserve.collateralToken);
+        uint256 pTokenToUSDPure = priceOracle.price(reserve.paymentToken);
+
+        uint256 collateralValue = amounts.collateral * cTokenToUSDPure;
+        uint256 reservePriceValue = reserve.price * pTokenToUSDPure;
+
+        uint256 collateralValueScaled;
+        // scale collateral value to reserve price value decimals
+        if (cDecimals > pDecimals) {
+            collateralValueScaled = collateralValue / 10**(cDecimals - pDecimals);
+        } else {
+            collateralValueScaled = collateralValue * 10**(pDecimals - cDecimals);
+        }
+
+        // get the current percent with decimals
+        uint256 currentPercent = (collateralValueScaled * 100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS) /
+            reservePriceValue;
+
+        // actually check undercollateralization
+        require(currentPercent < reserve.collateralPercent, "Non undercollateralized reserve");
+
+        // liquidate
+        _liquidateUndercollateralizedReserve(amounts, reserve);
+
         delete activeReserves[activeReserveId_];
     }
 
@@ -523,8 +598,22 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         address seller_,
         address buyer_
     ) internal {
+        uint256 collateralShare = _calculateOwnerCollateralShare(
+            price_,
+            paymentToken_,
+            collateralToken_,
+            collateralPercent_
+        );
+
         // transfer the collateral
-        IERC20(collateralToken_).safeTransfer(seller_, amounts_.collateral);
+        if (amounts_.collateral > collateralShare) {
+            // split the collateral between seller and buyer
+            IERC20(collateralToken_).safeTransfer(buyer_, amounts_.collateral - collateralShare);
+            IERC20(collateralToken_).safeTransfer(seller_, collateralShare);
+        } else {
+            // transfer the amount left to the seller
+            IERC20(collateralToken_).safeTransfer(seller_, amounts_.collateral);
+        }
 
         // transfer the NFT
         IERC721(collection_).transferFrom(address(this), seller_, tokenId_);
@@ -539,6 +628,67 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
             seller_,
             buyer_
         );
+    }
+
+    /**
+     * @dev helper for liquidations
+     */
+    function _liquidateUndercollateralizedReserve(
+        ReserveAmounts memory amounts_,
+        ActiveReserve memory reserve_
+    ) internal {
+        // transfer the collateral
+        IERC20(reserve_.collateralToken).safeTransfer(reserve_.seller, amounts_.collateral);
+
+        // return the NFT
+        IERC721(reserve_.collection).transferFrom(address(this), reserve_.seller, reserve_.tokenId);
+
+        emit CollateralClaimed(
+            reserve_.collection,
+            reserve_.tokenId,
+            reserve_.paymentToken,
+            reserve_.collateralToken,
+            reserve_.price,
+            reserve_.collateralPercent,
+            reserve_.seller,
+            reserve_.buyer
+        );
+    }
+
+    /**
+     * @dev helper for liquidations
+     */
+    function _calculateOwnerCollateralShare(
+        uint256 price_,
+        address paymentToken_,
+        address collateralToken_,
+        uint80 collateralPercent_
+    ) internal view returns (uint256 collateralValue) {
+        // check undercollateralization with price oracle
+        // cToken is the collateral token and pToken is the payment token
+        uint256 cDecimals = IERC20Metadata(collateralToken_).decimals();
+        uint256 pDecimals = IERC20Metadata(paymentToken_).decimals();
+
+        // (price oracle return 6 decimals)
+        uint256 cTokenToUSDPure = priceOracle.price(collateralToken_);
+        uint256 pTokenToUSDPure = priceOracle.price(paymentToken_);
+
+        // the opposite case shouldn't be possible
+        assert(cTokenToUSDPure > 0 && pTokenToUSDPure > 0);
+
+        uint256 reservePriceValue = price_ * pTokenToUSDPure;
+
+        uint256 usdValueToPay = (collateralPercent_ * reservePriceValue) /
+            (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS);
+
+        uint256 collateralValueWithPDecimals = usdValueToPay / cTokenToUSDPure;
+
+        // scale collateral value from reserve price value decimals
+        if (cDecimals < pDecimals) {
+            collateralValue = collateralValueWithPDecimals / 10**(pDecimals - cDecimals);
+        } else {
+            collateralValue = collateralValueWithPDecimals * 10**(cDecimals - pDecimals);
+        }
     }
 
     // solhint-disable-next-line no-empty-blocks

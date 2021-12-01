@@ -74,7 +74,7 @@ describe('ProtocolParameters', function () {
     it('has correct default buyerPurchaseGracePeriod', async () => {
       let buyerPurchaseGracePeriod = await this.protocol.buyerPurchaseGracePeriod();
 
-      assert.strictEqual(String(buyerPurchaseGracePeriod), String(time.duration.minutes(15)));
+      assert.strictEqual(String(buyerPurchaseGracePeriod), '0');
     });
   });
 
@@ -130,7 +130,7 @@ describe('ProtocolParameters', function () {
       expectEvent(
         await this.protocol.setBuyerPurchaseGracePeriod(time.duration.minutes(50)),
         'BuyerPurchaseGracePeriodUpdated',
-        { from: time.duration.minutes(15), to: time.duration.minutes(50) }
+        { from: '0', to: time.duration.minutes(50) }
       );
 
       let buyerPurchaseGracePeriod = await this.protocol.buyerPurchaseGracePeriod();
