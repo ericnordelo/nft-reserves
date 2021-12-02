@@ -8,6 +8,9 @@ module.exports = async ({ getNamedAccounts, deployments, network }) => {
       log: true,
       args: [],
     });
+
+    let oracle = await ethers.getContract('PriceOracleMock');
+    oracle.setPrice(oracle.address, '1');
   }
 };
 

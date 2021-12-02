@@ -199,7 +199,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     function cancelReserve(bytes32 activeReserveId_) external nonReentrant {
         ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        require(reserve.price > 0, "Non-existent active proposal");
+        require(reserve.price > 0, "Non-existent active reserve");
 
         // the reserve period should not be over
         require(
@@ -260,7 +260,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     function liquidateReserve(bytes32 activeReserveId_) external nonReentrant {
         ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        require(reserve.price > 0, "Non-existent active proposal");
+        require(reserve.price > 0, "Non-existent active reserve");
 
         // check the caller and make corresponding validation
         if (msg.sender == reserve.seller) {
@@ -321,7 +321,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     function liquidateUndercollateralization(bytes32 activeReserveId_) external nonReentrant {
         ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        require(reserve.price > 0, "Non-existent active proposal");
+        require(reserve.price > 0, "Non-existent active reserve");
 
         ReserveAmounts memory amounts = reserveAmounts[activeReserveId_];
 
@@ -369,7 +369,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
     function payThePrice(bytes32 activeReserveId_) external {
         ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        require(msg.sender == reserve.buyer, "Only proposal buyer allowed");
+        require(msg.sender == reserve.buyer, "Only reserve buyer allowed");
         require(reserveAmounts[activeReserveId_].payment < reserve.price, "Already paid");
         require(
             reserve.reservePeriod + reserve.activationTimestamp + protocol.buyerPurchaseGracePeriod() >
@@ -400,7 +400,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
-     * @param price_ the price of the sale proposal
+     * @param price_ the price of the sale reserve
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param seller_ the address of the seller

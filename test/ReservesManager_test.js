@@ -96,7 +96,7 @@ describe('ReservesManager', function () {
             )
           )
         ),
-        'Non-existent active proposal'
+        'Non-existent active reserve'
       );
     });
 
@@ -189,7 +189,7 @@ describe('ReservesManager', function () {
             )
           )
         ),
-        'Non-existent active proposal'
+        'Non-existent active reserve'
       );
     });
 
@@ -253,7 +253,7 @@ describe('ReservesManager', function () {
     describe('pay the price and paid liquidation', () => {
       describe('payThePrice method', () => {
         it('fails to pay from non buyer', async () => {
-          await expectRevert(this.manager.payThePrice(this.reserveId), 'Only proposal buyer allowed');
+          await expectRevert(this.manager.payThePrice(this.reserveId), 'Only reserve buyer allowed');
         });
 
         it('fails to pay after valid period', async () => {
@@ -491,6 +491,51 @@ describe('ReservesManager', function () {
       ),
       'Only callable from the marketplace'
     );
+  });
+
+  describe('undercollateralization', () => {
+    it('fails for non existent reserve', async () => {
+      const { bob, user } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.liquidateUndercollateralization(
+          web3.utils.keccak256(
+            web3.eth.abi.encodeParameters(
+              ['address', 'uint256', 'address', 'address'],
+              [this.collection.address, 1, bob, user]
+            )
+          )
+        ),
+        'Non-existent active reserve'
+      );
+    });
+
+    it('fails if reserve was already paid', async () => {
+      const { deployer, user } = await getNamedAccounts();
+
+      // approve funds
+      await this.usdt.transfer(user, 1000, { from: deployer });
+      await this.usdt.approve(this.manager.address, 1000, { from: user });
+
+      await this.manager.payThePrice(this.reserveId, { from: user });
+
+      await expectRevert(
+        this.manager.liquidateUndercollateralization(this.reserveId, { from: user }),
+        'Reserve already paid'
+      );
+    });
+
+    it('fails with non undercollateralized reserve', async () => {
+      const { user } = await getNamedAccounts();
+
+      await expectRevert(
+        this.manager.liquidateUndercollateralization(this.reserveId, { from: user }),
+        'Non undercollateralized reserve'
+      );
+    });
+
+    it('collateral token with more decimals than payment token');
+    it('_liquidateUndercollateralizedReserve method');
   });
 
   describe('upgrade', () => {
