@@ -40,6 +40,7 @@ describe('ReservesManager', function () {
       purchasePriceOffer,
       user,
       1000,
+      100,
       time.duration.weeks(1),
       time.duration.weeks(1),
       constants.ZERO_ADDRESS,
@@ -488,6 +489,7 @@ describe('ReservesManager', function () {
         this.usdt.address,
         String(purchasePriceOffer),
         1000,
+        100,
         1000,
         bob,
         user

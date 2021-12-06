@@ -21,6 +21,7 @@ struct PurchaseReserveProposal {
     address collateralToken;
     uint64 expirationTimestamp;
     uint256 price;
+    uint256 collateralInitialAmount;
     uint80 collateralPercent;
     address buyer;
     address beneficiary;

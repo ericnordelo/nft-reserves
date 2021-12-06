@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./oracles/interfaces/IPriceOracle.sol";
 import "./governance/ProtocolParameters.sol";
 import "./libraries/ReserveProposal.sol";
 import "./libraries/Constants.sol";
@@ -191,7 +192,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the sale proposal
-     * @param collateralPercent_ the percent representing the collateral
+     * @param collateralPercent_ the percent representing minimum collateral (to avoid liquidation by undercollateralization)
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param validityPeriod_ the duration in seconds of the proposal availability
@@ -251,6 +252,19 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             if (_purchaseReserveProposals[matchId].price > 0) {
                 PurchaseReserveProposal memory purchaseProposal = _purchaseReserveProposals[matchId];
 
+                // not allow undercollateralized proposals
+                uint256 percentage = _getCollateralAmountPercent(
+                    collateralToken_,
+                    paymentToken_,
+                    purchaseProposal.collateralInitialAmount,
+                    price_
+                );
+
+                require(
+                    percentage >= collateralPercent_,
+                    "Attempt to accept an undercollateralized proposal"
+                );
+
                 // if the amount matches
                 if (purchaseProposal.price == price_) {
                     // allowance can be not enough at this moment, or could have been canceled
@@ -265,6 +279,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             collateralToken_,
                             price_,
                             collateralPercent_,
+                            purchaseProposal.collateralInitialAmount,
                             reservePeriod_,
                             msg.sender,
                             purchaseProposal.buyer
@@ -325,7 +340,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the sale proposal
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
-     * @param collateralPercent_ the percent representing the collateral
+     * @param collateralPercent_ the percent representing minimum collateral (to avoid liquidation by undercollateralization)
+     * @param collateralInitialAmount_ the initial amount of collateral deposited
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param validityPeriod_ the duration in seconds of the proposal availability
      * @param sellerToMatch_ the address to get the id for the match
@@ -338,6 +354,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         uint256 price_,
         address beneficiary_,
         uint80 collateralPercent_,
+        uint256 collateralInitialAmount_,
         uint64 reservePeriod_,
         uint64 validityPeriod_,
         address sellerToMatch_
@@ -365,6 +382,18 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
 
         require(price_ > 0, "Price can't be 0");
 
+        {
+            // not allow undercollateralized proposals
+            uint256 percentage = _getCollateralAmountPercent(
+                collateralToken_,
+                paymentToken_,
+                collateralInitialAmount_,
+                price_
+            );
+
+            require(percentage >= collateralPercent_, "Attempt to create an undercollateralized proposal");
+        }
+
         // try to purchase the reserve in the moment if possible
         if (sellerToMatch_ != address(0)) {
             bytes32 matchId = keccak256(
@@ -386,7 +415,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 // if the amount matches
                 if (saleProposal.price == price_) {
                     // allowance can be not enough at this moment, or could have been canceled
-                    if (saleProposal.tryToBuyReserve(reservesManagerAddress)) {
+                    if (saleProposal.tryToBuyReserve(reservesManagerAddress, collateralInitialAmount_)) {
                         delete _saleReserveProposals[matchId];
 
                         // save the struct with the reserve info
@@ -397,6 +426,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             collateralToken_,
                             price_,
                             collateralPercent_,
+                            collateralInitialAmount_,
                             reservePeriod_,
                             saleProposal.owner,
                             msg.sender
@@ -432,6 +462,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             beneficiary: beneficiary_,
             price: price_,
             collateralPercent: collateralPercent_,
+            collateralInitialAmount: collateralInitialAmount_,
             reservePeriod: reservePeriod_,
             expirationTimestamp: uint64(block.timestamp + validityPeriod_) // solhint-disable-line not-rely-on-time
         });
@@ -455,7 +486,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
-     * @param collateralPercent_ the percent representing the collateral
+     * @param collateralPercent_ the percent representing minimum collateral (to avoid liquidation by undercollateralization)
      * @param reservePeriod_ the duration in seconds of the reserve
      * @param owner_ the owner of the token
      */
@@ -502,7 +533,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
-     * @param collateralPercent_ the percent representing the collateral
+     * @param collateralPercent_ the percent representing minimum collateral (to avoid liquidation by undercollateralization)
      * @param reservePeriod_ the duration in seconds of the reserve
      * @param buyer_ the buyer
      */
@@ -562,7 +593,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
-     * @param collateralPercent_ the percent representing the collateral
+     * @param collateralPercent_ the percent representing minimum collateral (to avoid liquidation by undercollateralization)
      * @param reservePeriod_ the duration in seconds of the reserve
      * @param owner_ the owner of the token
      */
@@ -612,7 +643,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param paymentToken_ the address of the token to use for payment
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
-     * @param collateralPercent_ the percent representing the collateral
+     * @param collateralPercent_ the percent representing minimum collateral (to avoid liquidation by undercollateralization)
      * @param reservePeriod_ the duration in seconds of the reserve
      * @param buyer_ the buyer
      */
@@ -640,6 +671,44 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             )
         );
         proposal = getPurchaseReserveProposalById(id);
+    }
+
+    /**
+     * @dev helper to get the percentage representing the fraction of the value in USD from
+     *      an amount of collateral to the price of a proposal
+     */
+    function _getCollateralAmountPercent(
+        address collateralToken_,
+        address paymentToken_,
+        uint256 collateralAmount_,
+        uint256 price_
+    ) internal view returns (uint256 percentage) {
+        IPriceOracle priceOracle = IPriceOracle(ReservesManager(reservesManagerAddress).priceOracle());
+
+        // check undercollateralization with price oracle
+        // cToken is the collateral token and pToken is the payment token
+        uint256 cDecimals = IERC20Metadata(collateralToken_).decimals();
+        uint256 pDecimals = IERC20Metadata(paymentToken_).decimals();
+
+        // (price oracle return 6 decimals)
+        uint256 cTokenToUSDPure = priceOracle.price(collateralToken_);
+        uint256 pTokenToUSDPure = priceOracle.price(paymentToken_);
+
+        uint256 collateralValue = collateralAmount_ * cTokenToUSDPure;
+        uint256 reservePriceValue = price_ * pTokenToUSDPure;
+
+        uint256 collateralValueScaled;
+        // scale collateral value to reserve price value decimals
+        if (cDecimals > pDecimals) {
+            collateralValueScaled = collateralValue / 10**(cDecimals - pDecimals);
+        } else {
+            collateralValueScaled = collateralValue * 10**(pDecimals - cDecimals);
+        }
+
+        // get the current percent with decimals
+        percentage =
+            (collateralValueScaled * 100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS) /
+            reservePriceValue;
     }
 
     // solhint-disable-next-line no-empty-blocks

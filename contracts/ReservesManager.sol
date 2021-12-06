@@ -328,16 +328,33 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         require(amounts.payment < reserve.price, "Reserve already paid");
 
         // check undercollateralization with price oracle
+        require(_isUndercollateralized(reserve, amounts), "Non undercollateralized reserve");
+
+        // liquidate
+        _liquidateUndercollateralizedReserve(amounts, reserve);
+
+        delete activeReserves[activeReserveId_];
+    }
+
+    /**
+     * @dev allows to check if a reserve is currently undercollateralized
+     */
+    function _isUndercollateralized(ActiveReserve memory reserve_, ReserveAmounts memory amounts_)
+        internal
+        view
+        returns (bool undercollateralized)
+    {
+        // check undercollateralization with price oracle
         // cToken is the collateral token and pToken is the payment token
-        uint256 cDecimals = IERC20Metadata(reserve.collateralToken).decimals();
-        uint256 pDecimals = IERC20Metadata(reserve.paymentToken).decimals();
+        uint256 cDecimals = IERC20Metadata(reserve_.collateralToken).decimals();
+        uint256 pDecimals = IERC20Metadata(reserve_.paymentToken).decimals();
 
         // (price oracle return 6 decimals)
-        uint256 cTokenToUSDPure = priceOracle.price(reserve.collateralToken);
-        uint256 pTokenToUSDPure = priceOracle.price(reserve.paymentToken);
+        uint256 cTokenToUSDPure = priceOracle.price(reserve_.collateralToken);
+        uint256 pTokenToUSDPure = priceOracle.price(reserve_.paymentToken);
 
-        uint256 collateralValue = amounts.collateral * cTokenToUSDPure;
-        uint256 reservePriceValue = reserve.price * pTokenToUSDPure;
+        uint256 collateralValue = amounts_.collateral * cTokenToUSDPure;
+        uint256 reservePriceValue = reserve_.price * pTokenToUSDPure;
 
         uint256 collateralValueScaled;
         // scale collateral value to reserve price value decimals
@@ -352,12 +369,21 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
             reservePriceValue;
 
         // actually check undercollateralization
-        require(currentPercent < reserve.collateralPercent, "Non undercollateralized reserve");
+        return (currentPercent < reserve_.collateralPercent);
+    }
 
-        // liquidate
-        _liquidateUndercollateralizedReserve(amounts, reserve);
+    /**
+     * @notice allows to check if a reserve is currently undercollateralized
+     * @param activeReserveId_ the id of the reserve
+     */
+    function isUndercollateralized(bytes32 activeReserveId_) public view returns (bool undercollateralized) {
+        ActiveReserve memory reserve = activeReserves[activeReserveId_];
 
-        delete activeReserves[activeReserveId_];
+        require(reserve.price > 0, "Non-existent active reserve");
+
+        ReserveAmounts memory amounts = reserveAmounts[activeReserveId_];
+
+        return _isUndercollateralized(reserve, amounts);
     }
 
     /**
@@ -403,6 +429,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
      * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the sale reserve
      * @param collateralPercent_ the percent representing the collateral
+     * @param collateralInitialAmount_ the amount of collateral deposited at the beggining
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
      * @param seller_ the address of the seller
      * @param buyer_ the address of the buyer
@@ -414,6 +441,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         address collateralToken_,
         uint256 price_,
         uint80 collateralPercent_,
+        uint256 collateralInitialAmount_,
         uint64 reservePeriod_,
         address seller_,
         address buyer_
@@ -435,10 +463,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
             activationTimestamp: uint64(block.timestamp) // solhint-disable-line not-rely-on-time
         });
 
-        uint256 minimumCollateral = (collateralPercent_ * price_) /
-            (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS);
-
-        reserveAmounts[reserveId].collateral = minimumCollateral;
+        reserveAmounts[reserveId].collateral = collateralInitialAmount_;
     }
 
     /**

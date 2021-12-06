@@ -3,6 +3,7 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../ReservesManager.sol";
 import "../Structs.sol";
 import "./Constants.sol";
 
@@ -23,11 +24,10 @@ library ReserveProposal {
 
         // try to make the transfer from the buyer (the collateral)
         try
-            IERC20(purchaseProposal_.paymentToken).transferFrom(
+            IERC20(purchaseProposal_.collateralToken).transferFrom(
                 purchaseProposal_.buyer,
                 fundsManager_,
-                (purchaseProposal_.collateralPercent * purchaseProposal_.price) /
-                    (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS)
+                purchaseProposal_.collateralInitialAmount
             )
         returns (bool success) {
             if (!success) {
@@ -50,10 +50,11 @@ library ReserveProposal {
     /**
      * @dev helper for trying to automatically buy from a purchase proposal
      */
-    function tryToBuyReserve(SaleReserveProposal memory saleProposal_, address fundsManager_)
-        internal
-        returns (bool bought)
-    {
+    function tryToBuyReserve(
+        SaleReserveProposal memory saleProposal_,
+        address fundsManager_,
+        uint256 collateralInitialAmount_
+    ) internal returns (bool bought) {
         // check if proposal is expired
         // solhint-disable-next-line not-rely-on-time
         if (block.timestamp > saleProposal_.expirationTimestamp) {
@@ -68,13 +69,12 @@ library ReserveProposal {
                 saleProposal_.tokenId
             )
         {
-            // if the previous transfer was successfull transfer the NFT
+            // if the previous transfer was successfull transfer the collateral
             require(
-                IERC20(saleProposal_.paymentToken).transferFrom(
+                IERC20(saleProposal_.collateralToken).transferFrom(
                     msg.sender,
                     fundsManager_,
-                    (saleProposal_.collateralPercent * saleProposal_.price) /
-                        (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS)
+                    collateralInitialAmount_
                 ),
                 "Fail to transfer"
             );
