@@ -35,9 +35,11 @@ module.exports = async ({ getNamedAccounts, deployments, network, getChainId }) 
 
   if (manager.newlyDeployed) {
     log('Initializing the Marketplace...');
-    await marketplace.initialize(manager.address);
+    let tx = await marketplace.initialize(manager.address);
+
+    await tx.wait();
   }
 };
 
 module.exports.tags = ['reserves_manager'];
-module.exports.dependencies = ['reserve_marketplace', 'protocol_parameters', 'price_oracle_mock'];
+module.exports.dependencies = ['reserve_marketplace', 'price_oracle_mock'];
