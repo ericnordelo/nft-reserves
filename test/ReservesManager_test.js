@@ -185,6 +185,46 @@ describe('ReservesManager', function () {
         executor: bob,
       });
     });
+
+    describe('pay the price and cancel', () => {
+      it('allows to cancel paid reserve from buyer', async () => {
+        const { deployer, user, bob } = await getNamedAccounts();
+
+        // compute cancel fee
+        let cancelFee = (purchasePriceOffer * 5) / 100;
+
+        // approve funds
+        await this.usdt.transfer(user, 1000, { from: deployer });
+        await this.usdt.approve(this.manager.address, 1000, { from: user });
+
+        await this.manager.payThePrice(this.reserveId, { from: user });
+
+        // get and approve the funds for the fee
+        this.usdt.transfer(user, cancelFee);
+        this.usdt.approve(this.manager.address, cancelFee, { from: user });
+
+        await this.manager.cancelReserve(this.reserveId, { from: user });
+      });
+
+      it('allows to cancel paid reserve from seller', async () => {
+        const { deployer, user, bob } = await getNamedAccounts();
+
+        // compute cancel fee
+        let cancelFee = (purchasePriceOffer * 5) / 100;
+
+        // approve funds
+        await this.usdt.transfer(user, 1000, { from: deployer });
+        await this.usdt.approve(this.manager.address, 1000, { from: user });
+
+        await this.manager.payThePrice(this.reserveId, { from: user });
+
+        // get and approve the funds for the fee
+        this.usdt.transfer(bob, cancelFee);
+        this.usdt.approve(this.manager.address, cancelFee, { from: bob });
+
+        await this.manager.cancelReserve(this.reserveId, { from: bob });
+      });
+    });
   });
 
   describe('liquidate a reserve', () => {
@@ -605,6 +645,17 @@ describe('ReservesManager', function () {
             [this.collection.address, 1, bob, user]
           )
         );
+      });
+
+      it('fails to get isUndercollateralized successfully with non existent reserve', async () => {
+        await expectRevert(
+          this.manager.isUndercollateralized(web3.utils.keccak256('nonexistent id')),
+          'Non-existent active reserve'
+        );
+      });
+
+      it('gets isUndercollateralized successfully', async () => {
+        await this.manager.isUndercollateralized(this.reserveId);
       });
 
       it('_liquidateUndercollateralizedReserve method', async () => {
