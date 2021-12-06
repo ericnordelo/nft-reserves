@@ -150,7 +150,7 @@ describe('ReserveMarketplace', function () {
           const { user } = await getNamedAccounts();
 
           // transfer the balance first
-          await this.token8.transfer(user, purchasePriceOffer);
+          await this.token8.transfer(user, 10000);
 
           // create the purchase proposal
           await this.marketplace.approveReserveToBuy(
@@ -161,7 +161,7 @@ describe('ReserveMarketplace', function () {
             purchasePriceOffer,
             user,
             1000,
-            100,
+            10000,
             time.duration.weeks(1),
             time.duration.weeks(1),
             constants.ZERO_ADDRESS,
@@ -205,11 +205,10 @@ describe('ReserveMarketplace', function () {
             const { user, bob, alice } = await getNamedAccounts();
 
             // transfer the balances first
-            await this.usdt.transfer(bob, purchasePriceOffer);
             await this.collection.transferFrom(user, bob, 0, { from: user });
 
             // set the allowances
-            await this.token8.approve(this.marketplace.address, purchasePriceOffer, { from: user });
+            await this.token8.approve(this.marketplace.address, 10000, { from: user });
             await this.collection.approve(this.marketplace.address, 0, { from: bob });
 
             // sale with enough price
@@ -234,7 +233,7 @@ describe('ReserveMarketplace', function () {
             // manager should have received the collateral
             assert.strictEqual(
               (await this.token8.balanceOf(manager)).toNumber(),
-              (purchasePriceOffer * 10) / 100,
+              purchasePriceOffer * 10,
               'Invalid locked balance in marketplace'
             );
 
@@ -520,7 +519,7 @@ describe('ReserveMarketplace', function () {
         const { user } = await getNamedAccounts();
 
         // transfer the balance first
-        await this.token8.transfer(user, 100);
+        await this.token8.transfer(user, 10000);
 
         let tx = await this.marketplace.approveReserveToBuy(
           this.collection.address,
@@ -530,7 +529,7 @@ describe('ReserveMarketplace', function () {
           1000,
           user,
           1000,
-          100,
+          10000,
           time.duration.weeks(1),
           time.duration.weeks(1),
           constants.ZERO_ADDRESS,

@@ -13,3 +13,5 @@ deployments/
 
 .vscode/
 build/
+
+tenderly.yaml
