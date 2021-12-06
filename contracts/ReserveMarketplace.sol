@@ -249,7 +249,8 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 )
             );
 
-            if (_purchaseReserveProposals[matchId].price > 0) {
+            // if matching proposal exists
+            if (_purchaseReserveProposals[matchId].price == price_) {
                 PurchaseReserveProposal memory purchaseProposal = _purchaseReserveProposals[matchId];
 
                 // not allow undercollateralized proposals
@@ -265,42 +266,39 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                     "Attempt to accept an undercollateralized proposal"
                 );
 
-                // if the amount matches
-                if (purchaseProposal.price == price_) {
-                    // allowance can be not enough at this moment, or could have been canceled
-                    if (purchaseProposal.tryToSellReserve(reservesManagerAddress)) {
-                        delete _purchaseReserveProposals[matchId];
+                // allowance can be not enough at this moment, or could have been canceled
+                if (purchaseProposal.tryToSellReserve(reservesManagerAddress)) {
+                    delete _purchaseReserveProposals[matchId];
 
-                        // save the struct with the reserve info
-                        ReservesManager(reservesManagerAddress).startReserve(
-                            collection_,
-                            tokenId_,
-                            paymentToken_,
-                            collateralToken_,
-                            price_,
-                            collateralPercent_,
-                            purchaseProposal.collateralInitialAmount,
-                            reservePeriod_,
-                            msg.sender,
-                            purchaseProposal.buyer
-                        );
+                    // save the struct with the reserve info
+                    ReservesManager(reservesManagerAddress).startReserve(
+                        collection_,
+                        tokenId_,
+                        paymentToken_,
+                        collateralToken_,
+                        price_,
+                        collateralPercent_,
+                        purchaseProposal.collateralInitialAmount,
+                        reservePeriod_,
+                        msg.sender,
+                        purchaseProposal.buyer
+                    );
 
-                        emit SaleReserved(
-                            collection_,
-                            tokenId_,
-                            paymentToken_,
-                            collateralToken_,
-                            price_,
-                            collateralPercent_,
-                            msg.sender,
-                            purchaseProposal.buyer,
-                            reservePeriod_
-                        );
-                        return;
-                    } else {
-                        // the proposal has not the right allowance, so has to be removed
-                        delete _purchaseReserveProposals[id];
-                    }
+                    emit SaleReserved(
+                        collection_,
+                        tokenId_,
+                        paymentToken_,
+                        collateralToken_,
+                        price_,
+                        collateralPercent_,
+                        msg.sender,
+                        purchaseProposal.buyer,
+                        reservePeriod_
+                    );
+                    return;
+                } else {
+                    // the proposal has not the right allowance, so has to be removed
+                    delete _purchaseReserveProposals[id];
                 }
             }
         }
@@ -360,8 +358,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address sellerToMatch_
     ) external nonReentrant {
         require(
-            IERC20(paymentToken_).balanceOf(msg.sender) >=
-                (price_ * collateralPercent_) / (100 * 10**Constants.COLLATERAL_PERCENT_DECIMALS),
+            IERC20(collateralToken_).balanceOf(msg.sender) >= collateralInitialAmount_,
             "Not enough balance to pay for collateral"
         );
         require(reservePeriod_ > protocol.minimumReservePeriod(), "Reserve period must be greater");
@@ -409,45 +406,43 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 )
             );
 
-            if (_saleReserveProposals[matchId].price > 0) {
+            // if matching proposal exists
+            if (_saleReserveProposals[matchId].price == price_) {
                 SaleReserveProposal memory saleProposal = _saleReserveProposals[matchId];
 
-                // if the amount matches
-                if (saleProposal.price == price_) {
-                    // allowance can be not enough at this moment, or could have been canceled
-                    if (saleProposal.tryToBuyReserve(reservesManagerAddress, collateralInitialAmount_)) {
-                        delete _saleReserveProposals[matchId];
+                // allowance can be not enough at this moment, or could have been canceled
+                if (saleProposal.tryToBuyReserve(reservesManagerAddress, collateralInitialAmount_)) {
+                    delete _saleReserveProposals[matchId];
 
-                        // save the struct with the reserve info
-                        ReservesManager(reservesManagerAddress).startReserve(
-                            collection_,
-                            tokenId_,
-                            paymentToken_,
-                            collateralToken_,
-                            price_,
-                            collateralPercent_,
-                            collateralInitialAmount_,
-                            reservePeriod_,
-                            saleProposal.owner,
-                            msg.sender
-                        );
+                    // save the struct with the reserve info
+                    ReservesManager(reservesManagerAddress).startReserve(
+                        collection_,
+                        tokenId_,
+                        paymentToken_,
+                        collateralToken_,
+                        price_,
+                        collateralPercent_,
+                        collateralInitialAmount_,
+                        reservePeriod_,
+                        saleProposal.owner,
+                        msg.sender
+                    );
 
-                        emit PurchaseReserved(
-                            collection_,
-                            tokenId_,
-                            paymentToken_,
-                            collateralToken_,
-                            price_,
-                            collateralPercent_,
-                            saleProposal.owner,
-                            msg.sender,
-                            reservePeriod_
-                        );
-                        return;
-                    } else {
-                        // the proposal has not the right allowance, so has to be removed
-                        delete _saleReserveProposals[matchId];
-                    }
+                    emit PurchaseReserved(
+                        collection_,
+                        tokenId_,
+                        paymentToken_,
+                        collateralToken_,
+                        price_,
+                        collateralPercent_,
+                        saleProposal.owner,
+                        msg.sender,
+                        reservePeriod_
+                    );
+                    return;
+                } else {
+                    // the proposal has not the right allowance, so has to be removed
+                    delete _saleReserveProposals[matchId];
                 }
             }
         }

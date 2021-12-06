@@ -1,14 +1,29 @@
 const ReserveMarketplace = artifacts.require('ReserveMarketplace');
 const CollectionMock = artifacts.require('CollectionMock');
 const USDTMock = artifacts.require('USDTMock');
+const Token8Mock = artifacts.require('Token8Mock');
+const PriceOracleMock = artifacts.require('PriceOracleMock');
 
 const { constants, expectRevert, expectEvent, time } = require('@openzeppelin/test-helpers');
 
 describe('ReserveMarketplace', function () {
   beforeEach(async () => {
-    await deployments.fixture(['reserves_manager', 'collection_mock', 'usdt_mock']);
+    await deployments.fixture([
+      'reserves_manager',
+      'collection_mock',
+      'usdt_mock',
+      'token8_mock',
+      'dai_mock',
+      'price_oracle_mock',
+    ]);
     let deployment = await deployments.get('ReserveMarketplace');
     this.marketplace = await ReserveMarketplace.at(deployment.address);
+
+    deployment = await deployments.get('Token8Mock');
+    this.token8 = await Token8Mock.at(deployment.address);
+
+    deployment = await deployments.get('PriceOracleMock');
+    this.priceOracle = await PriceOracleMock.at(deployment.address);
   });
 
   it('should be deployed', async () => {
@@ -33,7 +48,7 @@ describe('ReserveMarketplace', function () {
       });
 
       it('emits SaleReserveProposed if match not found', async () => {
-        const { user } = await getNamedAccounts();
+        const { user, alice } = await getNamedAccounts();
 
         let tx = await this.marketplace.approveReserveToSell(
           this.collection.address,
@@ -45,7 +60,7 @@ describe('ReserveMarketplace', function () {
           1000, // ten percent
           time.duration.weeks(1),
           time.duration.weeks(1),
-          constants.ZERO_ADDRESS,
+          alice,
           {
             from: user,
           }
@@ -135,14 +150,14 @@ describe('ReserveMarketplace', function () {
           const { user } = await getNamedAccounts();
 
           // transfer the balance first
-          await this.usdt.transfer(user, purchasePriceOffer);
+          await this.token8.transfer(user, purchasePriceOffer);
 
           // create the purchase proposal
           await this.marketplace.approveReserveToBuy(
             this.collection.address,
             0,
             this.usdt.address,
-            this.usdt.address,
+            this.token8.address,
             purchasePriceOffer,
             user,
             1000,
@@ -157,6 +172,35 @@ describe('ReserveMarketplace', function () {
         });
 
         describe('tryToSellReserve method', () => {
+          it('fails if initial collateral is not enough', async () => {
+            const { user, bob, alice } = await getNamedAccounts();
+
+            // transfer the balances first
+            await this.collection.transferFrom(user, bob, 0, { from: user });
+
+            // decrease the price of the token8 mock
+            await this.priceOracle.setPrice(this.token8.address, 900000);
+
+            // sale without enough collateral
+            let tx = this.marketplace.approveReserveToSell(
+              this.collection.address,
+              0,
+              this.usdt.address,
+              this.token8.address,
+              purchasePriceOffer,
+              alice,
+              1000,
+              time.duration.weeks(1),
+              time.duration.weeks(1),
+              user,
+              {
+                from: bob,
+              }
+            );
+
+            await expectRevert(tx, 'Attempt to accept an undercollateralized proposal');
+          });
+
           it('emits SaleReserved if match found and allowance is enough for collateral', async () => {
             const { user, bob, alice } = await getNamedAccounts();
 
@@ -165,7 +209,7 @@ describe('ReserveMarketplace', function () {
             await this.collection.transferFrom(user, bob, 0, { from: user });
 
             // set the allowances
-            await this.usdt.approve(this.marketplace.address, purchasePriceOffer, { from: user });
+            await this.token8.approve(this.marketplace.address, purchasePriceOffer, { from: user });
             await this.collection.approve(this.marketplace.address, 0, { from: bob });
 
             // sale with enough price
@@ -173,7 +217,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
-              this.usdt.address,
+              this.token8.address,
               purchasePriceOffer,
               alice,
               1000,
@@ -189,7 +233,7 @@ describe('ReserveMarketplace', function () {
 
             // manager should have received the collateral
             assert.strictEqual(
-              (await this.usdt.balanceOf(manager)).toNumber(),
+              (await this.token8.balanceOf(manager)).toNumber(),
               (purchasePriceOffer * 10) / 100,
               'Invalid locked balance in marketplace'
             );
@@ -202,7 +246,7 @@ describe('ReserveMarketplace', function () {
               collection: this.collection.address,
               tokenId: '0',
               paymentToken: this.usdt.address,
-              collateralToken: this.usdt.address,
+              collateralToken: this.token8.address,
               price: String(purchasePriceOffer),
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
@@ -217,7 +261,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
-              this.usdt.address,
+              this.token8.address,
               purchasePriceOffer,
               user,
               1000,
@@ -233,7 +277,7 @@ describe('ReserveMarketplace', function () {
               collection: this.collection.address,
               tokenId: '0',
               paymentToken: this.usdt.address,
-              collateralToken: this.usdt.address,
+              collateralToken: this.token8.address,
               price: String(purchasePriceOffer),
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
@@ -248,7 +292,7 @@ describe('ReserveMarketplace', function () {
             await this.collection.transferFrom(user, bob, 0, { from: user });
 
             // set the allowances
-            await this.usdt.approve(this.marketplace.address, purchasePriceOffer, { from: user });
+            await this.token8.approve(this.marketplace.address, purchasePriceOffer, { from: user });
             await this.collection.approve(this.marketplace.address, 0, { from: bob });
 
             await time.increase(time.duration.weeks(2));
@@ -258,7 +302,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
-              this.usdt.address,
+              this.token8.address,
               purchasePriceOffer,
               alice,
               1000,
@@ -378,7 +422,7 @@ describe('ReserveMarketplace', function () {
             this.collection.address,
             1,
             this.usdt.address,
-            this.usdt.address,
+            this.token8.address,
             100,
             constants.ZERO_ADDRESS,
             1000,
@@ -392,17 +436,97 @@ describe('ReserveMarketplace', function () {
         );
       });
 
+      it("should't allow to approve purchase without enough reserve period", async () => {
+        const { user } = await getNamedAccounts();
+
+        // transfer the balances first
+        await this.token8.transfer(user, 100);
+
+        await expectRevert(
+          this.marketplace.approveReserveToBuy(
+            this.collection.address,
+            1,
+            this.usdt.address,
+            this.token8.address,
+            100,
+            constants.ZERO_ADDRESS,
+            1000,
+            100,
+            time.duration.minutes(4),
+            time.duration.weeks(1),
+            constants.ZERO_ADDRESS,
+            { from: user }
+          ),
+          'Reserve period must be greater'
+        );
+      });
+
+      it("should't allow to approve purchase with price equal 0", async () => {
+        const { user } = await getNamedAccounts();
+
+        // transfer the balances first
+        await this.token8.transfer(user, 100);
+
+        await expectRevert(
+          this.marketplace.approveReserveToBuy(
+            this.collection.address,
+            1,
+            this.usdt.address,
+            this.token8.address,
+            0,
+            constants.ZERO_ADDRESS,
+            1000,
+            100,
+            time.duration.weeks(4),
+            time.duration.weeks(1),
+            constants.ZERO_ADDRESS,
+            { from: user }
+          ),
+          "Price can't be 0"
+        );
+      });
+
+      it('fails if initial collateral is not enough', async () => {
+        const { user, alice } = await getNamedAccounts();
+
+        // transfer the balances first
+        await this.token8.transfer(user, 100);
+
+        // decrease the price of the token8 mock
+        await this.priceOracle.setPrice(this.token8.address, 900000);
+
+        // sale without enough collateral
+        let tx = this.marketplace.approveReserveToBuy(
+          this.collection.address,
+          0,
+          this.usdt.address,
+          this.token8.address,
+          1000,
+          alice,
+          1000,
+          100,
+          time.duration.weeks(1),
+          time.duration.weeks(1),
+          user,
+          {
+            from: user,
+          }
+        );
+
+        await expectRevert(tx, 'Attempt to create an undercollateralized proposal');
+      });
+
       it('emits PurchaseReserveProposed if match not found', async () => {
         const { user } = await getNamedAccounts();
 
         // transfer the balance first
-        await this.usdt.transfer(user, 100);
+        await this.token8.transfer(user, 100);
 
         let tx = await this.marketplace.approveReserveToBuy(
           this.collection.address,
           0,
           this.usdt.address,
-          this.usdt.address,
+          this.token8.address,
           1000,
           user,
           1000,
@@ -419,7 +543,7 @@ describe('ReserveMarketplace', function () {
           collection: this.collection.address,
           tokenId: '0',
           paymentToken: this.usdt.address,
-          collateralToken: this.usdt.address,
+          collateralToken: this.token8.address,
           price: '1000',
           collateralPercent: '1000',
           reservePeriod: time.duration.weeks(1),
