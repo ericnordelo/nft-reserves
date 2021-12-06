@@ -542,7 +542,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
 
         // return the payment if was made
         if (amounts_.payment > 0) {
-            require(IERC20(paymentToken_).transfer(buyer_, amounts_.payment), "Fail to transfer");
+            IERC20(paymentToken_).safeTransfer(buyer_, amounts_.payment);
         }
 
         // now return the token to the seller

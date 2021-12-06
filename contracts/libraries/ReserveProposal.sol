@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../ReservesManager.sol";
@@ -8,6 +9,8 @@ import "../Structs.sol";
 import "./Constants.sol";
 
 library ReserveProposal {
+    using SafeERC20 for IERC20;
+
     /**
      * @dev helper for trying to automatically sell a reserve sale proposal
      *      tranferring the collateral and the NFT
@@ -70,13 +73,10 @@ library ReserveProposal {
             )
         {
             // if the previous transfer was successfull transfer the collateral
-            require(
-                IERC20(saleProposal_.collateralToken).transferFrom(
-                    msg.sender,
-                    fundsManager_,
-                    collateralInitialAmount_
-                ),
-                "Fail to transfer"
+            IERC20(saleProposal_.collateralToken).safeTransferFrom(
+                msg.sender,
+                fundsManager_,
+                collateralInitialAmount_
             );
         } catch {
             return false;

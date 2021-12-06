@@ -2,6 +2,8 @@ const ReservesManager = artifacts.require('ReservesManager');
 const ReserveMarketplace = artifacts.require('ReserveMarketplace');
 const CollectionMock = artifacts.require('CollectionMock');
 const USDTMock = artifacts.require('USDTMock');
+const Token8Mock = artifacts.require('Token8Mock');
+const PriceOracleMock = artifacts.require('PriceOracleMock');
 
 const { constants, expectRevert, expectEvent, time } = require('@openzeppelin/test-helpers');
 
@@ -11,7 +13,7 @@ describe('ReservesManager', function () {
   beforeEach(async () => {
     const { user, bob, alice } = await getNamedAccounts();
 
-    await deployments.fixture(['reserves_manager', 'collection_mock', 'usdt_mock']);
+    await deployments.fixture(['reserves_manager', 'collection_mock', 'usdt_mock', 'token8_mock', 'price_oracle_mock']);
     let deployment = await deployments.get('ReservesManager');
 
     this.manager = await ReservesManager.at(deployment.address);
@@ -27,6 +29,12 @@ describe('ReservesManager', function () {
 
     deployment = await deployments.get('USDTMock');
     this.usdt = await USDTMock.at(deployment.address);
+
+    deployment = await deployments.get('Token8Mock');
+    this.token8 = await Token8Mock.at(deployment.address);
+
+    deployment = await deployments.get('PriceOracleMock');
+    this.priceOracle = await PriceOracleMock.at(deployment.address);
 
     // transfer the balance first
     await this.usdt.transfer(user, purchasePriceOffer);
@@ -539,8 +547,117 @@ describe('ReservesManager', function () {
       );
     });
 
-    it('collateral token with more decimals than payment token');
-    it('_liquidateUndercollateralizedReserve method');
+    describe('different collateral and payment tokens', () => {
+      beforeEach(async () => {
+        const { user, bob, alice } = await getNamedAccounts();
+
+        const purchasePriceOffer = 1000;
+
+        // mint the token
+        await this.collection.safeMint(user);
+
+        // transfer the balances first
+        await this.usdt.transfer(user, 1000);
+        await this.collection.transferFrom(user, bob, 1, { from: user });
+
+        // create the purchase proposal
+        await this.marketplace.approveReserveToBuy(
+          this.collection.address,
+          1,
+          this.token8.address,
+          this.usdt.address,
+          purchasePriceOffer,
+          user,
+          1000,
+          100,
+          time.duration.weeks(1),
+          time.duration.weeks(1),
+          constants.ZERO_ADDRESS,
+          {
+            from: user,
+          }
+        );
+
+        // set the allowances
+        await this.usdt.approve(this.marketplace.address, 100, { from: user });
+        await this.collection.approve(this.marketplace.address, 1, { from: bob });
+
+        // sale with enough price
+        await this.marketplace.approveReserveToSell(
+          this.collection.address,
+          1,
+          this.token8.address,
+          this.usdt.address,
+          purchasePriceOffer,
+          alice,
+          1000,
+          time.duration.weeks(1),
+          time.duration.weeks(1),
+          user,
+          {
+            from: bob,
+          }
+        );
+
+        this.reserveId = web3.utils.keccak256(
+          web3.eth.abi.encodeParameters(
+            ['address', 'uint256', 'address', 'address'],
+            [this.collection.address, 1, bob, user]
+          )
+        );
+      });
+
+      it('_liquidateUndercollateralizedReserve method', async () => {
+        const { user, bob } = await getNamedAccounts();
+
+        // decrease the price of the token8 mock
+        await this.priceOracle.setPrice(this.usdt.address, 900);
+
+        expectEvent(
+          await this.manager.liquidateUndercollateralization(this.reserveId, { from: user }),
+          'CollateralClaimed',
+          {
+            collection: this.collection.address,
+            tokenId: '1',
+            paymentToken: this.token8.address,
+            collateralToken: this.usdt.address,
+            price: '1000',
+            collateralPercent: '1000',
+            seller: bob,
+            buyer: user,
+          }
+        );
+      });
+
+      it('should allow to liquidate a non paid reserve', async () => {
+        const { user, bob } = await getNamedAccounts();
+
+        // advance the time
+        await time.increase(time.duration.weeks(2));
+
+        // compute collateral
+        const { collateral } = await this.manager.reserveAmounts(this.reserveId);
+
+        let tx = await this.manager.liquidateReserve(this.reserveId, { from: user });
+
+        expectEvent(tx, 'PurchaseCanceled', {
+          collection: this.collection.address,
+          tokenId: '1',
+          paymentToken: this.token8.address,
+          collateralToken: this.usdt.address,
+          price: String(purchasePriceOffer),
+          collateralPercent: '1000',
+          seller: bob,
+          buyer: user,
+        });
+
+        await expectEvent.inTransaction(tx.tx, this.collection, 'Transfer', {
+          from: this.manager.address,
+          to: bob,
+          tokenId: '1',
+        });
+      });
+    });
   });
 
   describe('upgrade', () => {
