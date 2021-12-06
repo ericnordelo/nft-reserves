@@ -5,6 +5,7 @@ struct SaleReserveProposal {
     address collection;
     uint256 tokenId;
     address paymentToken;
+    address collateralToken;
     uint64 expirationTimestamp;
     uint256 price;
     uint80 collateralPercent;
@@ -17,6 +18,7 @@ struct PurchaseReserveProposal {
     address collection;
     uint256 tokenId;
     address paymentToken;
+    address collateralToken;
     uint64 expirationTimestamp;
     uint256 price;
     uint80 collateralPercent;

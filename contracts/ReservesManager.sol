@@ -400,6 +400,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the sale reserve
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve period if reserve is executed
@@ -410,6 +411,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
@@ -426,7 +428,7 @@ contract ReservesManager is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuard
             seller: seller_,
             buyer: buyer_,
             paymentToken: paymentToken_,
-            collateralToken: paymentToken_,
+            collateralToken: collateralToken_,
             collateralPercent: collateralPercent_,
             price: price_,
             reservePeriod: reservePeriod_,

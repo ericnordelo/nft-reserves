@@ -36,6 +36,7 @@ describe('ReservesManager', function () {
       this.collection.address,
       0,
       this.usdt.address,
+      this.usdt.address,
       purchasePriceOffer,
       user,
       1000,
@@ -59,6 +60,7 @@ describe('ReservesManager', function () {
     await this.marketplace.approveReserveToSell(
       this.collection.address,
       0,
+      this.usdt.address,
       this.usdt.address,
       purchasePriceOffer,
       alice,
@@ -482,6 +484,7 @@ describe('ReservesManager', function () {
       this.manager.startReserve(
         this.collection.address,
         0,
+        this.usdt.address,
         this.usdt.address,
         String(purchasePriceOffer),
         1000,

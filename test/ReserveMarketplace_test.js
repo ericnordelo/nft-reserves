@@ -39,6 +39,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           this.usdt.address,
+          this.usdt.address,
           1000,
           user,
           1000, // ten percent
@@ -54,6 +55,7 @@ describe('ReserveMarketplace', function () {
           collection: this.collection.address,
           tokenId: '0',
           paymentToken: this.usdt.address,
+          collateralToken: this.usdt.address,
           price: '1000',
           collateralPercent: '1000',
           reservePeriod: time.duration.weeks(1),
@@ -67,6 +69,7 @@ describe('ReserveMarketplace', function () {
         await this.marketplace.approveReserveToSell(
           this.collection.address,
           0,
+          this.usdt.address,
           this.usdt.address,
           1000,
           user,
@@ -84,6 +87,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           this.usdt.address,
+          this.usdt.address,
           1000,
           1000,
           time.duration.weeks(1),
@@ -92,8 +96,8 @@ describe('ReserveMarketplace', function () {
 
         let expectedId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
-            ['address', 'uint256', 'address', 'uint256', 'uint80', 'uint64', 'address'],
-            [this.collection.address, 0, this.usdt.address, 1000, 1000, time.duration.weeks(1), user]
+            ['address', 'uint256', 'address', 'address', 'uint256', 'uint80', 'uint64', 'address'],
+            [this.collection.address, 0, this.usdt.address, this.usdt.address, 1000, 1000, time.duration.weeks(1), user]
           )
         );
 
@@ -101,6 +105,7 @@ describe('ReserveMarketplace', function () {
         assert.strictEqual(proposal.collection, this.collection.address, 'Invalid proposal collection');
         assert.strictEqual(proposal.tokenId, '0', 'Invalid proposal token id');
         assert.strictEqual(proposal.paymentToken, this.usdt.address, 'Invalid proposal payment token');
+        assert.strictEqual(proposal.collateralToken, this.usdt.address, 'Invalid proposal collateral token');
         assert.strictEqual(proposal.price, '1000', 'Invalid proposal price');
         assert.strictEqual(proposal.owner, user, 'Invalid proposal owner');
         assert.strictEqual(proposal.beneficiary, user, 'Invalid proposal beneficiary');
@@ -112,6 +117,7 @@ describe('ReserveMarketplace', function () {
           this.marketplace.getSaleReserveProposal(
             this.collection.address,
             0,
+            this.usdt.address,
             this.usdt.address,
             1000,
             1000,
@@ -135,6 +141,7 @@ describe('ReserveMarketplace', function () {
           await this.marketplace.approveReserveToBuy(
             this.collection.address,
             0,
+            this.usdt.address,
             this.usdt.address,
             purchasePriceOffer,
             user,
@@ -165,6 +172,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
+              this.usdt.address,
               purchasePriceOffer,
               alice,
               1000,
@@ -193,6 +201,7 @@ describe('ReserveMarketplace', function () {
               collection: this.collection.address,
               tokenId: '0',
               paymentToken: this.usdt.address,
+              collateralToken: this.usdt.address,
               price: String(purchasePriceOffer),
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
@@ -206,6 +215,7 @@ describe('ReserveMarketplace', function () {
             let tx = await this.marketplace.approveReserveToSell(
               this.collection.address,
               0,
+              this.usdt.address,
               this.usdt.address,
               purchasePriceOffer,
               user,
@@ -222,6 +232,7 @@ describe('ReserveMarketplace', function () {
               collection: this.collection.address,
               tokenId: '0',
               paymentToken: this.usdt.address,
+              collateralToken: this.usdt.address,
               price: String(purchasePriceOffer),
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
@@ -246,6 +257,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
+              this.usdt.address,
               purchasePriceOffer,
               alice,
               1000,
@@ -269,6 +281,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           constants.ZERO_ADDRESS,
+          constants.ZERO_ADDRESS,
           100,
           constants.ZERO_ADDRESS,
           1000,
@@ -289,6 +302,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           constants.ZERO_ADDRESS,
+          constants.ZERO_ADDRESS,
           100,
           constants.ZERO_ADDRESS,
           10000,
@@ -307,6 +321,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           constants.ZERO_ADDRESS,
+          constants.ZERO_ADDRESS,
           100,
           constants.ZERO_ADDRESS,
           1000,
@@ -323,6 +338,7 @@ describe('ReserveMarketplace', function () {
         this.marketplace.approveReserveToSell(
           this.collection.address,
           1,
+          constants.ZERO_ADDRESS,
           constants.ZERO_ADDRESS,
           100,
           constants.ZERO_ADDRESS,
@@ -361,6 +377,7 @@ describe('ReserveMarketplace', function () {
             this.collection.address,
             1,
             this.usdt.address,
+            this.usdt.address,
             100,
             constants.ZERO_ADDRESS,
             1000,
@@ -383,6 +400,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           this.usdt.address,
+          this.usdt.address,
           1000,
           user,
           1000,
@@ -398,6 +416,7 @@ describe('ReserveMarketplace', function () {
           collection: this.collection.address,
           tokenId: '0',
           paymentToken: this.usdt.address,
+          collateralToken: this.usdt.address,
           price: '1000',
           collateralPercent: '1000',
           reservePeriod: time.duration.weeks(1),
@@ -415,6 +434,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           this.usdt.address,
+          this.usdt.address,
           1000,
           user,
           1000,
@@ -431,6 +451,7 @@ describe('ReserveMarketplace', function () {
           this.collection.address,
           0,
           this.usdt.address,
+          this.usdt.address,
           1000,
           1000,
           time.duration.weeks(1),
@@ -439,8 +460,8 @@ describe('ReserveMarketplace', function () {
 
         let expectedId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
-            ['address', 'uint256', 'address', 'uint256', 'uint80', 'uint64', 'address'],
-            [this.collection.address, 0, this.usdt.address, 1000, 1000, time.duration.weeks(1), user]
+            ['address', 'uint256', 'address', 'address', 'uint256', 'uint80', 'uint64', 'address'],
+            [this.collection.address, 0, this.usdt.address, this.usdt.address, 1000, 1000, time.duration.weeks(1), user]
           )
         );
 
@@ -448,6 +469,7 @@ describe('ReserveMarketplace', function () {
         assert.strictEqual(proposal.collection, this.collection.address, 'Invalid proposal collection');
         assert.strictEqual(proposal.tokenId, '0', 'Invalid proposal token id');
         assert.strictEqual(proposal.paymentToken, this.usdt.address, 'Invalid proposal payment token');
+        assert.strictEqual(proposal.collateralToken, this.usdt.address, 'Invalid proposal collateral token');
         assert.strictEqual(proposal.price, '1000', 'Invalid proposal price');
         assert.strictEqual(proposal.buyer, user, 'Invalid proposal buyer');
         assert.strictEqual(proposal.beneficiary, user, 'Invalid proposal beneficiary');
@@ -459,6 +481,7 @@ describe('ReserveMarketplace', function () {
           this.marketplace.getPurchaseReserveProposal(
             this.collection.address,
             0,
+            this.usdt.address,
             this.usdt.address,
             1000,
             1000,
@@ -479,6 +502,7 @@ describe('ReserveMarketplace', function () {
           await this.marketplace.approveReserveToSell(
             this.collection.address,
             0,
+            this.usdt.address,
             this.usdt.address,
             salePriceOffer,
             user,
@@ -507,6 +531,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
+              this.usdt.address,
               salePriceOffer,
               alice,
               1000,
@@ -533,6 +558,7 @@ describe('ReserveMarketplace', function () {
               collection: this.collection.address,
               tokenId: '0',
               paymentToken: this.usdt.address,
+              collateralToken: this.usdt.address,
               price: String(salePriceOffer),
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
@@ -553,6 +579,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
+              this.usdt.address,
               salePriceOffer,
               alice,
               1000,
@@ -568,6 +595,7 @@ describe('ReserveMarketplace', function () {
               collection: this.collection.address,
               tokenId: '0',
               paymentToken: this.usdt.address,
+              collateralToken: this.usdt.address,
               price: String(salePriceOffer),
               collateralPercent: '1000',
               reservePeriod: time.duration.weeks(1),
@@ -591,6 +619,7 @@ describe('ReserveMarketplace', function () {
               this.collection.address,
               0,
               this.usdt.address,
+              this.usdt.address,
               salePriceOffer,
               alice,
               1000,
@@ -612,6 +641,7 @@ describe('ReserveMarketplace', function () {
             this.collection.address,
             0,
             this.usdt.address,
+            this.usdt.address,
             salePriceOffer - 100,
             user,
             1000,
@@ -627,6 +657,7 @@ describe('ReserveMarketplace', function () {
             collection: this.collection.address,
             tokenId: '0',
             paymentToken: this.usdt.address,
+            collateralToken: this.usdt.address,
             price: String(salePriceOffer - 100),
             collateralPercent: '1000',
             reservePeriod: time.duration.weeks(1),
@@ -653,6 +684,7 @@ describe('ReserveMarketplace', function () {
         this.collection.address,
         0,
         this.usdt.address,
+        this.usdt.address,
         1000,
         user,
         1000,
@@ -671,6 +703,7 @@ describe('ReserveMarketplace', function () {
       let tx = this.marketplace.cancelSaleReserveProposal(
         this.collection.address,
         0,
+        this.usdt.address,
         this.usdt.address,
         1000,
         1000,
@@ -691,6 +724,7 @@ describe('ReserveMarketplace', function () {
         this.collection.address,
         0,
         this.usdt.address,
+        this.usdt.address,
         1000,
         1000,
         time.duration.weeks(1),
@@ -704,6 +738,7 @@ describe('ReserveMarketplace', function () {
         collection: this.collection.address,
         tokenId: '0',
         paymentToken: this.usdt.address,
+        collateralToken: this.usdt.address,
         price: '1000',
         collateralPercent: '1000',
         reservePeriod: time.duration.weeks(1),
@@ -730,6 +765,7 @@ describe('ReserveMarketplace', function () {
         this.collection.address,
         0,
         this.usdt.address,
+        this.usdt.address,
         1000,
         user,
         1000,
@@ -748,6 +784,7 @@ describe('ReserveMarketplace', function () {
       let tx = this.marketplace.cancelPurchaseReserveProposal(
         this.collection.address,
         0,
+        this.usdt.address,
         this.usdt.address,
         1000,
         1000,
@@ -768,6 +805,7 @@ describe('ReserveMarketplace', function () {
         this.collection.address,
         0,
         this.usdt.address,
+        this.usdt.address,
         1000,
         1000,
         time.duration.weeks(1),
@@ -781,6 +819,7 @@ describe('ReserveMarketplace', function () {
         collection: this.collection.address,
         tokenId: '0',
         paymentToken: this.usdt.address,
+        collateralToken: this.usdt.address,
         price: '1000',
         collateralPercent: '1000',
         reservePeriod: time.duration.weeks(1),

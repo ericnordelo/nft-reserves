@@ -37,6 +37,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
      * @param paymentToken the address of the ERC20 token used for payment
+     * @param collateralToken the address of the ERC20 token that should be used for collateral
      * @param price the amount of paymentToken used for payment
      * @param collateralPercent the percent of the price as collateral
      * @param seller the address of the seller
@@ -47,6 +48,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection,
         uint256 tokenId,
         address paymentToken,
+        address collateralToken,
         uint256 price,
         uint256 collateralPercent,
         address seller,
@@ -59,6 +61,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
      * @param paymentToken the address of the ERC20 token that should be used for payment
+     * @param collateralToken the address of the ERC20 token that should be used for collateral
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
      * @param reservePeriod the duration in seconds of the reserve
@@ -68,6 +71,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection,
         uint256 tokenId,
         address paymentToken,
+        address collateralToken,
         uint256 price,
         uint256 collateralPercent,
         uint256 reservePeriod,
@@ -79,6 +83,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
      * @param paymentToken the address of the ERC20 token that should be used for payment
+     * @param collateralToken the address of the ERC20 token that should be used for collateral
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
      * @param reservePeriod the duration in seconds of the reserve
@@ -87,6 +92,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection,
         uint256 tokenId,
         address paymentToken,
+        address collateralToken,
         uint256 price,
         uint256 collateralPercent,
         uint256 reservePeriod
@@ -97,6 +103,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
      * @param paymentToken the address of the ERC20 token used for payment
+     * @param collateralToken the address of the ERC20 token that should be used for collateral
      * @param price the amount of paymentToken used for payment
      * @param collateralPercent the percent of the price as collateral
      * @param seller the address of the seller
@@ -107,6 +114,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection,
         uint256 tokenId,
         address paymentToken,
+        address collateralToken,
         uint256 price,
         uint256 collateralPercent,
         address seller,
@@ -119,6 +127,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
      * @param paymentToken the address of the ERC20 token that should be used for payment
+     * @param collateralToken the address of the ERC20 token that should be used for collateral
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
      * @param reservePeriod the duration in seconds of the reserve
@@ -128,6 +137,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection,
         uint256 tokenId,
         address paymentToken,
+        address collateralToken,
         uint256 price,
         uint256 collateralPercent,
         uint256 reservePeriod,
@@ -139,6 +149,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection the address of the NFT collection contract
      * @param tokenId the id of the NFT
      * @param paymentToken the address of the ERC20 token that should be used for payment
+     * @param collateralToken the address of the ERC20 token that should be used for collateral
      * @param price the amount of paymentToken that should be paid
      * @param collateralPercent the percent of the price as collateral
      * @param reservePeriod the duration in seconds of the reserve
@@ -147,6 +158,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection,
         uint256 tokenId,
         address paymentToken,
+        address collateralToken,
         uint256 price,
         uint256 collateralPercent,
         uint256 reservePeriod
@@ -177,6 +189,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the sale proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
@@ -188,6 +201,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         address beneficiary_,
         uint80 collateralPercent_,
@@ -211,6 +225,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 collection_,
                 tokenId_,
                 paymentToken_,
+                collateralToken_,
                 price_,
                 collateralPercent_,
                 reservePeriod_,
@@ -225,6 +240,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                     collection_,
                     tokenId_,
                     paymentToken_,
+                    collateralToken_,
                     price_,
                     collateralPercent_,
                     reservePeriod_,
@@ -246,6 +262,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             collection_,
                             tokenId_,
                             paymentToken_,
+                            collateralToken_,
                             price_,
                             collateralPercent_,
                             reservePeriod_,
@@ -257,6 +274,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             collection_,
                             tokenId_,
                             paymentToken_,
+                            collateralToken_,
                             price_,
                             collateralPercent_,
                             msg.sender,
@@ -276,6 +294,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         _saleReserveProposals[id] = SaleReserveProposal({
             collection: collection_,
             paymentToken: paymentToken_,
+            collateralToken: collateralToken_,
             tokenId: tokenId_,
             owner: msg.sender,
             beneficiary: beneficiary_,
@@ -289,6 +308,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             collection_,
             tokenId_,
             paymentToken_,
+            collateralToken_,
             price_,
             collateralPercent_,
             reservePeriod_,
@@ -302,6 +322,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the sale proposal
      * @param beneficiary_ the address receiving the payment tokens if the sale is executed
      * @param collateralPercent_ the percent representing the collateral
@@ -313,6 +334,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         address beneficiary_,
         uint80 collateralPercent_,
@@ -333,6 +355,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 collection_,
                 tokenId_,
                 paymentToken_,
+                collateralToken_,
                 price_,
                 collateralPercent_,
                 reservePeriod_,
@@ -349,6 +372,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                     collection_,
                     tokenId_,
                     paymentToken_,
+                    collateralToken_,
                     price_,
                     collateralPercent_,
                     reservePeriod_,
@@ -370,6 +394,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             collection_,
                             tokenId_,
                             paymentToken_,
+                            collateralToken_,
                             price_,
                             collateralPercent_,
                             reservePeriod_,
@@ -381,6 +406,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                             collection_,
                             tokenId_,
                             paymentToken_,
+                            collateralToken_,
                             price_,
                             collateralPercent_,
                             saleProposal.owner,
@@ -400,6 +426,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         _purchaseReserveProposals[id] = PurchaseReserveProposal({
             collection: collection_,
             paymentToken: paymentToken_,
+            collateralToken: collateralToken_,
             tokenId: tokenId_,
             buyer: msg.sender,
             beneficiary: beneficiary_,
@@ -413,6 +440,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             collection_,
             tokenId_,
             paymentToken_,
+            collateralToken_,
             price_,
             collateralPercent_,
             reservePeriod_,
@@ -425,6 +453,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve
@@ -434,6 +463,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
@@ -443,6 +473,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             collection_,
             tokenId_,
             paymentToken_,
+            collateralToken_,
             price_,
             collateralPercent_,
             reservePeriod_,
@@ -457,6 +488,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             collection_,
             tokenId_,
             paymentToken_,
+            collateralToken_,
             price_,
             collateralPercent_,
             reservePeriod_
@@ -468,6 +500,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve
@@ -477,6 +510,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
@@ -486,6 +520,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             collection_,
             tokenId_,
             paymentToken_,
+            collateralToken_,
             price_,
             collateralPercent_,
             reservePeriod_,
@@ -500,6 +535,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
             collection_,
             tokenId_,
             paymentToken_,
+            collateralToken_,
             price_,
             collateralPercent_,
             reservePeriod_
@@ -524,6 +560,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve
@@ -533,6 +570,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
@@ -544,6 +582,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 collection_,
                 tokenId_,
                 paymentToken_,
+                collateralToken_,
                 price_,
                 collateralPercent_,
                 reservePeriod_,
@@ -571,6 +610,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
      * @param collection_ the address of the collection where the token belongs to
      * @param tokenId_ the id of the token to sell
      * @param paymentToken_ the address of the token to use for payment
+     * @param collateralToken_ the address of the token to use for collateral
      * @param price_ the price of the proposal
      * @param collateralPercent_ the percent representing the collateral
      * @param reservePeriod_ the duration in seconds of the reserve
@@ -580,6 +620,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
         address collection_,
         uint256 tokenId_,
         address paymentToken_,
+        address collateralToken_,
         uint256 price_,
         uint80 collateralPercent_,
         uint64 reservePeriod_,
@@ -591,6 +632,7 @@ contract ReserveMarketplace is UUPSUpgradeable, OwnableUpgradeable, ReentrancyGu
                 collection_,
                 tokenId_,
                 paymentToken_,
+                collateralToken_,
                 price_,
                 collateralPercent_,
                 reservePeriod_,
